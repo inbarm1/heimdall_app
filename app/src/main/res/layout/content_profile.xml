@@ -30,7 +30,7 @@
                 android:src="@drawable/elections" />
 
             <Spinner
-                android:id="@+id/tvNumber1"
+                android:id="@+id/party"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -40,11 +40,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvNumber1"
+                android:layout_below="@id/party"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/ivContactItem1"
-                android:text="Party"
+                android:text="@string/party"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#727272" />
 
@@ -84,13 +84,15 @@
                 android:id="@+id/tvNumber2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_toEndOf="@id/ivContactItem2"
+                android:layout_above="@+id/chkState2"
+                android:layout_alignLeft="@+id/textView"
+                android:layout_alignStart="@+id/textView"
                 android:text="(321) 654-0987"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121" />
 
             <TextView
+                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvNumber2"
@@ -133,27 +135,22 @@
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:src="@drawable/cupcake" />
 
-            <TextView
-                android:id="@+id/tvNumber3"
+            <Spinner
+                android:id="@+id/year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivContactItem3"
-                android:layout_toStartOf="@+id/chkState3"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="chintan@letsnurture.com"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvNumber3"
+                android:layout_below="@id/year"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/ivContactItem3"
-                android:text="Birth year"
+                android:text="Year of birth"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#727272" />
 
@@ -189,21 +186,17 @@
                 android:src="@drawable/ic_location_on_black" />
 
             <Spinner
-                android:id="@+id/tvNumber5"
+                android:id="@+id/city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivContactItem5"
-                android:layout_toStartOf="@+id/chkState5"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvNumber5"
+                android:layout_below="@id/city"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/ivContactItem5"
