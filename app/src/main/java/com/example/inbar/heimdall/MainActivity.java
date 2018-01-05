@@ -530,9 +530,6 @@ public class MainActivity extends HttpsConnection {
             "    }\n" +
             "}";
 
-    private float[] yData = { 5, 10, 15, 30, 40 };
-    private String[] xData = { "Sony", "Huawei", "LG", "Apple", "Samsung" };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -600,12 +597,12 @@ public class MainActivity extends HttpsConnection {
 
     }
 
-    private void createBarChart(int char_id, JSONObject parties, String key, String keyMember, Map<String, JSONObject> map) {
+    private void createBarChart(int char_id, JSONObject parties, String key, String keyMember, final Map<String, JSONObject> map) {
 
         BarChart barChart = (BarChart) findViewById(char_id);
 
-        ArrayList<BarEntry> valueSet = new ArrayList<>();
-        ArrayList<String> xAxis = new ArrayList<>();
+        final ArrayList<BarEntry> valueSet = new ArrayList<>();
+        final ArrayList<String> xAxis = new ArrayList<>();
 
         try {
             Iterator<?> partyName = parties.keys();
@@ -631,27 +628,7 @@ public class MainActivity extends HttpsConnection {
                             String valM = new DecimalFormat("##.##").format(((Number)memData.get(nameM)).floatValue() * 100);
                             dataForShow.put(nameM, valM);
                         }
-
                         map.put(name,dataForShow);
-
-                        // set a chart value selected listener
-                        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-
-                            @Override
-                            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                                // display msg when value selected
-                                if (e == null)
-                                    return;
-
-                                Toast.makeText(MainActivity.this,
-                                        (name + " = " + dataForShow.toString()), Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onNothingSelected() {
-
-                            }
-                        });
                     }
                 }
                 counter ++;
@@ -659,6 +636,25 @@ public class MainActivity extends HttpsConnection {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        // set a chart value selected listener
+        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                // display msg when value selected
+                if (e == null)
+                    return;
+
+                String name = xAxis.get(e.getXIndex());
+                Toast.makeText(MainActivity.this,
+                        (name + " = " + map.get(name).toString()), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
 
         BarDataSet dataSet = new BarDataSet(valueSet, "מפלגות");
         dataSet.setColors(getColors());
@@ -670,7 +666,7 @@ public class MainActivity extends HttpsConnection {
         barChart.invalidate();
     }
 
-    protected void creatingChart(List<String> members, List<Float> membersPrec){
+    protected void creatingChart(final JSONObject data){
         mChart = new PieChart(this);
         // add pie chart to main layout
         mainLayout.addView(mChart, 1000, 500);
@@ -700,7 +696,7 @@ public class MainActivity extends HttpsConnection {
                     return;
 
                 Toast.makeText(MainActivity.this,
-                        xData[e.getXIndex()] + " = " + e.getVal() + "%", Toast.LENGTH_SHORT).show();
+                        data.get(e.getXIndex()) + " = " + e.getVal() + "%", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -727,7 +723,7 @@ public class MainActivity extends HttpsConnection {
 
         ArrayList<String> xVals = new ArrayList<String>();
 
-        Collections.addAll(xVals, xData);
+        Collections.addAll(xVals, );
 
         // create pie data set
         PieDataSet dataSet = new PieDataSet(yVals1, "Market Share");
