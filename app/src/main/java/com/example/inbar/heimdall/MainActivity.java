@@ -3,14 +3,10 @@ package com.example.inbar.heimdall;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -33,8 +29,10 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends HttpsConnection {
     public static final String EFFICIENCY   = "party_efficiency";
@@ -45,8 +43,11 @@ public class MainActivity extends HttpsConnection {
     public static final String MISSING_M    = "member_missing";
     public static final String EFFICIENCY_T = "יעילות המפלגות";
     public static final String PROPOSALS_T  = "הצעות חוק";
-    public static final String MISSING_T    = "העדריות";
+    public static final String MISSING_T    = "העדרויות";
     public static final String TITLE_PIE    = "התפלגות";
+    Map<String, JSONObject> chart1 = new HashMap<>();
+    Map<String, JSONObject> chart2 = new HashMap<>();
+    Map<String, JSONObject> chart3 = new HashMap<>();
 
     private CoordinatorLayout mainLayout;
     PieChart mChart;
@@ -540,15 +541,6 @@ public class MainActivity extends HttpsConnection {
         setSupportActionBar(toolbar);
         mainLayout =  findViewById(R.id.mainLayout);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -582,7 +574,7 @@ public class MainActivity extends HttpsConnection {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        createBarChart(R.id.chart1, EFFICIENCY_T, jsonObj, EFFICIENCY, EFFICIENCY_M);
+        createBarChart(R.id.chart1, jsonObj, EFFICIENCY, EFFICIENCY_M, chart1);
     }
 
     private void createProposalsChar() {
@@ -592,7 +584,7 @@ public class MainActivity extends HttpsConnection {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        createBarChart(R.id.chart2, PROPOSALS_T, jsonObj, PROPOSALS, PROPOSALS_M);
+        createBarChart(R.id.chart2, jsonObj, PROPOSALS, PROPOSALS_M, chart2);
 
     }
 
@@ -604,11 +596,11 @@ public class MainActivity extends HttpsConnection {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        createBarChart(R.id.chart3, MISSING_T, jsonObj, MISSING, MISSING_M);
+        createBarChart(R.id.chart3, jsonObj, MISSING, MISSING_M, chart3);
 
     }
 
-    private void createBarChart(int char_id, String description, JSONObject parties, String key, String keyMember) {
+    private void createBarChart(int char_id, JSONObject parties, String key, String keyMember, Map<String, JSONObject> map) {
 
         BarChart barChart = (BarChart) findViewById(char_id);
 
@@ -625,7 +617,7 @@ public class MainActivity extends HttpsConnection {
                 // Get party's data
                 if ( parties.get(name) instanceof JSONObject ) {
                     JSONObject data = (JSONObject)parties.get(name);
-                    float val = Math.round(((Number)data.get(key)).floatValue() * 100);
+                    float val = Math.round((((Number)data.get(key)).floatValue() * 100 * 100.0) / 100.0);
                     BarEntry entry = new BarEntry(val, counter);
                     // Get value of party
                     valueSet.add(entry);
@@ -639,6 +631,9 @@ public class MainActivity extends HttpsConnection {
                             String valM = new DecimalFormat("##.##").format(((Number)memData.get(nameM)).floatValue() * 100);
                             dataForShow.put(nameM, valM);
                         }
+
+                        map.put(name,dataForShow);
+
                         // set a chart value selected listener
                         barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
 
@@ -649,7 +644,7 @@ public class MainActivity extends HttpsConnection {
                                     return;
 
                                 Toast.makeText(MainActivity.this,
-                                        name + " = " + dataForShow.toString(), Toast.LENGTH_SHORT).show();
+                                        (name + " = " + dataForShow.toString()), Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -665,17 +660,12 @@ public class MainActivity extends HttpsConnection {
             e.printStackTrace();
         }
 
-        BarDataSet barDataSet1 = new BarDataSet(valueSet, "Brand 1");
-        barDataSet1.setColor(Color.rgb(0, 155, 0));
-        barDataSet1.setColors(ColorTemplate.COLORFUL_COLORS);
-
-        BarDataSet dataSet = new BarDataSet(valueSet, "# of Calls");
-        ArrayList<BarDataSet> dataSets = new ArrayList<>();
-        dataSets.add(barDataSet1);
+        BarDataSet dataSet = new BarDataSet(valueSet, "מפלגות");
+        dataSet.setColors(getColors());
 
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
-        barChart.setDescription(description);
+        barChart.setDescription("");
         barChart.animateXY(2000, 2000);
         barChart.invalidate();
     }
@@ -744,6 +734,25 @@ public class MainActivity extends HttpsConnection {
         dataSet.setSliceSpace(3);
         dataSet.setSelectionShift(5);
 
+
+        dataSet.setColors(getColors());
+
+        // instantiate pie data object now
+        PieData data = new PieData(xVals, dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.GRAY);
+
+        mChart.setData(data);
+
+        // undo all highlights
+        mChart.highlightValues(null);
+
+        // update pie chart
+        mChart.invalidate();
+    }
+
+    private ArrayList<Integer> getColors() {
         // add many colors
         ArrayList<Integer> colors = new ArrayList<Integer>();
 
@@ -763,20 +772,8 @@ public class MainActivity extends HttpsConnection {
             colors.add(c);
 
         colors.add(ColorTemplate.getHoloBlue());
-        dataSet.setColors(colors);
 
-        // instantiate pie data object now
-        PieData data = new PieData(xVals, dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.GRAY);
-
-        mChart.setData(data);
-
-        // undo all highlights
-        mChart.highlightValues(null);
-
-        // update pie chart
-        mChart.invalidate();
+        return colors;
     }
+
 }
