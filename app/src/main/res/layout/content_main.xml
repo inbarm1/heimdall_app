@@ -27,10 +27,22 @@
                 android:clickable="true"
                 android:padding="@dimen/activity_horizontal_margin">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="210dp"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:text="יעילות המפלגות"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#727272" />
+
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chart1"
+                    android:layout_marginTop="40dp"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp" />
+                    android:layout_height="450dp" />
 
             </RelativeLayout>
 
@@ -43,10 +55,22 @@
                 android:clickable="true"
                 android:padding="@dimen/activity_horizontal_margin">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:text="הצעות חוק"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#727272" />
+
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chart2"
+                    android:layout_marginTop="40dp"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp" />
+                    android:layout_height="450dp" />
 
             </RelativeLayout>
 
@@ -59,10 +83,22 @@
                 android:clickable="true"
                 android:padding="@dimen/activity_horizontal_margin">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="270dp"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:text="העדרויות"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#727272" />
+
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chart3"
+                    android:layout_marginTop="40dp"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp" />
+                    android:layout_height="450dp" />
             </RelativeLayout>
         </LinearLayout>
 
