@@ -19,16 +19,219 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class MainActivity extends HttpsConnection {
+    public static final String EFFICIENCY   = "party_efficiency";
+    public static final String PROPOSALS    = "num_of_proposals";
+    public static final String MISSING      = "party_missing";
+    public static final String EFFICIENCY_M = "memeber_efficiency";
+    public static final String PROPOSALS_M  = "elected_proposals";
+    public static final String MISSING_M    = "member_missing";
+    public static final String EFFICIENCY_T = "יעילות המפלגות";
+    public static final String PROPOSALS_T  = "הצעות חוק";
+    public static final String MISSING_T    = "העדריות";
+    public static final String TITLE_PIE    = "התפלגות";
 
-    private PieChart mChart;
     private ConstraintLayout mainLayout;
+    PieChart mChart;
+    String jsonTest = "{\n" +
+            "    \"אינם חברי כנסת\": {\n" +
+            "        \"memeber_efficiency\": {},\n" +
+            "        \"party_efficiency\": 0\n" +
+            "    },\n" +
+            "    \"הבית היהודי\": {\n" +
+            "        \"memeber_efficiency\": {\n" +
+            "            \"אורי יהודה אריאל\": 0.11274509803921569,\n" +
+            "            \"איילת שקד\": 0.014705882352941176,\n" +
+            "            \"אלי בן-דהן\": 0.18627450980392157,\n" +
+            "            \"בצלאל סמוטריץ\": 0.17647058823529413,\n" +
+            "            \"מרדכי יוגב\": 0.14215686274509803,\n" +
+            "            \"ניסן סלומינסקי\": 0.18627450980392157,\n" +
+            "            \"נפתלי בנט\": 0.00980392156862745,\n" +
+            "            \"שולי מועלם-רפאלי\": 0.1715686274509804\n" +
+            "        },\n" +
+            "        \"party_efficiency\": 0.255\n" +
+            "    },\n" +
+            "    \"הליכוד\": {\n" +
+            "        \"memeber_efficiency\": {\n" +
+            "            \"אבי (משה) דיכטר\": 0.02074074074074074,\n" +
+            "            \"אברהם נגוסה\": 0.07111111111111111,\n" +
+            "            \"אופיר אקוניס\": 0.01037037037037037,\n" +
+            "            \"אורן אסף חזן\": 0.02074074074074074,\n" +
+            "            \"איוב קרא\": 0.04,\n" +
+            "            \"אמיר אוחנה\": 0.047407407407407405,\n" +
+            "            \"בנימין נתניהו\": 0.0014814814814814814,\n" +
+            "            \"גילה גמליאל\": 0.013333333333333334,\n" +
+            "            \"גלעד ארדן\": 0.016296296296296295,\n" +
+            "            \"דוד אמסלם\": 0.023703703703703703,\n" +
+            "            \"דוד ביטן\": 0.06074074074074074,\n" +
+            "            \"ז`קי לוי\": 0.028148148148148148,\n" +
+            "            \"זאב אלקין\": 0.014814814814814815,\n" +
+            "            \"זאב בנימין בגין\": 0.044444444444444446,\n" +
+            "            \"חיים כץ\": 0.022222222222222223,\n" +
+            "            \"יהודה יהושע גליק\": 0.02074074074074074,\n" +
+            "            \"יואב קיש\": 0.037037037037037035,\n" +
+            "            \"יובל שטייניץ\": 0.025185185185185185,\n" +
+            "            \"יולי יואל אדלשטיין\": 0.02074074074074074,\n" +
+            "            \"ירון מזוז\": 0.02962962962962963,\n" +
+            "            \"יריב לוין\": 0.04148148148148148,\n" +
+            "            \"ישראל כץ\": 0.017777777777777778,\n" +
+            "            \"מירי רגב\": 0.01925925925925926,\n" +
+            "            \"מכלוף מיקי זוהר\": 0.045925925925925926,\n" +
+            "            \"נאוה בוקר\": 0.05925925925925926,\n" +
+            "            \"נורית קורן\": 0.06962962962962962,\n" +
+            "            \"ענת ברקו\": 0.057777777777777775,\n" +
+            "            \"צחי הנגבי\": 0.02962962962962963,\n" +
+            "            \"ציפי חוטובלי\": 0.044444444444444446,\n" +
+            "            \"שרן השכל\": 0.045925925925925926\n" +
+            "        },\n" +
+            "        \"party_efficiency\": 0.225\n" +
+            "    },\n" +
+            "    \"המחנה הציוני\": {\n" +
+            "        \"memeber_efficiency\": {\n" +
+            "            \"איילת נחמיאס ורבין\": 0.031335149863760216,\n" +
+            "            \"איל בן-ראובן\": 0.051771117166212535,\n" +
+            "            \"איציק שמולי\": 0.08446866485013624,\n" +
+            "            \"איתן ברושי\": 0.035422343324250684,\n" +
+            "            \"איתן כבל\": 0.039509536784741145,\n" +
+            "            \"זוהיר בהלול\": 0.04495912806539509,\n" +
+            "            \"יואל חסון\": 0.051771117166212535,\n" +
+            "            \"יוסי יונה\": 0.03678474114441417,\n" +
+            "            \"יחיאל חיליק בר\": 0.08038147138964577,\n" +
+            "            \"יעל כהן פארן\": 0.0667574931880109,\n" +
+            "            \"יצחק הרצוג\": 0.01226158038147139,\n" +
+            "            \"לאה פדידה\": 0.020435967302452316,\n" +
+            "            \"מיכל בירן\": 0.02861035422343324,\n" +
+            "            \"מיקי רוזנטל\": 0.05313351498637602,\n" +
+            "            \"מרב מיכאלי\": 0.051771117166212535,\n" +
+            "            \"נחמן שי\": 0.07220708446866485,\n" +
+            "            \"סאלח סעד\": 0.013623978201634877,\n" +
+            "            \"סתיו שפיר\": 0.0667574931880109,\n" +
+            "            \"עמיר פרץ\": 0.0027247956403269754,\n" +
+            "            \"עמר בר-לב\": 0.02861035422343324,\n" +
+            "            \"ציפי לבני\": 0.020435967302452316,\n" +
+            "            \"קסניה סבטלובה\": 0.031335149863760216,\n" +
+            "            \"רויטל סויד\": 0.021798365122615803,\n" +
+            "            \"שלי יחימוביץ`\": 0.05313351498637602\n" +
+            "        },\n" +
+            "        \"party_efficiency\": 0.30583333333333335\n" +
+            "    },\n" +
+            "    \"הרשימה המשותפת\": {\n" +
+            "        \"memeber_efficiency\": {\n" +
+            "            \"אחמד טיבי\": 0.06801007556675064,\n" +
+            "            \"איימן עודה\": 0.11083123425692695,\n" +
+            "            \"ג'מעה אזברגה\": 0.10579345088161209,\n" +
+            "            \"ג`מאל זחאלקה\": 0.030226700251889168,\n" +
+            "            \"דב חנין\": 0.15113350125944586,\n" +
+            "            \"חנין זועבי\": 0.037783375314861464,\n" +
+            "            \"טלב אבו עראר\": 0.08060453400503778,\n" +
+            "            \"יוסף ג`בארין\": 0.07556675062972293,\n" +
+            "            \"יוסף עטאונה\": 0.020151133501259445,\n" +
+            "            \"מסעוד גנאים\": 0.055415617128463476,\n" +
+            "            \"סעיד אלחרומי\": 0.042821158690176324,\n" +
+            "            \"עאידה תומא סלימאן\": 0.07808564231738035,\n" +
+            "            \"עבד אלחכים חאג` יחיא\": 0.14357682619647355\n" +
+            "        },\n" +
+            "        \"party_efficiency\": 0.30538461538461537\n" +
+            "    },\n" +
+            "    \"ח”כ יחיד – אורלי לוי-אבקסיס\": {\n" +
+            "        \"memeber_efficiency\": {\n" +
+            "            \"אורלי לוי-אבקסיס\": 1\n" +
+            "        },\n" +
+            "        \"party_efficiency\": 0.16\n" +
+            "    },\n" +
+            "    \"יהדות התורה\": {\n" +
+            "        \"memeber_efficiency\": {\n" +
+            "            \"אורי מקלב\": 0.21465968586387435,\n" +
+            "            \"יעקב אשר\": 0.20418848167539266,\n" +
+            "            \"יעקב ליצמן\": 0.07853403141361257,\n" +
+            "            \"ישראל אייכלר\": 0.14136125654450263,\n" +
+            "            \"מנחם אליעזר מוזס\": 0.193717277486911,\n" +
+            "            \"משה גפני\": 0.16753926701570682\n" +
+            "        },\n" +
+            "        \"party_efficiency\": 0.31833333333333336\n" +
+            "    },\n" +
+            "    \"יש עתיד\": {\n" +
+            "        \"memeber_efficiency\": {\n" +
+            "            \"אלעזר שטרן\": 0.06501547987616099,\n" +
+            "            \"חיים ילין\": 0.10835913312693499,\n" +
+            "            \"יאיר לפיד\": 0.02476780185758514,\n" +
+            "            \"יואל רזבוזוב\": 0.07430340557275542,\n" +
+            "            \"יעל גרמן\": 0.15479876160990713,\n" +
+            "            \"יעקב פרי\": 0.09907120743034056,\n" +
+            "            \"מאיר כהן\": 0.13312693498452013,\n" +
+            "            \"מיקי לוי\": 0.17647058823529413,\n" +
+            "            \"עליזה לביא\": 0.08359133126934984,\n" +
+            "            \"עפר שלח\": 0.04953560371517028,\n" +
+            "            \"קארין אלהרר\": 0.030959752321981424\n" +
+            "        },\n" +
+            "        \"party_efficiency\": 0.29363636363636364\n" +
+            "    },\n" +
+            "    \"ישראל ביתנו\": {\n" +
+            "        \"memeber_efficiency\": {\n" +
+            "            \"חמד עמאר\": 0.2549019607843137,\n" +
+            "            \"יוליה מלינובסקי\": 0.20588235294117646,\n" +
+            "            \"סופה לנדבר\": 0.1715686274509804,\n" +
+            "            \"עודד פורר\": 0.18627450980392157,\n" +
+            "            \"רוברט אילטוב\": 0.18137254901960784\n" +
+            "        },\n" +
+            "        \"party_efficiency\": 0.408\n" +
+            "    },\n" +
+            "    \"כולנו\": {\n" +
+            "        \"memeber_efficiency\": {\n" +
+            "            \"אכרם חסון\": 0.1792452830188679,\n" +
+            "            \"אלי אלאלוף\": 0.11320754716981132,\n" +
+            "            \"אלי כהן\": 0.031446540880503145,\n" +
+            "            \"טלי פלוסקוב\": 0.1540880503144654,\n" +
+            "            \"יואב גלנט\": 0.03459119496855346,\n" +
+            "            \"יפעת שאשא ביטון\": 0.07547169811320754,\n" +
+            "            \"מיכאל אורן\": 0.07861635220125786,\n" +
+            "            \"מירב בן-ארי\": 0.07861635220125786,\n" +
+            "            \"רועי פולקמן\": 0.16037735849056603,\n" +
+            "            \"רחל עזריה\": 0.09433962264150944\n" +
+            "        },\n" +
+            "        \"party_efficiency\": 0.318\n" +
+            "    },\n" +
+            "    \"מרצ\": {\n" +
+            "        \"memeber_efficiency\": {\n" +
+            "            \"אילן גילאון\": 0.23076923076923078,\n" +
+            "            \"מיכל רוזין\": 0.25443786982248523,\n" +
+            "            \"משה (מוסי) רז\": 0.10059171597633136,\n" +
+            "            \"עיסאווי פריג`\": 0.22485207100591717,\n" +
+            "            \"תמר זנדברג\": 0.1893491124260355\n" +
+            "        },\n" +
+            "        \"party_efficiency\": 0.338\n" +
+            "    },\n" +
+            "    \"ש”ס\": {\n" +
+            "        \"memeber_efficiency\": {\n" +
+            "            \"דוד אזולאי\": 0.1095890410958904,\n" +
+            "            \"יואב בן-צור\": 0.1643835616438356,\n" +
+            "            \"יעקב מרגי\": 0.1278538812785388,\n" +
+            "            \"יצחק וקנין\": 0.1963470319634703,\n" +
+            "            \"יצחק כהן\": 0.136986301369863,\n" +
+            "            \"מיכאל מלכיאלי\": 0.228310502283105,\n" +
+            "            \"משולם נהרי\": 0.0365296803652968\n" +
+            "        },\n" +
+            "        \"party_efficiency\": 0.31285714285714283\n" +
+            "    }\n" +
+            "}";
+
     private float[] yData = { 5, 10, 15, 30, 40 };
     private String[] xData = { "Sony", "Huawei", "LG", "Apple", "Samsung" };
 
@@ -62,15 +265,111 @@ public class MainActivity extends HttpsConnection {
     @Override
     protected void onStart() {
         super.onStart();
-        connect(R.id.mainLayout);
+//        connect(R.id.mainLayout);
+        // TODO remove it
+        onConnectionSuccess();
     }
 
     @Override
     protected void onConnectionSuccess() {
-        creatingChart();
+        createEfficiencyChar();
+//        creatingChart();
     }
 
-    protected void creatingChart(){
+    private void createEfficiencyChar() {
+        JSONObject jsonObj = null;
+        try {
+           jsonObj = new JSONObject(jsonTest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        createBarChart(R.id.chart1, EFFICIENCY_T, jsonObj, EFFICIENCY, EFFICIENCY_M);
+    }
+
+    private void createProposalsChar() {
+
+    }
+
+    private void createMissingChar() {
+
+    }
+
+    private void createBarChart(int char_id, String description, JSONObject parties, String key, String keyMember) {
+
+        BarChart barChart = (BarChart) findViewById(char_id);
+        // add pie chart to main layout
+//        mainLayout.addView(barChart, 1000, 500);
+//        mainLayout.setBackgroundColor(Color.WHITE);
+
+        ArrayList<BarEntry> valueSet = new ArrayList<>();
+        ArrayList<String> xAxis = new ArrayList<>();
+
+        try {
+            Iterator<?> partyName = parties.keys();
+            int counter = 0;
+            while( partyName.hasNext() ) {
+                String name = (String)partyName.next();
+                // Add party name
+                xAxis.add(name);
+                // Get party's data
+                if ( parties.get(name) instanceof JSONObject ) {
+                    JSONObject data = (JSONObject)parties.get(name);
+                    float val = Math.round(((Number)data.get(key)).floatValue() * 100);
+                    BarEntry entry = new BarEntry(val, counter);
+                    // Get value of party
+                    valueSet.add(entry);
+                    // Go over party members
+                    if (data.get(keyMember) instanceof JSONObject ) {
+                        JSONObject memData = (JSONObject)data.get(keyMember);
+                        final JSONObject dataForShow = new JSONObject();
+                        Iterator<?> memName = memData.keys();
+                        while(memName.hasNext()) {
+                            String nameM = (String)memName.next();
+                            String valM = new DecimalFormat("##.##").format(((Number)memData.get(nameM)).floatValue() * 100);
+                            dataForShow.put(nameM, valM);
+                        }
+                        // set a chart value selected listener
+                        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+
+                            @Override
+                            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                                // display msg when value selected
+                                if (e == null)
+                                    return;
+
+                                Toast.makeText(MainActivity.this,
+                                        xData[e.getXIndex()] + " = " + dataForShow.toString(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onNothingSelected() {
+
+                            }
+                        });
+                    }
+                }
+                counter ++;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        BarDataSet barDataSet1 = new BarDataSet(valueSet, "Brand 1");
+        barDataSet1.setColor(Color.rgb(0, 155, 0));
+        barDataSet1.setColors(ColorTemplate.COLORFUL_COLORS);
+
+        BarDataSet dataSet = new BarDataSet(valueSet, "# of Calls");
+        ArrayList<BarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(barDataSet1);
+
+        BarData data = new BarData(xAxis, dataSet);
+        barChart.setData(data);
+        barChart.setDescription(description);
+        barChart.animateXY(2000, 2000);
+        barChart.invalidate();
+    }
+
+    protected void creatingChart(List<String> members, List<Float> membersPrec){
         mChart = new PieChart(this);
         // add pie chart to main layout
         mainLayout.addView(mChart, 1000, 500);
@@ -78,7 +377,7 @@ public class MainActivity extends HttpsConnection {
 
         // configure pie chart
         mChart.setUsePercentValues(true);
-        mChart.setDescription("Smartphones Market Share");
+        mChart.setDescription(TITLE_PIE);
 
         // enable hole and configure
         mChart.setDrawHoleEnabled(true);
