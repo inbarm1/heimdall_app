@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class ProfileActivity extends NevActivity {
+public class ProfileActivity extends HttpsConnection {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

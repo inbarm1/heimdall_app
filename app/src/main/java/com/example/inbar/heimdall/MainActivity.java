@@ -1,20 +1,11 @@
 package com.example.inbar.heimdall;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -34,8 +25,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
-public class MainActivity extends NevActivity {
+public class MainActivity extends HttpsConnection {
 
     private PieChart mChart;
     private ConstraintLayout mainLayout;
@@ -67,6 +57,16 @@ public class MainActivity extends NevActivity {
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        connect(R.id.mainLayout);
+    }
+
+    @Override
+    protected void onConnectionSuccess() {
         creatingChart();
     }
 
