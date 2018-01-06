@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">heimdall</string>
+    <string name="app_name">Heimdall</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -80,4 +80,7 @@
     <string name="email_fmt">Email: %s</string>
     <string name="party">Party</string>
     <string name="failed_to_connect_to_server">Connection failed</string>
+    <string name="welcome_title">Welcome to Heimdall !</string>
+    <string name="register_main">ברוך הבא גיבור</string>
+    <string name="register_party">בחר מפלגה גבר</string>
 </resources>
