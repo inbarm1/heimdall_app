@@ -554,7 +554,7 @@ public class MainActivity extends HttpsConnection {
     @Override
     protected void onStart() {
         super.onStart();
-//        connect(R.id.mainLayout);
+//        getConnection(R.id.mainLayout);
         // TODO remove it
         onConnectionSuccess();
     }

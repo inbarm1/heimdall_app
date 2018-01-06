@@ -1,6 +1,8 @@
 package com.example.inbar.heimdall;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -8,62 +10,86 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 import javax.net.ssl.HttpsURLConnection;
 
 public class HttpsConnection extends NevActivity {
 
-    private HttpsURLConnection conn = null;
+    private final String USER_TOKEN="user_token";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    protected void connect(final int id_layer){
+    protected HttpsURLConnection getConnection(final int id_layer, String subDomain){
         try {
-            URL url = new URL("https://google.com");
-            conn = (HttpsURLConnection) url.openConnection();
+            URL url = new URL("http://api.heimdall.ga/"+subDomain);
+            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
             conn.setDoOutput(true);
             conn.setRequestProperty("Content-Type","application/json");
-            conn.setRequestProperty("Host", "android.schoolportal.gr");
             conn.connect();
             onConnectionSuccess();
+            return conn;
         } catch (Exception e) {
             e.printStackTrace();
             onConnectionFailed(id_layer);
+            return null;
         }
     }
 
-    protected void sendFirstConnection(final int id_layer) {
-        JSONObject message = new JSONObject();
+    protected String sendJson(final int id_layer, JSONObject message, String subDomain) {
         try {
-            message.put("name", "b");
-        } catch (JSONException e) {
-            onConnectionFailed(id_layer);
-        }
-        sendJson(id_layer, message);
-    }
+            String token = FirebaseInstanceId.getInstance().getToken();
+            message.put(USER_TOKEN, token);
+            HttpsURLConnection connection = getConnection(id_layer, subDomain);
 
-    protected void sendJson(final int id_layer, JSONObject message) {
-        try {
-            // Send POST output.
-            DataOutputStream printout = new DataOutputStream(conn.getOutputStream ());
-            printout.writeBytes(URLEncoder.encode(message.toString(),"UTF-8"));
-            printout.flush ();
-            printout.close ();
+            sendToConnection(message, connection);
+
+            return readFromConnection(connection);
+
         } catch (Exception e) {
             onConnectionFailed(id_layer);
+            Log.d("connection problem", e.getMessage());
+            return "";
         }
     }
+
+    private void sendToConnection(JSONObject message, HttpsURLConnection connection) throws IOException {
+        DataOutputStream out = new DataOutputStream(connection.getOutputStream ());
+        out.writeBytes(URLEncoder.encode(message.toString(),"UTF-8"));
+        out.flush ();
+        out.close ();
+    }
+
+    @NonNull
+    private String readFromConnection(HttpsURLConnection connection) throws IOException {
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        return response.toString();
+    }
+
     private void onConnectionFailed(final int id_layer) {
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
@@ -88,7 +114,7 @@ public class HttpsConnection extends NevActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 popupWindow.dismiss();
-                connect(id_layer);
+                //getConnection(id_layer);
                 return true;
             }
         });
@@ -101,6 +127,5 @@ public class HttpsConnection extends NevActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        conn.disconnect();
     }
 }

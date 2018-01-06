@@ -31,6 +31,7 @@ public class FirebaseActivity extends AppCompatActivity {
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
+
         // [END initialize_auth]
     }
 }
