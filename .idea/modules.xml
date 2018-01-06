@@ -3,8 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/heimdall.iml" filepath="$PROJECT_DIR$/heimdall.iml" />
+      <module fileurl="file://C:\Users\idan\Desktop\heimdall_app\heimdall.iml" filepath="C:\Users\idan\Desktop\heimdall_app\heimdall.iml" />
       <module fileurl="file://$PROJECT_DIR$/heimdall_app.iml" filepath="$PROJECT_DIR$/heimdall_app.iml" />
     </modules>
   </component>
