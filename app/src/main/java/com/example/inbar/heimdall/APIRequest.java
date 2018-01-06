@@ -29,6 +29,10 @@ public class APIRequest extends HttpsConnection {
     public final String END_DATE = "end_date";
 
 
+    public boolean isRegistered(int idLayer){
+        return sendJson(idLayer, new JSONObject(), "/isRegistered").equals("Success");
+    }
+
     public boolean register(int idLayer, int birthYear, String jobCategory, String residency, String party, InvolvementLevel involvementLevel){
         if(jobCategory == null || jobCategory.isEmpty() ||
                 party == null || party.isEmpty() ||
