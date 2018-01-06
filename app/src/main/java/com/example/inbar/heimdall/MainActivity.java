@@ -35,7 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends HttpsConnection {
+public class MainActivity extends APIRequest {
     public static final String EFFICIENCY   = "party_efficiency";
     public static final String PROPOSALS    = "num_of_proposals";
     public static final String MISSING      = "party_missing";
