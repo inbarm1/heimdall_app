@@ -1,6 +1,7 @@
 package com.example.inbar.heimdall;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -538,6 +539,9 @@ public class MainActivity extends HttpsConnection {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        Drawable myBadge = getMyBadge(R.id.mainLayout); TODO from getMyBadge return the resource as drawable
+        Drawable myBadge = getResources().getDrawable(R.drawable.rank1);
+        toolbar.setLogo(myBadge);
         setSupportActionBar(toolbar);
         mainLayout =  findViewById(R.id.mainLayout);
 

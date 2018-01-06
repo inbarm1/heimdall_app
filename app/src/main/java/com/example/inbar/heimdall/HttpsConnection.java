@@ -128,5 +128,6 @@ public class HttpsConnection extends NevActivity {
     @Override
     protected void onStop() {
         super.onStop();
+//        conn.disconnect();
     }
 }
