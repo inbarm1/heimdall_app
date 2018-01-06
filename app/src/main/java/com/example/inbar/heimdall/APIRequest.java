@@ -114,6 +114,14 @@ public class APIRequest extends HttpsConnection {
         }
     }
 
+    public String getUserAssociatedParty(int idLayer) {
+        JSONObject request = new JSONObject();
+        try {
+            return (new JSONObject(sendJson(idLayer, request, "/getUserAssociatedParty"))).getString("user_party");
+        } catch (JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
 
     public JSONObject getUserDistribution(int idLayer, String lawName){
         JSONObject request = new JSONObject();
