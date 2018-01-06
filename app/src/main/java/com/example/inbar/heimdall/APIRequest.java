@@ -21,9 +21,15 @@ public class APIRequest extends HttpsConnection {
     public final String  VOTE = "vote";
     public final String  TAG = "tags";
 
-    
+    public final String  ELECTED_OFFICIAL = "elected_official";
+
 
     public boolean register(int idLayer, int birthYear, String jobCategory, String residency, String party, InvolvementLevel involvementLevel){
+        if(jobCategory == null || jobCategory.isEmpty() ||
+                party == null || party.isEmpty() ||
+                residency == null || residency.isEmpty() ||
+                birthYear == 0)
+            throw new RuntimeException("Ileagal registration form");
         JSONObject request = new JSONObject();
         try {
             request.put(BIRTH_YEAR, birthYear);
@@ -43,25 +49,36 @@ public class APIRequest extends HttpsConnection {
     public boolean updatePersonalInfo(int idLayer, String jobCategory, String residency, String party, InvolvementLevel involvementLevel){
         JSONObject request = new JSONObject();
         try {
-            request.put(JOB_CATEGORY, jobCategory);
-            request.put(RESIDENCY, residency);
-            request.put(PARTY, party);
-            request.put(INVOLVEMENT_LEVEL, involvementLevel.getName());
+            if(jobCategory != null && !jobCategory.isEmpty()) {
+                request.put(JOB_CATEGORY, jobCategory);
+            }
+            if(residency != null && !residency.isEmpty()) {
+                request.put(RESIDENCY, residency);
+            }
+            if(party != null && !party.isEmpty()) {
+                request.put(PARTY, party);
+            }
+            if(involvementLevel != null) {
+                request.put(INVOLVEMENT_LEVEL, involvementLevel.getName());
+            }
         }
         catch (JSONException e){
             throw new RuntimeException(e);
         }
-        if (sendJson(idLayer, request, "/updatePersonalInfo").equals(SUCCESS))
-            return true;
-        return false;
+
+        return request.length() > 0 && sendJson(idLayer, request, "/updatePersonalInfo").equals(SUCCESS);
     }
 
     public JSONObject lawVoteSubmit(int idLayer, String lawName, UserVote userVote, String tag){
         JSONObject request = new JSONObject();
+        if(lawName.isEmpty())
+            throw new RuntimeException("Empty law name");
         try {
             request.put(LAW_NAME, lawName);
             request.put(VOTE, userVote.getName());
-            request.put(TAG, tag);
+            if(tag != null && !tag.isEmpty()) {
+                request.put(TAG, tag);
+            }
             return new JSONObject(sendJson(idLayer, request, "/lawVoteSubmit"));
         }
         catch (JSONException e){
@@ -88,4 +105,37 @@ public class APIRequest extends HttpsConnection {
             throw new RuntimeException(e);
         }
     }
+
+
+    public JSONObject getUserDistribution(int idLayer, String lawName){
+        JSONObject request = new JSONObject();
+        try {
+            request.put(LAW_NAME, lawName);
+            return new JSONObject(sendJson(idLayer, request, "/getUserDistribution"));
+        }
+        catch (JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public JSONObject getUserToElectedOfficialMatchByTag(int idLayer, String electedOfficial, String tag){
+        JSONObject request = new JSONObject();
+        if(electedOfficial.isEmpty())
+            throw new RuntimeException("Empty elected official");
+        try {
+            request.put(ELECTED_OFFICIAL, electedOfficial);
+            if(tag != null && !tag.isEmpty()){
+                request.put(TAG, tag);
+            }
+            return new JSONObject(sendJson(idLayer, request, "/getUserToElectedOfficialMatchByTag"));
+        }
+        catch (JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
+
 }
