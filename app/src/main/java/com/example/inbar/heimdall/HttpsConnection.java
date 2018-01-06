@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import javax.net.ssl.HttpsURLConnection;
@@ -32,10 +33,10 @@ public class HttpsConnection extends NevActivity {
         super.onCreate(savedInstanceState);
     }
 
-    protected HttpsURLConnection getConnection(final int id_layer, String subDomain){
+    protected HttpURLConnection getConnection(final int id_layer, String subDomain){
         try {
             URL url = new URL("http://api.heimdall.ga/"+subDomain);
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
             conn.setRequestMethod("POST");
@@ -56,7 +57,7 @@ public class HttpsConnection extends NevActivity {
         try {
             String token = FirebaseInstanceId.getInstance().getToken();
             message.put(USER_TOKEN, token);
-            HttpsURLConnection connection = getConnection(id_layer, subDomain);
+            HttpURLConnection connection = getConnection(id_layer, subDomain);
 
             sendToConnection(message, connection);
 
@@ -69,7 +70,7 @@ public class HttpsConnection extends NevActivity {
         }
     }
 
-    private void sendToConnection(JSONObject message, HttpsURLConnection connection) throws IOException {
+    private void sendToConnection(JSONObject message, HttpURLConnection connection) throws IOException {
         DataOutputStream out = new DataOutputStream(connection.getOutputStream ());
         out.writeBytes(URLEncoder.encode(message.toString(),"UTF-8"));
         out.flush ();
@@ -77,7 +78,7 @@ public class HttpsConnection extends NevActivity {
     }
 
     @NonNull
-    private String readFromConnection(HttpsURLConnection connection) throws IOException {
+    private String readFromConnection(HttpURLConnection connection) throws IOException {
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(connection.getInputStream()));
         String inputLine;
