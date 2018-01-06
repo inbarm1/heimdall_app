@@ -8,9 +8,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.github.mikephil.charting.charts.PieChart;
+import com.example.inbar.heimdall.Law.Law;
+import com.example.inbar.heimdall.Law.LawActivity;
 
 public class NevActivity extends FirebaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,7 +47,7 @@ public class NevActivity extends FirebaseActivity
 
         // prepare intent which is triggered if the
         // notification is selected
-        Intent intent = new Intent(this, LawActivity.class);
+        Intent intent = new Intent(this, LawActivityOld.class);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         this,
@@ -84,14 +82,12 @@ public class NevActivity extends FirebaseActivity
             startActivity(intent);
         } else if (id == R.id.nav_personal_statistics) {
 
-        } else if (id == R.id.nav_laws) {
-            Intent intent = new Intent(NevActivity.this,LawActivity.class);
+        }  else if (id == R.id.nav_general_statistics) {
+            Intent intent = new Intent(NevActivity.this,MainActivity.class);
             startActivity(intent);
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        }else if (id == R.id.nav_laws) {
+            Intent intent = new Intent(NevActivity.this, LawActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_log_out){
             // Firebase sign out
             mAuth.signOut();

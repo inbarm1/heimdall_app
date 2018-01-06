@@ -30,7 +30,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="235dp"
+                    android:layout_marginStart="210dp"
                     android:layout_marginTop="8dp"
                     android:textStyle="bold"
                     android:textSize="20dp"
@@ -40,9 +40,9 @@
 
                 <Spinner
                     android:id="@+id/tag"
-                    android:layout_width="220dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:textColor="#212121" />
 
             </RelativeLayout>
@@ -63,7 +63,7 @@
                     android:layout_marginTop="8dp"
                     android:textStyle="bold"
                     android:textSize="20dp"
-                    android:text="יעילות המפלגות"
+                    android:text="התאמה למפלגה"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#727272" />
 

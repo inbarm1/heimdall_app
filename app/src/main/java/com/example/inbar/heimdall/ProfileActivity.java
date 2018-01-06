@@ -54,12 +54,4 @@ public class ProfileActivity extends APIRequest {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-//        connect(R.id.mainLayout);
-        // TODO remove it
-        onConnectionSuccess();
-    }
 }

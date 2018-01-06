@@ -12,8 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -29,6 +32,7 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -49,6 +53,7 @@ public class MainActivity extends APIRequest {
     public static final String PROPOSALS_T  = "הצעות חוק";
     public static final String MISSING_T    = "העדרויות";
     public static final String TITLE_PIE    = "התפלגות";
+    public static final String GENERAL      = "כללי";
     Map<String, JSONObject> chart1 = new HashMap<>();
     Map<String, JSONObject> chart2 = new HashMap<>();
     Map<String, JSONObject> chart3 = new HashMap<>();
@@ -57,6 +62,7 @@ public class MainActivity extends APIRequest {
     private PopupWindow mPopupWindow;
     PieChart mChart;
     View customView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,28 +85,64 @@ public class MainActivity extends APIRequest {
     @Override
     protected void onStart() {
         super.onStart();
-        createEfficiencyChar();
-        createMissingChar();
-        createProposalsChar();
+        createTags();
+        createCharts(null);
     }
 
-    private void createEfficiencyChar() {
-//        JSONObject jsonObj = null;
-//        try {
-//           jsonObj = new JSONObject(jsonTest);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-        createBarChart(R.id.chart1, getAllPartiesEfficiencyByTag(R.id.main_layout, null), EFFICIENCY, EFFICIENCY_M, chart1);
+    private void createCharts(String tag){
+        createEfficiencyChar(tag);
+        createMissingChar(tag);
+        createProposalsChar(tag);
+    }
+    private void createTags() {
+        JSONObject category = getCategoryNames(R.id.main_layout);
+        final ArrayList<String> tags = new ArrayList<String>();
+        try {
+            tags.add(GENERAL);
+            JSONArray jsonTags = (JSONArray)category.get(TAG);
+            for (int i=0; i< jsonTags.length(); i++) {
+                final String name = (String) jsonTags.get(i);
+                // Add party name
+                if (name.equals(GENERAL)) {
+                    continue;
+                }
+                tags.add(name);
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
+            Spinner spinTag = (Spinner)findViewById(R.id.tag);
+            spinTag.setAdapter(adapter);
+
+            spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    createCharts(tags.get(position));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    createCharts(null);
+                }
+
+            });
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void createProposalsChar() {
-        createBarChart(R.id.chart2, getAllLawProposalsByTag(R.id.main_layout, null), PROPOSALS, PROPOSALS_M, chart2);
+    private void createEfficiencyChar(String tag) {
+        createBarChart(R.id.chart1, getAllPartiesEfficiencyByTag(R.id.main_layout, tag), EFFICIENCY, EFFICIENCY_M, chart1);
+    }
+
+    private void createProposalsChar(String tag) {
+        createBarChart(R.id.chart2, getAllLawProposalsByTag(R.id.main_layout, tag), PROPOSALS, PROPOSALS_M, chart2);
 
     }
 
-    private void createMissingChar() {
-        createBarChart(R.id.chart3, getAllAbsentFromVotesByTag(R.id.main_layout, null), MISSING, MISSING_M, chart3);
+    private void createMissingChar(String tag) {
+        createBarChart(R.id.chart3, getAllAbsentFromVotesByTag(R.id.main_layout, tag), MISSING, MISSING_M, chart3);
     }
 
     private void createBarChart(int char_id, JSONObject parties, String key, String keyMember, final Map<String, JSONObject> map) {
