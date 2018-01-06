@@ -1,6 +1,7 @@
 package com.example.inbar.heimdall;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Gravity;
@@ -12,7 +13,6 @@ import android.widget.PopupWindow;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -22,21 +22,25 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import javax.net.ssl.HttpsURLConnection;
+
 
 public class HttpsConnection extends NevActivity {
 
     private final String USER_TOKEN="user_token";
+    StrictMode.ThreadPolicy policy;
+    HttpURLConnection conn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     protected HttpURLConnection getConnection(final int id_layer, String subDomain){
         try {
             URL url = new URL("http://api.heimdall.ga"+subDomain);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
             conn.setRequestMethod("POST");
@@ -44,7 +48,6 @@ public class HttpsConnection extends NevActivity {
             conn.setDoOutput(true);
             conn.setRequestProperty("Content-Type","application/json");
             conn.connect();
-            onConnectionSuccess();
             return conn;
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,15 +126,5 @@ public class HttpsConnection extends NevActivity {
                 return true;
             }
         });
-    }
-
-    protected void onConnectionSuccess(){
-        //Do nothing
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        conn.disconnect();
     }
 }
