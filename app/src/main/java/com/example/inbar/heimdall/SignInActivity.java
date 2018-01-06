@@ -183,6 +183,7 @@ public class SignInActivity extends FirebaseActivity implements
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        FirebaseUser currentUser = mAuth.getCurrentUser();
                         updateUI(null);
                     }
                 });

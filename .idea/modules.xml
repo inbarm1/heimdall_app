@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/heimdall.iml" filepath="$PROJECT_DIR$/heimdall.iml" />
+      <module fileurl="file://C:\Users\oferh_000\Documents\Wedding\heimdall_app\heimdall.iml" filepath="C:\Users\oferh_000\Documents\Wedding\heimdall_app\heimdall.iml" />
+      <module fileurl="file://C:\Users\inbar\Desktop\sadna\code\heimdall\heimdall_app.iml" filepath="C:\Users\inbar\Desktop\sadna\code\heimdall\heimdall_app.iml" />
     </modules>
   </component>
 </project>
