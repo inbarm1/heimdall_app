@@ -97,8 +97,5 @@ public class APIRequest extends HttpsConnection {
             throw new RuntimeException(e);
         }
     }
-
-    public JSONObject generalInfoPartiesEfficency(int idLayer, String) {
-
-    }
+    
 }
