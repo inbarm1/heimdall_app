@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -15,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -39,6 +36,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static android.graphics.Color.rgb;
+
 public class MainActivity extends APIRequest {
     public static final String EFFICIENCY   = "party_efficiency";
     public static final String PROPOSALS    = "num_of_proposals";
@@ -59,14 +58,10 @@ public class MainActivity extends APIRequest {
     PieChart mChart;
     View customView;
 
-    StrictMode.ThreadPolicy policy;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mainLayout =  findViewById(R.id.mainLayout);
@@ -111,9 +106,10 @@ public class MainActivity extends APIRequest {
     private void createBarChart(int char_id, JSONObject parties, String key, String keyMember, final Map<String, JSONObject> map) {
 
         BarChart barChart = (BarChart) findViewById(char_id);
-
+        String userPartyName = getUserAssociatedParty(R.id.main_layout);
         final ArrayList<BarEntry> valueSet = new ArrayList<>();
         final ArrayList<String> xAxis = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<Integer>();
 
         try {
             Iterator<?> partyName = parties.keys();
@@ -127,6 +123,11 @@ public class MainActivity extends APIRequest {
                     JSONObject data = (JSONObject)parties.get(name);
                     float val = Math.round((((Number)data.get(key)).floatValue() * 100 * 100.0) / 100.0);
                     BarEntry entry = new BarEntry(val, counter);
+                    if (name.equals(userPartyName)) {
+                        colors.add(rgb(70,130,180));
+                    } else {
+                        colors.add(rgb(135,206,235));
+                    }
                     // Get value of party
                     valueSet.add(entry);
                     // Go over party members
@@ -204,7 +205,7 @@ public class MainActivity extends APIRequest {
         });
 
         BarDataSet dataSet = new BarDataSet(valueSet, "מפלגות");
-//        dataSet.setColors(getColors());
+        dataSet.setColors(colors);
 
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
