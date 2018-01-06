@@ -3,11 +3,8 @@ package com.example.inbar.heimdall;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.regex.Pattern;
 
 /**
  * Created by oferh_000 on 06-Jan-18.
@@ -104,21 +101,11 @@ public class APIRequest extends HttpsConnection {
         }
     }
 
-    public JSONArray lawNotification(int idLayer){
+    public JSONArray lawNotification(int idLayer) {
         JSONObject request = new JSONObject();
         try {
             return new JSONArray(sendJson(idLayer, request, "/lawNotification"));
-        }
-        catch (JSONException e){
-            throw new RuntimeException(e);
-        }
-    }
-
-    public String getUserAssociatedParty(int idLayer) {
-        JSONObject request = new JSONObject();
-        try {
-            return (new JSONObject(sendJson(idLayer, request, "/getUserAssociatedParty"))).getString("user_party");
-        } catch (JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }
@@ -187,9 +174,66 @@ public class APIRequest extends HttpsConnection {
     }
 
 
+    public String getUserAssociatedParty(int idLayer) {
+        JSONObject request = new JSONObject();
+        try {
+            return (new JSONObject(sendJson(idLayer, request, "/getUserAssociatedParty"))).getString("user_party");
+        } catch (JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
 
+    public JSONObject getAllAbsentFromVotesByTag(int idLayer, String tag) {
+        JSONObject request = new JSONObject();
+        try {
+            if(tag != null && !tag.isEmpty()) {
+                request.put(TAG, tag);
+            }
+            return new JSONObject(sendJson(idLayer, request, "/getAllAbsentFromVotesByTag"));
+        } catch (JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
 
+    public JSONObject getAllPartiesEfficiencyByTag(int idLayer, String tag) {
+        JSONObject request = new JSONObject();
+        try {
+            if(tag != null && !tag.isEmpty()) {
+                request.put(TAG, tag);
+            }
+            return new JSONObject(sendJson(idLayer, request, "/getAllPartiesEfficiencyByTag"));
+        } catch (JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
 
+    public JSONArray getElectedOfficials(int idLayer) {
+        JSONObject request = new JSONObject();
+        try {
+            return new JSONArray(sendJson(idLayer, request, "/getElectedOfficials"));
+        } catch (JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
 
+    public JSONObject getCategoryNames(int idLayer) {
+        JSONObject request = new JSONObject();
+        try {
+            return new JSONObject(sendJson(idLayer, request, "/getCategoryNames"));
+        } catch (JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
 
+    public JSONObject getAllLawProposalsByTag(int idLayer, String tag) {
+        JSONObject request = new JSONObject();
+        try {
+            if(tag != null && !tag.isEmpty()) {
+                request.put(TAG, tag);
+            }
+            return new JSONObject(sendJson(idLayer, request, "/getAllLawProposalsByTag"));
+        } catch (JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
 }
