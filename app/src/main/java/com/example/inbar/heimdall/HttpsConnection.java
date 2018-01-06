@@ -35,7 +35,7 @@ public class HttpsConnection extends NevActivity {
 
     protected HttpURLConnection getConnection(final int id_layer, String subDomain){
         try {
-            URL url = new URL("http://api.heimdall.ga/"+subDomain);
+            URL url = new URL("http://api.heimdall.ga"+subDomain);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
@@ -53,20 +53,20 @@ public class HttpsConnection extends NevActivity {
         }
     }
 
-    protected JSONObject sendJson(final int id_layer, JSONObject message, String subDomain) {
+    protected String sendJson(final int idLayer, JSONObject message, String subDomain) {
         try {
             String token = FirebaseInstanceId.getInstance().getToken();
             message.put(USER_TOKEN, token);
-            HttpURLConnection connection = getConnection(id_layer, subDomain);
+            HttpURLConnection connection = getConnection(idLayer, subDomain);
 
             sendToConnection(message, connection);
 
-            return new JSONObject(readFromConnection(connection));
+            return readFromConnection(connection);
 
         } catch (Exception e) {
-            onConnectionFailed(id_layer);
+            onConnectionFailed(idLayer);
             Log.d("connection problem", e.getMessage());
-            return  new JSONObject();
+            return  "";
         }
     }
 
