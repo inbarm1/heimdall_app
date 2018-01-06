@@ -4,6 +4,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.regex.Pattern;
+
 /**
  * Created by oferh_000 on 06-Jan-18.
  */
@@ -22,6 +27,9 @@ public class APIRequest extends HttpsConnection {
     public final String  TAG = "tags";
 
     public final String  ELECTED_OFFICIAL = "elected_official";
+
+    public final String START_DATE = "start_date";
+    public final String END_DATE = "end_date";
 
 
     public boolean register(int idLayer, int birthYear, String jobCategory, String residency, String party, InvolvementLevel involvementLevel){
@@ -66,7 +74,7 @@ public class APIRequest extends HttpsConnection {
             throw new RuntimeException(e);
         }
 
-        return request.length() > 0 && sendJson(idLayer, request, "/updatePersonalInfo").equals(SUCCESS);
+        return request.keys().hasNext() && sendJson(idLayer, request, "/updatePersonalInfo").equals(SUCCESS);
     }
 
     public JSONObject lawVoteSubmit(int idLayer, String lawName, UserVote userVote, String tag){
@@ -120,7 +128,7 @@ public class APIRequest extends HttpsConnection {
 
     public JSONObject getUserToElectedOfficialMatchByTag(int idLayer, String electedOfficial, String tag){
         JSONObject request = new JSONObject();
-        if(electedOfficial.isEmpty())
+        if(electedOfficial == null || electedOfficial.isEmpty())
             throw new RuntimeException("Empty elected official");
         try {
             request.put(ELECTED_OFFICIAL, electedOfficial);
@@ -133,6 +141,44 @@ public class APIRequest extends HttpsConnection {
             throw new RuntimeException(e);
         }
     }
+
+    public JSONObject getUserPartiesVotesMatchByTag(int idLayer, String tag){
+        JSONObject request = new JSONObject();
+        try {
+            if(tag != null && !tag.isEmpty()){
+                request.put(TAG, tag);
+            }
+            return new JSONObject(sendJson(idLayer, request, "/getUserPartiesVotesMatchByTag"));
+        }
+        catch (JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public JSONObject getLawsByDateInterval(int idLayer, String startDate, String endDate){
+
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        if(startDate == null || startDate.isEmpty() ||
+                endDate == null || endDate.isEmpty())
+            throw new RuntimeException("start/end date cant be empty/null");
+        try{
+            format.parse(endDate);
+            format.parse(startDate);
+        } catch (ParseException e){
+            throw new RuntimeException("start/end date must be in format of dd/MM/yyyy",e);
+        }
+        JSONObject request = new JSONObject();
+        try {
+            request.put(START_DATE, startDate);
+            request.put(END_DATE, endDate);
+            return new JSONObject(sendJson(idLayer, request, "/getLawsByDateInterval"));
+        }
+        catch (JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
 
 
