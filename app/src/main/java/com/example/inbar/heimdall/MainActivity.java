@@ -1,12 +1,20 @@
 package com.example.inbar.heimdall;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -25,13 +33,9 @@ import com.github.mikephil.charting.data.BarEntry;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends HttpsConnection {
@@ -50,7 +54,9 @@ public class MainActivity extends HttpsConnection {
     Map<String, JSONObject> chart3 = new HashMap<>();
 
     private CoordinatorLayout mainLayout;
+    private PopupWindow mPopupWindow;
     PieChart mChart;
+    View customView;
     String jsonTest1 = "{\n" +
             "    \"אינם חברי כנסת\": {\n" +
             "        \"member_missing\": {},\n" +
@@ -625,7 +631,7 @@ public class MainActivity extends HttpsConnection {
                         Iterator<?> memName = memData.keys();
                         while(memName.hasNext()) {
                             String nameM = (String)memName.next();
-                            String valM = new DecimalFormat("##.##").format(((Number)memData.get(nameM)).floatValue() * 100);
+                            float valM = ((Number)memData.get(nameM)).floatValue() * 100;
                             dataForShow.put(nameM, valM);
                         }
                         map.put(name,dataForShow);
@@ -645,9 +651,45 @@ public class MainActivity extends HttpsConnection {
                 if (e == null)
                     return;
 
+
+                // Get the application context
+                Context mContext = getApplicationContext();
                 String name = xAxis.get(e.getXIndex());
-                Toast.makeText(MainActivity.this,
-                        (name + " = " + map.get(name).toString()), Toast.LENGTH_SHORT).show();
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+                // Inflate the custom layout/view
+                customView = inflater.inflate(R.layout.activity_pop_piechart,null);
+
+                // Initialize a new instance of popup window
+                 mPopupWindow = new PopupWindow(
+                        customView,
+                        CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                        CoordinatorLayout.LayoutParams.WRAP_CONTENT
+                );
+
+                // Set an elevation value for popup window
+                // Call requires API level 21
+                if(Build.VERSION.SDK_INT>=21){
+                    mPopupWindow.setElevation(5.0f);
+                }
+
+                // Get a reference for the custom view close button
+                ImageButton closeButton = (ImageButton) customView.findViewById(R.id.ib_close);
+
+                // Set a click listener for the popup window close button
+                closeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Dismiss the popup window
+                        mPopupWindow.dismiss();
+                    }
+                });
+
+//                creatingChart(map.get(name));
+//                Toast.makeText(MainActivity.this,
+//                        (name + " = " + map.get(name).toString()), Toast.LENGTH_SHORT).show();
+                mPopupWindow.showAtLocation(mainLayout, Gravity.CENTER,0,0);
+
             }
 
             @Override
@@ -657,7 +699,7 @@ public class MainActivity extends HttpsConnection {
         });
 
         BarDataSet dataSet = new BarDataSet(valueSet, "מפלגות");
-        dataSet.setColors(getColors());
+//        dataSet.setColors(getColors());
 
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
@@ -667,10 +709,12 @@ public class MainActivity extends HttpsConnection {
     }
 
     protected void creatingChart(final JSONObject data){
+//        mChart = (PieChart) findViewById(R.id.piechart);
+
         mChart = new PieChart(this);
         // add pie chart to main layout
-        mainLayout.addView(mChart, 1000, 500);
-        mainLayout.setBackgroundColor(Color.WHITE);
+//        customView.(mChart, 1000, 500);
+        customView.setBackgroundColor(Color.WHITE);
 
         // configure pie chart
         mChart.setUsePercentValues(true);
@@ -686,27 +730,8 @@ public class MainActivity extends HttpsConnection {
         mChart.setRotationAngle(0);
         mChart.setRotationEnabled(true);
 
-        // set a chart value selected listener
-        mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-
-            @Override
-            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                // display msg when value selected
-                if (e == null)
-                    return;
-
-                Toast.makeText(MainActivity.this,
-                        data.get(e.getXIndex()) + " = " + e.getVal() + "%", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
-
         // add data
-        addData();
+        addData(data);
 
         // customize legends
         Legend l = mChart.getLegend();
@@ -715,35 +740,38 @@ public class MainActivity extends HttpsConnection {
         l.setYEntrySpace(5);
     }
 
-    private void addData() {
+    private void addData(JSONObject dataMem) {
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
-
-        for (int i = 0; i < yData.length; i++)
-            yVals1.add(new Entry(yData[i], i));
-
-        ArrayList<String> xVals = new ArrayList<String>();
-
-        Collections.addAll(xVals, );
+        ArrayList<String> xData = new ArrayList<>();
+        int counter = 0;
+        Iterator<?> memName = dataMem.keys();
+        try {
+            while(memName.hasNext()) {
+                final String nameM = (String) memName.next();
+                xData.add(nameM);
+                float val = ((Number)dataMem.get(nameM)).floatValue() * 100;
+                yVals1.add(new Entry(val, counter));
+                counter++;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         // create pie data set
-        PieDataSet dataSet = new PieDataSet(yVals1, "Market Share");
+        PieDataSet dataSet = new PieDataSet(yVals1, "התפלגות חברי כנסת");
         dataSet.setSliceSpace(3);
         dataSet.setSelectionShift(5);
-
-
         dataSet.setColors(getColors());
 
         // instantiate pie data object now
-        PieData data = new PieData(xVals, dataSet);
+        PieData data = new PieData(xData, dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.GRAY);
 
         mChart.setData(data);
-
         // undo all highlights
         mChart.highlightValues(null);
-
         // update pie chart
         mChart.invalidate();
     }
