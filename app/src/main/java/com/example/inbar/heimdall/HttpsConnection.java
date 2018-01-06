@@ -57,10 +57,11 @@ public class HttpsConnection extends NevActivity {
     }
 
     protected String sendJson(final int idLayer, JSONObject message, String subDomain) {
+        HttpURLConnection connection = null;
         try {
             String token = FirebaseInstanceId.getInstance().getToken();
             message.put(USER_TOKEN, token);
-            HttpURLConnection connection = getConnection(idLayer, subDomain);
+            connection = getConnection(idLayer, subDomain);
 
             sendToConnection(message, connection);
 
@@ -70,6 +71,9 @@ public class HttpsConnection extends NevActivity {
             onConnectionFailed(idLayer);
             Log.d("connection problem", e.getMessage());
             return  "";
+        } finally {
+            if(connection != null)
+                connection.disconnect();
         }
     }
 
