@@ -58,8 +58,8 @@ public class MainActivity extends APIRequest {
     Map<String, JSONObject> chart2 = new HashMap<>();
     Map<String, JSONObject> chart3 = new HashMap<>();
 
-    private CoordinatorLayout mainLayout;
-    private PopupWindow mPopupWindow;
+    protected CoordinatorLayout mainLayout;
+    protected PopupWindow mPopupWindow;
     PieChart mChart;
     View customView;
 
@@ -89,12 +89,13 @@ public class MainActivity extends APIRequest {
         createCharts(null);
     }
 
-    private void createCharts(String tag){
+    protected void createCharts(String tag){
         createEfficiencyChar(tag);
         createMissingChar(tag);
         createProposalsChar(tag);
     }
-    private void createTags() {
+
+    protected void createTags() {
         JSONObject category = getCategoryNames(R.id.main_layout);
         final ArrayList<String> tags = new ArrayList<String>();
         try {
