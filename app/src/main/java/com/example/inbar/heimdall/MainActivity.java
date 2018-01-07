@@ -138,7 +138,7 @@ public class MainActivity extends APIRequest {
         }
     }
 
-    private void createEfficiencyChar(String tag) {
+    private void createEfficiencyChar(final String tag) {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
@@ -148,7 +148,7 @@ public class MainActivity extends APIRequest {
         thread.start();
     }
 
-    private void createProposalsChar(String tag) {
+    private void createProposalsChar(final String tag) {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
@@ -158,7 +158,7 @@ public class MainActivity extends APIRequest {
         thread.start();
     }
 
-    private void createMissingChar(String tag) {
+    private void createMissingChar(final String tag) {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
