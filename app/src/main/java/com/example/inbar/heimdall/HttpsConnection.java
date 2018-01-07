@@ -29,19 +29,15 @@ import java.util.Iterator;
 public class HttpsConnection extends NevActivity {
 
     private final String USER_TOKEN="user_token";
-    StrictMode.ThreadPolicy policy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
     }
 
     protected HttpURLConnection getConnection(final int id_layer, String subDomain){
         try {
-            //URL url = new URL("http://api.heimdall.ga"+subDomain);
-            URL url = new URL("http://192.168.1.115:8080"+subDomain);
+            URL url = new URL("http://api.heimdall.ga"+subDomain);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);

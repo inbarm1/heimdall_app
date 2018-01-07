@@ -85,8 +85,14 @@ public class MainActivity extends APIRequest {
     @Override
     protected void onStart() {
         super.onStart();
-        createTags();
-        createCharts(null);
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                createTags();
+                createCharts(null);
+            }
+        });
+        thread.start();
     }
 
     private void createCharts(String tag){
@@ -133,16 +139,33 @@ public class MainActivity extends APIRequest {
     }
 
     private void createEfficiencyChar(String tag) {
-        createBarChart(R.id.chart1, getAllPartiesEfficiencyByTag(R.id.mainLayout, tag), EFFICIENCY, EFFICIENCY_M, chart1);
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                createBarChart(R.id.chart1, getAllPartiesEfficiencyByTag(R.id.mainLayout, tag), EFFICIENCY, EFFICIENCY_M, chart1);
+            }
+        });
+        thread.start();
     }
 
     private void createProposalsChar(String tag) {
-        createBarChart(R.id.chart2, getAllLawProposalsByTag(R.id.mainLayout, tag), PROPOSALS, PROPOSALS_M, chart2);
-
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                createBarChart(R.id.chart2, getAllLawProposalsByTag(R.id.mainLayout, tag), PROPOSALS, PROPOSALS_M, chart2);
+            }
+        });
+        thread.start();
     }
 
     private void createMissingChar(String tag) {
-        createBarChart(R.id.chart3, getAllAbsentFromVotesByTag(R.id.mainLayout, tag), MISSING, MISSING_M, chart3);
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                createBarChart(R.id.chart3, getAllAbsentFromVotesByTag(R.id.mainLayout, tag), MISSING, MISSING_M, chart3);
+            }
+        });
+        thread.start();
     }
 
     private void createBarChart(int char_id, JSONObject parties, String key, String keyMember, final Map<String, JSONObject> map) {
