@@ -95,7 +95,7 @@ public class MainActivity extends APIRequest {
         createProposalsChar(tag);
     }
     private void createTags() {
-        JSONObject category = getCategoryNames(R.id.main_layout);
+        JSONObject category = getCategoryNames(R.id.mainLayout);
         final ArrayList<String> tags = new ArrayList<String>();
         try {
             tags.add(GENERAL);
@@ -133,22 +133,22 @@ public class MainActivity extends APIRequest {
     }
 
     private void createEfficiencyChar(String tag) {
-        createBarChart(R.id.chart1, getAllPartiesEfficiencyByTag(R.id.main_layout, tag), EFFICIENCY, EFFICIENCY_M, chart1);
+        createBarChart(R.id.chart1, getAllPartiesEfficiencyByTag(R.id.mainLayout, tag), EFFICIENCY, EFFICIENCY_M, chart1);
     }
 
     private void createProposalsChar(String tag) {
-        createBarChart(R.id.chart2, getAllLawProposalsByTag(R.id.main_layout, tag), PROPOSALS, PROPOSALS_M, chart2);
+        createBarChart(R.id.chart2, getAllLawProposalsByTag(R.id.mainLayout, tag), PROPOSALS, PROPOSALS_M, chart2);
 
     }
 
     private void createMissingChar(String tag) {
-        createBarChart(R.id.chart3, getAllAbsentFromVotesByTag(R.id.main_layout, tag), MISSING, MISSING_M, chart3);
+        createBarChart(R.id.chart3, getAllAbsentFromVotesByTag(R.id.mainLayout, tag), MISSING, MISSING_M, chart3);
     }
 
     private void createBarChart(int char_id, JSONObject parties, String key, String keyMember, final Map<String, JSONObject> map) {
 
         BarChart barChart = (BarChart) findViewById(char_id);
-        String userPartyName = getUserAssociatedParty(R.id.main_layout);
+        String userPartyName = getUserAssociatedParty(R.id.mainLayout);
         final ArrayList<BarEntry> valueSet = new ArrayList<>();
         final ArrayList<String> xAxis = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -257,12 +257,12 @@ public class MainActivity extends APIRequest {
     }
 
     protected void creatingChart(final JSONObject data){
-//        mChart = (PieChart) findViewById(R.id.piechart);
+        mChart = (PieChart) findViewById(R.id.piechart);
 
-        mChart = new PieChart(this);
+//        mChart = new PieChart(this);
         // add pie chart to main layout
 //        customView.(mChart, 1000, 500);
-        customView.setBackgroundColor(Color.WHITE);
+//        customView.setBackgroundColor(Color.WHITE);
 
         // configure pie chart
         mChart.setUsePercentValues(true);

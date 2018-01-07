@@ -76,11 +76,11 @@ public class SignInActivity extends APIRequest implements
         hideProgressDialog();
         if (user != null) {
             Intent intent;
-            if(isRegistered)
-                intent = new Intent(SignInActivity.this, MainActivity.class);
-            else
-                intent = new Intent(SignInActivity.this, RegisterActivity.class);
-            startActivity(intent);
+//            if(isRegistered)
+//                intent = new Intent(SignInActivity.this, MainActivity.class);
+//            else
+//                intent = new Intent(SignInActivity.this, RegisterActivity.class);
+//            startActivity(intent);
 //            mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
 //            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
 //
