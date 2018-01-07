@@ -29,7 +29,7 @@ import static com.example.inbar.heimdall.MainActivity.GENERAL;
 public class PersonalStatisticsActivity extends APIRequest {
 
     protected CoordinatorLayout personalLayout;
-    protected  PieChart pChart;
+    protected PieChart pChart;
     protected String currTag = null;
     protected String currElected = null;
 
