@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -35,6 +37,12 @@ import com.github.mikephil.charting.data.BarEntry;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -63,6 +71,78 @@ public class MainActivity extends APIRequest {
     PieChart mChart;
     View customView;
 
+    private final static int CHART_1 = 0;
+    private final static int CHART_2 = 1;
+    private final static int CHART_3 = 2;
+    private final static int TAGS_HANDLER = 3;
+    private static String userPartyName;
+
+    private String readFromMessage(Message msg) throws IOException {
+        InputStream is = (InputStream)msg.obj;
+        BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        StringBuilder responseStrBuilder = new StringBuilder();
+
+        String inputStr;
+        while ((inputStr = streamReader.readLine()) != null)
+            responseStrBuilder.append(inputStr);
+
+        return responseStrBuilder.toString();
+    }
+
+    private Handler handler_ = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            try {
+                switch (msg.what) {
+                    case CHART_1:
+                        JSONObject data1 = new JSONObject(readFromMessage(msg));
+                        createBarChart(R.id.chart1, data1,userPartyName,  EFFICIENCY, EFFICIENCY_M, chart1);
+                        break;
+                    case CHART_2:
+                        JSONObject data2 = new JSONObject(readFromMessage(msg));
+                        createBarChart(R.id.chart2, data2,userPartyName,  PROPOSALS, PROPOSALS_M, chart2);
+                        break;
+                    case CHART_3:
+                        JSONObject data3 = new JSONObject(readFromMessage(msg));
+                        createBarChart(R.id.chart3, data3,userPartyName, MISSING, MISSING_M, chart3);
+                        break;
+                    case TAGS_HANDLER:
+                        JSONObject category = new JSONObject(readFromMessage(msg));
+                        analyzeTags(category);
+                        break;
+
+                }
+            }catch(IOException e){
+                throw new RuntimeException(e);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
+    };
+
+    private void analyzeTags(JSONObject category) {
+        final ArrayList<String> tags = new ArrayList<String>();
+        try {
+            tags.add(GENERAL);
+            JSONArray jsonTags = (JSONArray)category.get(TAG);
+            for (int i=0; i< jsonTags.length(); i++) {
+                final String name = (String) jsonTags.get(i);
+                // Add party name
+                if (name.equals(GENERAL)) {
+                    continue;
+                }
+                tags.add(name);
+            }
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        createFirstView(tags);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +168,14 @@ public class MainActivity extends APIRequest {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                createTags();
-                createCharts(null);
+                String str = getUserAssociatedParty(R.id.mainLayout);
+                userPartyName = str;
             }
         });
         thread.start();
+
+        createTags();
+        //createCharts(null);
     }
 
     private void createCharts(String tag){
@@ -100,49 +183,46 @@ public class MainActivity extends APIRequest {
         createMissingChar(tag);
         createProposalsChar(tag);
     }
+
     private void createTags() {
-        JSONObject category = getCategoryNames(R.id.mainLayout);
-        final ArrayList<String> tags = new ArrayList<String>();
-        try {
-            tags.add(GENERAL);
-            JSONArray jsonTags = (JSONArray)category.get(TAG);
-            for (int i=0; i< jsonTags.length(); i++) {
-                final String name = (String) jsonTags.get(i);
-                // Add party name
-                if (name.equals(GENERAL)) {
-                    continue;
-                }
-                tags.add(name);
+
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                String str = getCategoryNames(R.id.mainLayout).toString();
+                InputStream is = new ByteArrayInputStream(str.getBytes());
+                handler_.sendMessage(Message.obtain(handler_, TAGS_HANDLER, is));
+            }
+        });
+        thread.start();
+    }
+
+    private void createFirstView(final ArrayList<String> tags) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
+        Spinner spinTag = (Spinner)findViewById(R.id.tag);
+        spinTag.setAdapter(adapter);
+
+        spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                createCharts(tags.get(position));
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
-            Spinner spinTag = (Spinner)findViewById(R.id.tag);
-            spinTag.setAdapter(adapter);
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                createCharts(null);
+            }
 
-            spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    createCharts(tags.get(position));
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parentView) {
-                    createCharts(null);
-                }
-
-            });
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     private void createEfficiencyChar(final String tag) {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                createBarChart(R.id.chart1, getAllPartiesEfficiencyByTag(R.id.mainLayout, tag), EFFICIENCY, EFFICIENCY_M, chart1);
+                String str = getAllPartiesEfficiencyByTag(R.id.mainLayout, tag).toString();
+                InputStream is = new ByteArrayInputStream(str.getBytes());
+                handler_.sendMessage(Message.obtain(handler_, CHART_1, is));
             }
         });
         thread.start();
@@ -152,26 +232,33 @@ public class MainActivity extends APIRequest {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                createBarChart(R.id.chart2, getAllLawProposalsByTag(R.id.mainLayout, tag), PROPOSALS, PROPOSALS_M, chart2);
+                String str = getAllLawProposalsByTag(R.id.mainLayout, tag).toString();
+                InputStream is = new ByteArrayInputStream(str.getBytes());
+                handler_.sendMessage(Message.obtain(handler_, CHART_2, is));
             }
         });
         thread.start();
     }
+
+
 
     private void createMissingChar(final String tag) {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                createBarChart(R.id.chart3, getAllAbsentFromVotesByTag(R.id.mainLayout, tag), MISSING, MISSING_M, chart3);
+                String str = getAllAbsentFromVotesByTag(R.id.mainLayout, tag).toString();
+                InputStream is = new ByteArrayInputStream(str.getBytes());
+                handler_.sendMessage(Message.obtain(handler_, CHART_3, is));
             }
         });
         thread.start();
+
+
     }
 
-    private void createBarChart(int char_id, JSONObject parties, String key, String keyMember, final Map<String, JSONObject> map) {
+    private void createBarChart(int char_id, JSONObject parties, String userPartyName, String key, String keyMember, final Map<String, JSONObject> map) {
 
         BarChart barChart = (BarChart) findViewById(char_id);
-        String userPartyName = getUserAssociatedParty(R.id.mainLayout);
         final ArrayList<BarEntry> valueSet = new ArrayList<>();
         final ArrayList<String> xAxis = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<Integer>();
