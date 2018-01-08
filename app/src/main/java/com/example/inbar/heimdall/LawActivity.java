@@ -9,7 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class LawActivity extends HttpsConnection{
+public class LawActivity extends APIRequest{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

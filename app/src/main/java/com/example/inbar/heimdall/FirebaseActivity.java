@@ -1,7 +1,9 @@
 package com.example.inbar.heimdall;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -31,6 +33,11 @@ public class FirebaseActivity extends AppCompatActivity {
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
+
+
         // [END initialize_auth]
     }
+
+
+
 }

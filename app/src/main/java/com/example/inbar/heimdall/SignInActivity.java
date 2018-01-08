@@ -5,12 +5,6 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -19,19 +13,16 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 
-public class SignInActivity extends FirebaseActivity implements
+public class SignInActivity extends APIRequest implements
         View.OnClickListener {
 
     @VisibleForTesting
@@ -81,10 +72,14 @@ public class SignInActivity extends FirebaseActivity implements
         return true;
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(FirebaseUser user, boolean isRegistered) {
         hideProgressDialog();
         if (user != null) {
-            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+            Intent intent;
+            if(isRegistered)
+                intent = new Intent(SignInActivity.this, MainActivity.class);
+            else
+                intent = new Intent(SignInActivity.this, RegisterActivity.class);
             startActivity(intent);
 //            mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
 //            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
@@ -106,7 +101,7 @@ public class SignInActivity extends FirebaseActivity implements
         // Check for existing Google Sign In account, if the user is already signed in
 // the GoogleSignInAccount will be non-null.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        updateUI(currentUser, true);
     }
 
     @Override
@@ -131,13 +126,18 @@ public class SignInActivity extends FirebaseActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            if(isRegistered(R.id.main_layout_signin)) {
+                                updateUI(user, true);
+                            }
+                            else{
+                                updateUI(user, false);
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+                            updateUI(null, true);
                         }
 
                         // [START_EXCLUDE]
@@ -183,7 +183,8 @@ public class SignInActivity extends FirebaseActivity implements
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        updateUI(null);
+                        FirebaseUser currentUser = mAuth.getCurrentUser();
+                        updateUI(null, true);
                     }
                 });
     }
@@ -197,7 +198,7 @@ public class SignInActivity extends FirebaseActivity implements
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        updateUI(null);
+                        updateUI(null, true);
                     }
                 });
     }
