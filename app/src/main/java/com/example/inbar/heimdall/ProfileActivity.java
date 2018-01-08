@@ -59,7 +59,6 @@ public class ProfileActivity extends APIRequest {
     protected void onStart() {
         super.onStart();
 //        connect(R.id.mainLayout);
-        // TODO remove it
-        onConnectionSuccess();
+
     }
 }

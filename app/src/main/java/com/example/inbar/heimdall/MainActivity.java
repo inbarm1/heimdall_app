@@ -91,22 +91,22 @@ public class MainActivity extends APIRequest {
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-        createBarChart(R.id.chart1, getAllPartiesEfficiencyByTag(R.id.main_layout, null), EFFICIENCY, EFFICIENCY_M, chart1);
+        createBarChart(R.id.chart1, getAllPartiesEfficiencyByTag(R.id.mainLayout, null), EFFICIENCY, EFFICIENCY_M, chart1);
     }
 
     private void createProposalsChar() {
-        createBarChart(R.id.chart2, getAllLawProposalsByTag(R.id.main_layout, null), PROPOSALS, PROPOSALS_M, chart2);
+        createBarChart(R.id.chart2, getAllLawProposalsByTag(R.id.mainLayout, null), PROPOSALS, PROPOSALS_M, chart2);
 
     }
 
     private void createMissingChar() {
-        createBarChart(R.id.chart3, getAllAbsentFromVotesByTag(R.id.main_layout, null), MISSING, MISSING_M, chart3);
+        createBarChart(R.id.chart3, getAllAbsentFromVotesByTag(R.id.mainLayout, null), MISSING, MISSING_M, chart3);
     }
 
     private void createBarChart(int char_id, JSONObject parties, String key, String keyMember, final Map<String, JSONObject> map) {
 
         BarChart barChart = (BarChart) findViewById(char_id);
-        String userPartyName = getUserAssociatedParty(R.id.main_layout);
+        String userPartyName = getUserAssociatedParty(R.id.mainLayout);
         final ArrayList<BarEntry> valueSet = new ArrayList<>();
         final ArrayList<String> xAxis = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<Integer>();
