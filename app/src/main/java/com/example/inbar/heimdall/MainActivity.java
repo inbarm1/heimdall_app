@@ -22,6 +22,7 @@ import android.widget.Spinner;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -343,11 +344,11 @@ public class MainActivity extends APIRequest {
                     }
                 });
 
-                creatingChart(map.get(name));
-//                Toast.makeText(MainActivity.this,
-//                        (name + " = " + map.get(name).toString()), Toast.LENGTH_SHORT).show();
                 mPopupWindow.showAtLocation(mainLayout, Gravity.CENTER,0,0);
 
+                creatingChart(map.get(name), customView);
+//                Toast.makeText(MainActivity.this,
+//                        (name + " = " + map.get(name).toString()), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -357,17 +358,21 @@ public class MainActivity extends APIRequest {
         });
 
         BarDataSet dataSet = new BarDataSet(valueSet, "מפלגות");
-        dataSet.setColors(colors);
-
+        dataSet.setColors(colors);;
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
+//        XAxis rot = barChart.getXAxis();
+//        rot.setLabelRotationAngle(-45);
+
+//        barChart.setDragEnabled(true); // on by default
+//        barChart.setVisibleXRange(3,3); // sets the viewport to show 3 bars
         barChart.setDescription("");
         barChart.animateXY(2000, 2000);
         barChart.invalidate();
     }
 
-    protected void creatingChart(final JSONObject data){
-        mChart = (PieChart) findViewById(R.id.piechart);
+    protected void creatingChart(final JSONObject data, View pop){
+        mChart = (PieChart)pop.findViewById(R.id.piechart);
 
 //        mChart = new PieChart(this);
         // add pie chart to main layout
@@ -376,7 +381,7 @@ public class MainActivity extends APIRequest {
 
         // configure pie chart
         mChart.setUsePercentValues(true);
-        mChart.setDescription(TITLE_PIE);
+        mChart.setDescription("");
 
         // enable hole and configure
         mChart.setDrawHoleEnabled(true);
