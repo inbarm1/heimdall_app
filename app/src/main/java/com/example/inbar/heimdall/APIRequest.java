@@ -1,10 +1,15 @@
 package com.example.inbar.heimdall;
 
+import android.os.Bundle;
+import android.support.annotation.DrawableRes;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by oferh_000 on 06-Jan-18.
@@ -28,6 +33,20 @@ public class APIRequest extends HttpsConnection {
     public final String START_DATE = "start_date";
     public final String END_DATE = "end_date";
 
+    protected Map<String, Integer> rate = new HashMap<>();
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        rate.put("תייר",R.drawable.rank1);
+        rate.put("אזרח",R.drawable.rank2);
+        rate.put("עסקן",R.drawable.rank3);
+        rate.put("ראש עיר",R.drawable.rank4);
+        rate.put("חבר כנסת",R.drawable.rank5);
+        rate.put("לוביסט",R.drawable.rank6);
+        rate.put("טייקון",R.drawable.rank7);
+    }
 
     public boolean isRegistered(int idLayer){
         return sendJson(idLayer, new JSONObject(), "/isRegistered").equals("Success");
@@ -95,10 +114,10 @@ public class APIRequest extends HttpsConnection {
         }
     }
 
-    public String getUserRank(int idLayer){
+    public JSONObject getUserRank(int idLayer){
         JSONObject request = new JSONObject();
         try {
-            return (new JSONObject(sendJson(idLayer, request, "/getUserRank"))).getString("user_rank");
+            return (new JSONObject(sendJson(idLayer, request, "/getUserRank")));
         }
         catch (JSONException e){
             throw new RuntimeException(e);
