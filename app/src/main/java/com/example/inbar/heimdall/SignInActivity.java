@@ -28,8 +28,6 @@ public class SignInActivity extends APIRequest implements
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
     //    private static final String TAG = "MainActivity";
-    private TextView mStatusTextView;
-    private TextView mDetailTextView;
 
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
@@ -39,14 +37,8 @@ public class SignInActivity extends APIRequest implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google);
 
-        // Views
-        mStatusTextView = findViewById(R.id.status);
-        mDetailTextView = findViewById(R.id.detail);
-
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.disconnect_button).setOnClickListener(this);
     }
 
     public void showProgressDialog() {
@@ -77,21 +69,13 @@ public class SignInActivity extends APIRequest implements
         if (user != null) {
             Intent intent;
 //            if(isRegistered)
-//                intent = new Intent(SignInActivity.this, MainActivity.class);
+                intent = new Intent(SignInActivity.this, MainActivity.class);
 //            else
 //                intent = new Intent(SignInActivity.this, RegisterActivity.class);
-//            startActivity(intent);
-//            mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
-//            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-//
-//            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-//            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
+            startActivity(intent);
+            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         } else {
-            mStatusTextView.setText(R.string.signed_out);
-            mDetailTextView.setText(null);
-
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
         }
     }
 
@@ -209,10 +193,6 @@ public class SignInActivity extends APIRequest implements
         int i = v.getId();
         if (i == R.id.sign_in_button) {
             signIn();
-        } else if (i == R.id.sign_out_button) {
-            signOut();
-        } else if (i == R.id.disconnect_button) {
-            revokeAccess();
         }
     }
 }

@@ -183,14 +183,13 @@ public class MainActivity extends APIRequest {
         thread.start();
 
         createTags();
-        //createCharts(null);
     }
 
     private void createCharts(String tag){
+        getRate();
         createEfficiencyChar(tag);
         createMissingChar(tag);
         createProposalsChar(tag);
-        getRate();
     }
 
     private void getRate() {

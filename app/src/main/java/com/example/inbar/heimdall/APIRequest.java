@@ -11,10 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by oferh_000 on 06-Jan-18.
- */
-
 public class APIRequest extends HttpsConnection {
     private final String SUCCESS = "Success";
 
@@ -39,13 +35,13 @@ public class APIRequest extends HttpsConnection {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rate.put("תייר",R.drawable.rank1);
-        rate.put("אזרח",R.drawable.rank2);
-        rate.put("עסקן",R.drawable.rank3);
-        rate.put("ראש עיר",R.drawable.rank4);
-        rate.put("חבר כנסת",R.drawable.rank5);
-        rate.put("לוביסט",R.drawable.rank6);
-        rate.put("טייקון",R.drawable.rank7);
+        rate.put("תייר",R.drawable.rank1d);
+        rate.put("אזרח",R.drawable.rank2d);
+        rate.put("עסקן",R.drawable.rank3d);
+        rate.put("ראש עיר",R.drawable.rank4d);
+        rate.put("חבר כנסת",R.drawable.rank5d);
+        rate.put("לוביסט",R.drawable.rank6d);
+        rate.put("טייקון",R.drawable.rank7d);
     }
 
     public boolean isRegistered(int idLayer){
