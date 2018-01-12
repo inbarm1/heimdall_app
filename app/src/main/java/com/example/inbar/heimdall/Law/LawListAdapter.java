@@ -70,13 +70,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         }
         @Override
         public void onClick(View v) {
-            Toast.makeText(v.getContext(), "Law PRESSED = " +mLaw.getName() , Toast.LENGTH_SHORT).show();
-            if (mLaw.getVoteStat() == VoteStatus.NO_VOTE) {
-
-
-            }else{
-
-            }
+            
         }
     }
 
