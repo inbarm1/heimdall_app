@@ -34,9 +34,9 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         final Law law = mLaws[position];
-        holder.nameTextView.setText(law.name);
-        holder.roleTextView.setText(law.description);
-        holder.forButton.setOnClickListener(law.forButtonListener);
+        holder.nameTextView.setText(law.getName());
+        holder.roleTextView.setText(law.getDescription());
+        holder.moreInfoButton.setOnClickListener(law.moreInfoButtonListener);
     }
 
     @Override
@@ -48,13 +48,13 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
 
         protected TextView nameTextView;
         protected TextView roleTextView;
-        protected Button forButton;
+        protected Button moreInfoButton;
 
         public SimpleViewHolder(View v) {
             super(v);
             nameTextView = ((TextView)v.findViewById(R.id.nameTextView));
             roleTextView = ((TextView)v.findViewById(R.id.roleTextView));
-            forButton =    ((Button)v.findViewById(R.id.forButton));
+            moreInfoButton = ((Button)v.findViewById(R.id.moreInfoButton));
         }
     }
 }
