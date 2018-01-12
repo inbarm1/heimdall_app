@@ -112,17 +112,6 @@ public class PersonalStatisticsActivity extends APIRequest {
 
     };
 
-    private String readFromMessage(Message msg) throws IOException {
-        InputStream is = (InputStream)msg.obj;
-        BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-        StringBuilder responseStrBuilder = new StringBuilder();
-
-        String inputStr;
-        while ((inputStr = streamReader.readLine()) != null)
-            responseStrBuilder.append(inputStr);
-
-        return responseStrBuilder.toString();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -85,17 +85,6 @@ public class MainActivity extends APIRequest {
     private final static int RATE_HANDLER = 4;
     private static String userPartyName;
 
-    private String readFromMessage(Message msg) throws IOException {
-        InputStream is = (InputStream)msg.obj;
-        BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-        StringBuilder responseStrBuilder = new StringBuilder();
-
-        String inputStr;
-        while ((inputStr = streamReader.readLine()) != null)
-            responseStrBuilder.append(inputStr);
-
-        return responseStrBuilder.toString();
-    }
 
     private Handler handler_ = new Handler(){
         @Override

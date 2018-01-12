@@ -80,5 +80,17 @@
     <string name="id_fmt">User ID: %s</string>
     <string name="email_fmt">Email: %s</string>
     <string name="party">Party</string>
+    <string name="failed_to_connect_to_server">Connection failed</string>
+    <string name="welcome_title">Welcome to Heimdall !</string>
+    <string name="register_main">ברוך הבא גיבור</string>
+    <string name="register_party">בחר מפלגה גבר</string>
+
+    <string name="date_label_set">Press the button to set the date</string>
+    <string name="date_button_set">Set Date</string>
+    <string name="date_view_set">The Date is: </string>
+    <string name="date_selected"></string>
+    <string name="register_content_title">ברוכים הבאים</string>
+    <string name="register_content_text">על מנת שנוכל לספק את המידע הרלוונטי ביותר עבורך עליך לבצע תהליך רישום אנונימי קצר</string>
+    <string name="choose_date_text">לחץ לבחירת תאריך</string>
     <string name="failed_to_connect_to_server">Connection failed :(</string>
 </resources>

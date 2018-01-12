@@ -3,11 +3,14 @@ package com.example.inbar.heimdall;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 
 public class SignInActivity extends APIRequest implements
         View.OnClickListener {
@@ -31,6 +41,32 @@ public class SignInActivity extends APIRequest implements
 
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
+
+    private static final int REGISTER_RESPONSE = 1;
+
+    private Handler handler_ = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            try {
+                switch (msg.what) {
+                    case REGISTER_RESPONSE:
+                        boolean res = Boolean.parseBoolean(readFromMessage(msg));
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if(res) {
+                            updateUI(user, true);
+                        }
+                        else{
+                            updateUI(user, false);
+                        }
+
+                        break;
+
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +104,10 @@ public class SignInActivity extends APIRequest implements
         hideProgressDialog();
         if (user != null) {
             Intent intent;
-//            if(isRegistered)
+            if(isRegistered)
                 intent = new Intent(SignInActivity.this, MainActivity.class);
-//            else
-//                intent = new Intent(SignInActivity.this, RegisterActivity.class);
+            else
+                intent = new Intent(SignInActivity.this, RegisterActivity.class);
             startActivity(intent);
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         } else {
@@ -109,13 +145,7 @@ public class SignInActivity extends APIRequest implements
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if(isRegistered(R.id.main_layout_signin)) {
-                                updateUI(user, true);
-                            }
-                            else{
-                                updateUI(user, false);
-                            }
+                            runIsRegistered();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -129,6 +159,18 @@ public class SignInActivity extends APIRequest implements
                         // [END_EXCLUDE]
                     }
                 });
+    }
+
+    private void runIsRegistered() {
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                Boolean str = isRegistered(R.id.main_layout_signin);
+                InputStream is = new ByteArrayInputStream(str.toString().getBytes());
+                handler_.sendMessage(Message.obtain(handler_, REGISTER_RESPONSE, is));
+            }
+        });
+        thread.start();
     }
     // [END auth_with_google]
 
