@@ -117,7 +117,7 @@ public class HttpsConnection extends NevActivity {
         return response.toString();
     }
 
-    private void onConnectionFailed(final int id_layer) {
+    protected void onConnectionFailed(final int id_layer) {
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -140,10 +140,22 @@ public class HttpsConnection extends NevActivity {
         popupView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                popupWindow.dismiss();
                 //getConnection(id_layer);
-                return true;
+                finish();
+                moveTaskToBack(true);
+                return false;
             }
         });
+
+        // dismiss the popup window when touched
+        popupView.setOnFocusChangeListener(
+                new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        finish();
+                        moveTaskToBack(true);
+                    }
+                }
+        );
     }
 }
