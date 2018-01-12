@@ -1,5 +1,6 @@
 package com.example.inbar.heimdall;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -84,7 +86,18 @@ public class RegisterActivity extends APIRequest {
                 if(!validateRegisterForm()){
                     return;
                 };
-                register();
+                Future<Boolean> register = register();
+                try {
+                    if (register.get()) {
+                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    }
+                    else{
+                        Log.d("error","register failed");
+                        onConnectionFailed(R.layout.activity_register);
+                    }
+                } catch (Exception e) {
+                    onConnectionFailed(R.layout.activity_register);
+                }
             }
         });
     }

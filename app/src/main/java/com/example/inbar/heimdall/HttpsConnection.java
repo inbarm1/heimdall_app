@@ -117,7 +117,7 @@ public class HttpsConnection extends NevActivity {
         return response.toString();
     }
 
-    private void onConnectionFailed(final int id_layer) {
+    protected void onConnectionFailed(final int id_layer) {
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);

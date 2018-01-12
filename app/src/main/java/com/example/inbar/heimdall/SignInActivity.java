@@ -104,10 +104,10 @@ public class SignInActivity extends APIRequest implements
         hideProgressDialog();
         if (user != null) {
             Intent intent;
-//            if(isRegistered)
+            if(isRegistered)
                 intent = new Intent(SignInActivity.this, MainActivity.class);
-//            else
-//                intent = new Intent(SignInActivity.this, RegisterActivity.class);
+            else
+                intent = new Intent(SignInActivity.this, RegisterActivity.class);
             startActivity(intent);
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         } else {
