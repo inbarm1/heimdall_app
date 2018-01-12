@@ -19,7 +19,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <ImageView
-                android:id="@+id/rate"
+                android:id="@+id/ratep"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="250dp"
