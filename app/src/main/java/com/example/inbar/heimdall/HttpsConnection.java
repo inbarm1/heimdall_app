@@ -39,7 +39,7 @@ public class HttpsConnection extends NevActivity {
         try {
             URL url = new URL("http://api.heimdall.ga"+subDomain);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000);
+            conn.setReadTimeout(15000);
             conn.setConnectTimeout(15000);
             conn.setRequestMethod("POST");
             conn.setDoInput(true);

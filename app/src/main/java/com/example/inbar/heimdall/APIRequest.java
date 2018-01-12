@@ -58,13 +58,13 @@ public class APIRequest extends HttpsConnection {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rate.put("תייר",R.drawable.rank1d);
-        rate.put("אזרח",R.drawable.rank2d);
-        rate.put("עסקן",R.drawable.rank3d);
-        rate.put("ראש עיר",R.drawable.rank4d);
-        rate.put("חבר כנסת",R.drawable.rank5d);
-        rate.put("לוביסט",R.drawable.rank6d);
-        rate.put("טייקון",R.drawable.rank7d);
+        rate.put("1",R.drawable.rank1d);
+        rate.put("2",R.drawable.rank2d);
+        rate.put("3",R.drawable.rank3d);
+        rate.put("4",R.drawable.rank4d);
+        rate.put("5",R.drawable.rank5d);
+        rate.put("6",R.drawable.rank6d);
+        rate.put("7",R.drawable.rank7d);
     }
 
     public boolean isRegistered(int idLayer){
@@ -175,8 +175,10 @@ public class APIRequest extends HttpsConnection {
 
     public JSONObject getUserToElectedOfficialMatchByTag(int idLayer, String electedOfficial, String tag){
         JSONObject request = new JSONObject();
-        if(electedOfficial == null || electedOfficial.isEmpty())
-            throw new RuntimeException("Empty elected official");
+        if(electedOfficial == null || electedOfficial.isEmpty()) {
+            onConnectionFailed(idLayer);
+            return null;
+        }
         try {
             request.put(ELECTED_OFFICIAL, electedOfficial);
             if(tag != null && !tag.isEmpty()){

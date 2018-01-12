@@ -252,7 +252,7 @@ public class MainActivity extends APIRequest {
 
     private void createFirstView(final ArrayList<String> tags) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
-        Spinner spinTag = (Spinner)findViewById(R.id.tag);
+        Spinner spinTag = (Spinner)findViewById(R.id.tagp);
         spinTag.setAdapter(adapter);
 
         spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
