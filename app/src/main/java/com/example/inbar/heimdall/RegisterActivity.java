@@ -87,16 +87,21 @@ public class RegisterActivity extends APIRequest {
                     return;
                 };
                 Future<Boolean> register = register();
+                Intent intent = null;
                 try {
                     if (register.get()) {
-                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                        intent = new Intent(RegisterActivity.this, MainActivity.class);
                     }
                     else{
                         Log.d("error","register failed");
+                        intent = new Intent(RegisterActivity.this, SignInActivity.class);
                         onConnectionFailed(R.layout.activity_register);
                     }
                 } catch (Exception e) {
+                    intent = new Intent(RegisterActivity.this, SignInActivity.class);
                     onConnectionFailed(R.layout.activity_register);
+                }finally {
+                    startActivity(intent);
                 }
             }
         });
