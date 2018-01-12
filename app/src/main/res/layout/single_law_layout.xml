@@ -20,14 +20,21 @@
                 android:id="@+id/nameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"
+                android:textSize="30sp"/>
                 />
             <TextView
                 android:id="@+id/roleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                />
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/moreInfoButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="more_info:"  />
+
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>

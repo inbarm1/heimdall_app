@@ -19,6 +19,12 @@ import com.example.inbar.heimdall.APIRequest;
 import com.example.inbar.heimdall.HttpsConnection;
 import com.example.inbar.heimdall.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class LawActivity extends APIRequest {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -56,10 +62,28 @@ public class LawActivity extends APIRequest {
     public Law[] getLaws(){
         Law[] laws = new Law[30];//=  ;//Util.getPeopleList(this);
         for (int i =0; i < 30 ; i++){
-            Law l1 = new Law("eilon" + String.valueOf(i), VoteStatus.ABSTAIN, "bad ass mf", null);
+            Law l1 = null;
+            try {
+                l1 = createLaw(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             laws[i] = (l1);
         }
         return laws;
+    }
+
+    public static Law createLaw(int i) throws JSONException {
+        String jsonS = String.format("{'fuck law %s': {'link' : 'www.pornhub.com, 'description' : 'bla bla', 'tags' : ['eilon','ram'], 'user_voted' : 'for'  }",i);
+        JSONObject subJson = new JSONObject();
+        subJson.put("link","pornhub.com " + String.valueOf(i));
+        subJson.put("description","bla bla "+ String.valueOf(i));
+        List<String> tags = new ArrayList<>();
+        tags.add("eilon "+ String.valueOf(i));
+        tags.add("the king "+ String.valueOf(i));
+        subJson.put("tags",tags);
+        subJson.put("user_voted","for");
+        return new Law("law " + String.valueOf(i),subJson );
     }
 
 }

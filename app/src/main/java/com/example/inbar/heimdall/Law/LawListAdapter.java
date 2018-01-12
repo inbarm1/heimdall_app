@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.inbar.heimdall.R;
@@ -33,8 +34,9 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         final Law law = mLaws[position];
-        holder.nameTextView.setText(law.name);
-        holder.roleTextView.setText(law.description);
+        holder.nameTextView.setText(law.getName());
+        holder.roleTextView.setText(law.getDescription());
+        holder.moreInfoButton.setOnClickListener(law.moreInfoButtonListener);
     }
 
     @Override
@@ -46,11 +48,13 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
 
         protected TextView nameTextView;
         protected TextView roleTextView;
+        protected Button moreInfoButton;
 
         public SimpleViewHolder(View v) {
             super(v);
             nameTextView = ((TextView)v.findViewById(R.id.nameTextView));
             roleTextView = ((TextView)v.findViewById(R.id.roleTextView));
+            moreInfoButton = ((Button)v.findViewById(R.id.moreInfoButton));
         }
     }
 }
