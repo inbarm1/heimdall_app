@@ -1,4 +1,4 @@
-package com.example.inbar.heimdall;
+package com.example.inbar.heimdall.Law;
 
 import android.graphics.drawable.Drawable;
 
@@ -7,63 +7,19 @@ import android.graphics.drawable.Drawable;
  */
 
 public class Law {
-    public String firstname;
-    public String lastname;
-    public String role;
+    public String name;
+    public VoteStatus voteStat;
     public String description;
     public Drawable image;
 
     public Law(){}
 
-    public Law(String fname, String lname, String role, String description, Drawable image) {
-        this.firstname = fname;
-        this.lastname = lname;
-        this.role = role;
+    public Law(String name, VoteStatus status, String description, Drawable image) {
+        this.name = name;
+        this.voteStat = status;
         this.description = description;
         this.image = image;
     }
 
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getName() {
-        return firstname + " " + lastname;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Drawable getImage() {
-        return image;
-    }
-
-    public void setImage(Drawable image) {
-        this.image = image;
-    }
 }
+
