@@ -2,10 +2,14 @@ package com.example.inbar.heimdall.Law;
 
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.inbar.heimdall.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -97,10 +101,14 @@ public class Law {
 
         public MoreInfoButtonListener(Law law){
             mLaw = law;
+            int x = 1;
         }
         @Override
         public void onClick(View v) {
-            Toast.makeText(v.getContext(), "Law PRESSED = " +mLaw.getName() , Toast.LENGTH_SHORT).show();
+            //the view is the button, we need to get it's parnet
+            View parent = (View) v.getParent();
+            ExpandableLayout expandableLayout = ((ExpandableLayout)parent.findViewById(R.id.expandable_layout));
+            expandableLayout.toggle();
         }
     }
 
