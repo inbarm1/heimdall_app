@@ -108,7 +108,7 @@ public class PersonalStatisticsActivity extends APIRequest {
 
 
     };
-    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
