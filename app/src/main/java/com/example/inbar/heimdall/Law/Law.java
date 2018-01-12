@@ -1,6 +1,6 @@
 package com.example.inbar.heimdall.Law;
 
-import android.graphics.drawable.Drawable;
+import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,13 +30,15 @@ public class Law {
     public static final String AGE_AGAINST = "age_against";
 
 
-
     private String name;
     private VoteStatus voteStat;
     private String description;
     private String link;
     private ArrayList<String> tags;
     private HashMap<String, HashMap<String, Float>> userDist;
+//    private LawVoteListener voteClickListener;
+//    private LawMoreInfoListener moreInfoListener;
+
 
     public Law(String name, JSONObject lawObject) {
         this.name = name;
@@ -88,6 +90,7 @@ public class Law {
     public HashMap<String, HashMap<String, Float>> getUserDist() {
         return userDist;
     }
+
 
 }
 

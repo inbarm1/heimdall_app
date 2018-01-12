@@ -33,8 +33,8 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         final Law law = mLaws[position];
-        holder.nameTextView.setText(law.name);
-        holder.roleTextView.setText(law.description);
+        holder.nameTextView.setText(law.getName());
+        holder.roleTextView.setText(law.getDescription());
     }
 
     @Override
