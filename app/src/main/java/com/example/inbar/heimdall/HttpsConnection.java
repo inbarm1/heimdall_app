@@ -37,10 +37,11 @@ public class HttpsConnection extends NevActivity {
 
     protected HttpURLConnection getConnection(final int id_layer, String subDomain){
         try {
-            URL url = new URL("http://api.heimdall.ga"+subDomain);
+            //URL url = new URL("http://api.heimdall.ga"+subDomain);
+            URL url = new URL("http://192.168.1.25:8080"+subDomain);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
+            conn.setConnectTimeout(150000);
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
             conn.setDoOutput(true);
@@ -58,7 +59,7 @@ public class HttpsConnection extends NevActivity {
         HttpURLConnection connection = null;
         try {
             String token = FirebaseInstanceId.getInstance().getToken();
-            message.put(USER_TOKEN, 10);
+            message.put(USER_TOKEN, token);
             connection = getConnection(idLayer, subDomain);
 
             sendToConnection(message, connection);

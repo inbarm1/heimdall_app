@@ -104,10 +104,12 @@ public class SignInActivity extends APIRequest implements
         hideProgressDialog();
         if (user != null) {
             Intent intent;
-            if(isRegistered)
+            if(isRegistered) {
                 intent = new Intent(SignInActivity.this, MainActivity.class);
-            else
+            }
+            else {
                 intent = new Intent(SignInActivity.this, RegisterActivity.class);
+            }
             startActivity(intent);
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         } else {
@@ -165,8 +167,8 @@ public class SignInActivity extends APIRequest implements
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                Boolean str = isRegistered(R.id.main_layout_signin);
-                InputStream is = new ByteArrayInputStream(str.toString().getBytes());
+                Boolean registered = isRegistered(R.id.main_layout_signin);
+                InputStream is = new ByteArrayInputStream(registered.toString().getBytes());
                 handler_.sendMessage(Message.obtain(handler_, REGISTER_RESPONSE, is));
             }
         });
