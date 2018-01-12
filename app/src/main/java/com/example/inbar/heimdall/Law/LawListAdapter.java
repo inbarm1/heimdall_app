@@ -6,8 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.inbar.heimdall.R;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.util.List;
 
@@ -17,9 +20,12 @@ import java.util.List;
 
 public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleViewHolder> {
     private Law[]  mLaws;
+    protected LawActivity lawActivity;
 
-    public LawListAdapter(Law[] laws) {
+    public LawListAdapter(Law[] laws, LawActivity father) {
         mLaws = laws;
+        lawActivity = father;
+
     }
 
     @Override
@@ -36,7 +42,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         final Law law = mLaws[position];
         holder.nameTextView.setText(law.getName());
         holder.roleTextView.setText(law.getDescription());
-        holder.moreInfoButton.setOnClickListener(law.moreInfoButtonListener);
+        holder.moreInfoButton.setOnClickListener(new VoteButtonListener(law));
     }
 
     @Override
@@ -57,5 +63,41 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             moreInfoButton = ((Button)v.findViewById(R.id.moreInfoButton));
         }
     }
+
+    public class VoteButtonListener implements View.OnClickListener {
+        private Law mLaw;
+
+        public VoteButtonListener(Law law){
+            mLaw = law;
+        }
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(v.getContext(), "Law PRESSED = " +mLaw.getName() , Toast.LENGTH_SHORT).show();
+            if (mLaw.getVoteStat() == VoteStatus.NO_VOTE) {
+
+
+            }else{
+
+            }
+        }
+    }
+
+    public static class MoreInfoButtonListener implements View.OnClickListener {
+        private Law mLaw;
+
+        public MoreInfoButtonListener(Law law) {
+            mLaw = law;
+            int x = 1;
+        }
+
+        @Override
+        public void onClick(View v) {
+            //the view is the button, we need to get it's parnet
+            View parent = (View) v.getParent();
+            ExpandableLayout expandableLayout = ((ExpandableLayout) parent.findViewById(R.id.expandable_layout));
+            expandableLayout.toggle();
+        }
+    }
+
 }
 

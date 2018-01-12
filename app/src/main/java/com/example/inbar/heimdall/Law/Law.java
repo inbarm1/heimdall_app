@@ -1,5 +1,6 @@
 package com.example.inbar.heimdall.Law;
 
+import android.view.View;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,11 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by Eilon on 05/01/2018.
@@ -35,14 +41,23 @@ public class Law {
     public static final String RESIDENT_AGAINST = "resident_against";
     public static final String AGE_FOR = "age_for";
     public static final String AGE_AGAINST = "age_against";
+    public static final String USER_INFO = "user_info";
+    public static final String JOB = "job";
+    public static final String RESIDENCY = "residency";
+    public static final String AGE = "age";
 
-    private String name;
+
+    ExecutorService es = Executors.newSingleThreadExecutor();
+
+    String name;
     private VoteStatus voteStat;
     private String description;
     private String link;
     private ArrayList<String> tags;
-    private HashMap<String, HashMap<String, Float>> userDist;
-    public View.OnClickListener moreInfoButtonListener;
+    private Future<JSONObject> userDist;
+    private Future<JSONObject> electedVotes;
+    LawActivity lawActivity;
+
 
     public Law(String name, JSONObject lawObject) {
         this.name = name;
@@ -54,7 +69,30 @@ public class Law {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.moreInfoButtonListener = new MoreInfoButtonListener(this);
+    }
+
+    public void setLawActivity(LawActivity lawActivity) {
+        this.lawActivity = lawActivity;
+    }
+
+    public Future<JSONObject> setUserDist() {
+        return es.submit(new Callable<JSONObject>() {
+
+            @Override
+            public JSONObject call() throws Exception {
+                return lawActivity.getUserDistribution(R.id.lawLayout, name);
+            }
+        });
+    }
+
+    public Future<JSONObject> setElectedVotes() {
+        return es.submit(new Callable<JSONObject>() {
+
+            @Override
+            public JSONObject call() throws Exception {
+                return lawActivity.getLawKnessetVotes(R.id.lawLayout, name);
+            }
+        });
     }
 
     public String getName() {
@@ -86,31 +124,28 @@ public class Law {
         return tags;
     }
 
-
-    public void setUserDist(JSONObject distObject) {
-        Type type = new TypeToken<HashMap<String, HashMap<String, Float>>>(){}.getType();
-        userDist = new Gson().fromJson(distObject.toString(), type);
-    }
-
-    public HashMap<String, HashMap<String, Float>> getUserDist() {
-        return userDist;
-    }
-
-    public static class MoreInfoButtonListener implements View.OnClickListener {
-        private Law mLaw;
-
-        public MoreInfoButtonListener(Law law){
-            mLaw = law;
-            int x = 1;
+    public JSONObject getUserDist() {
+        try {
+            return userDist.get();
+    } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-        @Override
-        public void onClick(View v) {
-            //the view is the button, we need to get it's parnet
-            View parent = (View) v.getParent();
-            ExpandableLayout expandableLayout = ((ExpandableLayout)parent.findViewById(R.id.expandable_layout));
-            expandableLayout.toggle();
-        }
+        return null;
     }
+
+    public JSONObject getElectedVotes() {
+        try {
+            return electedVotes.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 }
 

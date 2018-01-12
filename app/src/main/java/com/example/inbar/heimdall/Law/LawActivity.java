@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.app.FragmentManager;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.inbar.heimdall.APIRequest;
 import com.example.inbar.heimdall.HttpsConnection;
@@ -41,7 +42,7 @@ public class LawActivity extends APIRequest {
         mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);
-        mAdapter = new LawListAdapter(getLaws());
+        mAdapter = new LawListAdapter(getLaws(), this);
         mRecyclerView.setAdapter(mAdapter);
 
         id_drawer_layout = R.id.drawer_layout_law;
