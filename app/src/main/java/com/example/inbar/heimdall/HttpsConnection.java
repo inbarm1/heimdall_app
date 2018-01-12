@@ -141,10 +141,22 @@ public class HttpsConnection extends NevActivity {
         popupView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                popupWindow.dismiss();
                 //getConnection(id_layer);
-                return true;
+                finish();
+                moveTaskToBack(true);
+                return false;
             }
         });
+
+        // dismiss the popup window when touched
+        popupView.setOnFocusChangeListener(
+                new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        finish();
+                        moveTaskToBack(true);
+                    }
+                }
+        );
     }
 }
