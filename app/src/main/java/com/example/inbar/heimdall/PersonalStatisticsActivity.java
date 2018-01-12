@@ -88,6 +88,9 @@ public class PersonalStatisticsActivity extends APIRequest {
                     case CHART_2:
                         JSONObject data2 = new JSONObject(readFromMessage(msg));
                         creatingPieChart(R.id.chart2p, data2);
+                        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.scroll_personal);
+                        int y = (scrollView.getChildAt(0).getMeasuredHeight() -scrollView.getMeasuredHeight());
+                        scrollView.setScrollY(y);
                         break;
                     case TAGS_HANDLER2:
                         JSONArray category2 = new JSONArray(readFromMessage(msg));
@@ -166,8 +169,8 @@ public class PersonalStatisticsActivity extends APIRequest {
 
     private void createLawPieChart(final String elected, final String tagElected) {
         if (elected == null || elected.equals(NONE_TAG)){
-            TextView test = (TextView)findViewById(R.id.no_data);
-            test.setCursorVisible(true);
+            TextView text = (TextView)findViewById(R.id.no_data);
+            text.setVisibility(View.VISIBLE);
             return;
         }
         Thread thread = new Thread(new Runnable(){
@@ -331,7 +334,7 @@ public class PersonalStatisticsActivity extends APIRequest {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 TextView test = (TextView)findViewById(R.id.no_data);
-                test.setCursorVisible(false);
+                test.setVisibility(View.GONE);
                 currentElectedPosition = position;
                 createLawPieChart(tags2.get(position), tags.get(currentTagPosition));
             }
@@ -421,9 +424,6 @@ public class PersonalStatisticsActivity extends APIRequest {
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
         l.setXEntrySpace(7);
         l.setYEntrySpace(5);
-
-        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.scroll_personal);
-        scrollView.scrollBy(0, 1500);
     }
 
     private void addData(PieChart mChart, JSONObject dataMem) {
