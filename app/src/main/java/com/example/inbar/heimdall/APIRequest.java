@@ -63,7 +63,8 @@ public class APIRequest extends HttpsConnection {
             request.put(INVOLVEMENT_LEVEL, involvementLevel.getName());
         }
         catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
         }
         if (sendJson(idLayer, request, "/register").equals(SUCCESS))
             return true;
@@ -87,7 +88,8 @@ public class APIRequest extends HttpsConnection {
             }
         }
         catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
         }
 
         return request.keys().hasNext() && sendJson(idLayer, request, "/updatePersonalInfo").equals(SUCCESS);
@@ -106,7 +108,9 @@ public class APIRequest extends HttpsConnection {
             return new JSONObject(sendJson(idLayer, request, "/lawVoteSubmit"));
         }
         catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -116,7 +120,9 @@ public class APIRequest extends HttpsConnection {
             return (new JSONObject(sendJson(idLayer, request, "/getUserRank")));
         }
         catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -125,7 +131,9 @@ public class APIRequest extends HttpsConnection {
         try {
             return new JSONArray(sendJson(idLayer, request, "/lawNotification"));
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -136,7 +144,9 @@ public class APIRequest extends HttpsConnection {
             return new JSONObject(sendJson(idLayer, request, "/getUserDistribution"));
         }
         catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -152,7 +162,9 @@ public class APIRequest extends HttpsConnection {
             return new JSONObject(sendJson(idLayer, request, "/getUserToElectedOfficialMatchByTag"));
         }
         catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -165,7 +177,9 @@ public class APIRequest extends HttpsConnection {
             return new JSONObject(sendJson(idLayer, request, "/getUserPartiesVotesMatchByTag"));
         }
         catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -188,7 +202,9 @@ public class APIRequest extends HttpsConnection {
             return new JSONObject(sendJson(idLayer, request, "/getLawsByDateInterval"));
         }
         catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -198,7 +214,9 @@ public class APIRequest extends HttpsConnection {
         try {
             return (new JSONObject(sendJson(idLayer, request, "/getUserAssociatedParty"))).getString("user_party");
         } catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -210,7 +228,9 @@ public class APIRequest extends HttpsConnection {
             }
             return new JSONObject(sendJson(idLayer, request, "/getAllAbsentFromVotesByTag"));
         } catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -222,7 +242,9 @@ public class APIRequest extends HttpsConnection {
             }
             return new JSONObject(sendJson(idLayer, request, "/getAllPartiesEfficiencyByTag"));
         } catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -231,7 +253,9 @@ public class APIRequest extends HttpsConnection {
         try {
             return new JSONArray(sendJson(idLayer, request, "/getElectedOfficials"));
         } catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -240,7 +264,9 @@ public class APIRequest extends HttpsConnection {
         try {
             return new JSONObject(sendJson(idLayer, request, "/getCategoryNames"));
         } catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 
@@ -252,7 +278,9 @@ public class APIRequest extends HttpsConnection {
             }
             return new JSONObject(sendJson(idLayer, request, "/getAllLawProposalsByTag"));
         } catch (JSONException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
         }
     }
 }

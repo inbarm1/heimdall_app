@@ -1,6 +1,7 @@
 package com.example.inbar.heimdall;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,10 +24,14 @@ import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
@@ -41,11 +46,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 
+import static android.graphics.Color.BLACK;
 import static android.graphics.Color.rgb;
-import static com.example.inbar.heimdall.MainActivity.GENERAL;
-
 public class PersonalStatisticsActivity extends APIRequest {
 
     protected CoordinatorLayout personalLayout;
@@ -95,7 +98,7 @@ public class PersonalStatisticsActivity extends APIRequest {
                     case RATE_HANDLER:
                         JSONObject data4 = new JSONObject(readFromMessage(msg));
                         String rank = data4.getString("user_rank");
-                        ImageView img= (ImageView) findViewById(R.id.rate);
+                        ImageView img = (ImageView) findViewById(R.id.ratep);
                         img.setImageResource(rate.get(rank));
 
                 }
@@ -145,17 +148,21 @@ public class PersonalStatisticsActivity extends APIRequest {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                String str = getUserAssociatedParty(R.id.mainLayout);
+                String str = getUserAssociatedParty(R.id.personal_layout);
                 userPartyName = str;
             }
         });
         thread.start();
         createTags();
-        getRate();
+        PieChart mChart = (PieChart)findViewById(R.id.chart2p);
+        mChart.setCenterText("בחר חבר כנסת");
+        mChart.setCenterTextColor(BLACK);
+        mChart.setCenterTextSize(20);
     }
 
 
     private void createCharts(String tag){
+        getRate();
         createMatchChar(tag);
 //        createMissingChar(tag);
 //        createProposalsChar(tag);
@@ -164,7 +171,11 @@ public class PersonalStatisticsActivity extends APIRequest {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                String str = getUserPartiesVotesMatchByTag(R.id.personal_layout, tag).toString();
+                JSONObject json = getUserPartiesVotesMatchByTag(R.id.personal_layout, tag);
+                if (json == null) {
+                    return;
+                }
+                String str = json.toString();
                 InputStream is = new ByteArrayInputStream(str.getBytes());
                 handler_.sendMessage(Message.obtain(handler_, CHART_1, is));
             }
@@ -295,7 +306,7 @@ public class PersonalStatisticsActivity extends APIRequest {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                String str = getUserRank(R.id.mainLayout).toString();
+                String str = getUserRank(R.id.personal_layout).toString();
                 InputStream is = new ByteArrayInputStream(str.getBytes());
                 handler_.sendMessage(Message.obtain(handler_, RATE_HANDLER, is));
             }
@@ -303,92 +314,174 @@ public class PersonalStatisticsActivity extends APIRequest {
         thread.start();
     }
 
-    protected void createTags() {
-        JSONObject category = getCategoryNames(R.id.mainLayout);
-        final ArrayList<String> tags = new ArrayList<String>();
-        try {
-            tags.add(GENERAL);
-            JSONArray jsonTags = (JSONArray)category.get(TAG);
-            for (int i=0; i< jsonTags.length(); i++) {
-                final String name = (String) jsonTags.get(i);
-                // Add party name
-                if (name.equals(GENERAL)) {
-                    continue;
-                }
-                tags.add(name);
+    private void createTags() {
+
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                String str = getCategoryNames(R.id.personal_layout).toString();
+                InputStream is = new ByteArrayInputStream(str.getBytes());
+                handler_.sendMessage(Message.obtain(handler_, TAGS_HANDLER, is));
             }
+        });
+        thread.start();
+    }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
-            Spinner spinTag = (Spinner)findViewById(R.id.tag);
-            spinTag.setAdapter(adapter);
+    protected void creatingChart(final JSONObject data){
+        View view = (View)findViewById(R.id.personal_layout);
+        PieChart mChart = (PieChart)view.findViewById(R.id.chart2p);
 
-            spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    currTag = tags.get(position);
-                    createCharts(currTag, currElected);
-                }
+//        mChart = new PieChart(this);
+        // add pie chart to main layout
+//        customView.(mChart, 1000, 500);
+//        customView.setBackgroundColor(Color.WHITE);
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parentView) {
-                    createCharts(currTag, currElected);
-                }
+        // configure pie chart
+        mChart.setUsePercentValues(true);
+        mChart.setDescription("");
 
-            });
+        // enable hole and configure
+        mChart.setDrawHoleEnabled(true);
+//        mChart.setHoleColorTransparent(true);
+        mChart.setHoleRadius(7);
+        mChart.setTransparentCircleRadius(10);
 
+        // enable rotation of the chart by touch
+        mChart.setRotationAngle(0);
+        mChart.setRotationEnabled(true);
 
+        // add data
+        addData(mChart, data);
+
+        // customize legends
+        Legend l = mChart.getLegend();
+        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+        l.setXEntrySpace(7);
+        l.setYEntrySpace(5);
+    }
+
+    private void addData(PieChart mChart, JSONObject dataMem) {
+        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
+        ArrayList<String> xData = new ArrayList<>();
+        int counter = 0;
+        Iterator<?> memName = dataMem.keys();
+        try {
+            while(memName.hasNext()) {
+                final String nameM = (String) memName.next();
+                xData.add(nameM);
+                float val = ((Number)dataMem.get(nameM)).floatValue() * 100;
+                yVals1.add(new Entry(val, counter));
+                counter++;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        // create pie data set
+        PieDataSet dataSet = new PieDataSet(yVals1, "התאמה לחבר כנסת");
+        dataSet.setSliceSpace(3);
+        dataSet.setSelectionShift(5);
+
+        // instantiate pie data object now
+        PieData data = new PieData(xData, dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.GRAY);
+
+        mChart.setData(data);
+        // undo all highlights
+        mChart.highlightValues(null);
+        // update pie chart
+        mChart.invalidate();
     }
 
 
-    protected void createElectedList() {
-        JSONArray electedJson = getElectedOfficials(R.id.mainLayout);
-        final ArrayList<String> electedList = new ArrayList<String>();
-        if (electedJson != null) {
-            int len = electedJson.length();
-            for (int i=0;i<len;i++){
-                try {
-                    electedList.add(electedJson.get(i).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+//    protected void createTags() {
+//        JSONObject category = getCategoryNames(R.id.personal_layout);
+//        final ArrayList<String> tags = new ArrayList<String>();
+//        try {
+//            tags.add(GENERAL);
+//            JSONArray jsonTags = (JSONArray)category.get(TAG);
+//            for (int i=0; i< jsonTags.length(); i++) {
+//                final String name = (String) jsonTags.get(i);
+//                // Add party name
+//                if (name.equals(GENERAL)) {
+//                    continue;
+//                }
+//                tags.add(name);
+//            }
+//
+//            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
+//            Spinner spinTag = (Spinner)findViewById(R.id.tag);
+//            spinTag.setAdapter(adapter);
+//
+//            spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                @Override
+//                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+//                    currTag = tags.get(position);
+//                    createCharts(currTag, currElected);
+//                }
+//
+//                @Override
+//                public void onNothingSelected(AdapterView<?> parentView) {
+//                    createCharts(currTag, currElected);
+//                }
+//
+//            });
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, electedList);
-        Spinner spinTag = (Spinner)findViewById(R.id.tag);
-        spinTag.setAdapter(adapter);
-
-        spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                currElected = electedList.get(position);
-                createCharts(currTag, currElected);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                createCharts(currTag, currElected);
-            }
-
-        });
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
-    }
+//    protected void createElectedList() {
+//        JSONArray electedJson = getElectedOfficials(R.id.personal_layout);
+//        final ArrayList<String> electedList = new ArrayList<String>();
+//        if (electedJson != null) {
+//            int len = electedJson.length();
+//            for (int i=0;i<len;i++){
+//                try {
+//                    electedList.add(electedJson.get(i).toString());
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, electedList);
+//        Spinner spinTag = (Spinner)findViewById(R.id.tag);
+//        spinTag.setAdapter(adapter);
+//
+//        spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+//                currElected = electedList.get(position);
+//                createCharts(currTag, currElected);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parentView) {
+//                createCharts(currTag, currElected);
+//            }
+//
+//        });
+//
+//
+//    }
 
-    protected void createCharts(String tag, String elected) {
-        JSONObject electedMatchByTag;
-        if (elected != null) {
-            electedMatchByTag = getUserToElectedOfficialMatchByTag(R.id.mainLayout, elected, tag);
-            drawPieChart(electedMatchByTag);
-        }
-        JSONObject partiesMatchByTag = getUserPartiesVotesMatchByTag(R.id.mainLayout, tag);
-        drawPieChart(partiesMatchByTag);
-    }
-
-    protected void drawPieChart(JSONObject data) {
-        //TODO implement
-    }
+//    protected void createCharts(String tag, String elected) {
+//        JSONObject electedMatchByTag;
+//        if (elected != null) {
+//            electedMatchByTag = getUserToElectedOfficialMatchByTag(R.id.personal_layout, elected, tag);
+//            drawPieChart(electedMatchByTag);
+//        }
+//        JSONObject partiesMatchByTag = getUserPartiesVotesMatchByTag(R.id.personal_layout, tag);
+//        drawPieChart(partiesMatchByTag);
+//    }
+//
+//    protected void drawPieChart(JSONObject data) {
+//        //TODO implement
+//    }
 }
