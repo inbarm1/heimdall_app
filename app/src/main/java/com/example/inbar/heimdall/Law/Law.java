@@ -1,4 +1,4 @@
-package com.example.inbar.heimdall.Law;
+package com.example.inbar.heimdall;
 
 import android.graphics.drawable.Drawable;
 
@@ -7,11 +7,11 @@ import android.graphics.drawable.Drawable;
  */
 
 public class Law {
-    private String firstname;
-    private String lastname;
-    private String role;
-    private String description;
-    private Drawable image;
+    public String firstname;
+    public String lastname;
+    public String role;
+    public String description;
+    public Drawable image;
 
     public Law(){}
 
