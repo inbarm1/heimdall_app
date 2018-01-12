@@ -7,13 +7,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -50,6 +55,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static android.graphics.Color.WHITE;
 import static android.graphics.Color.rgb;
 
 public class MainActivity extends APIRequest {
@@ -70,7 +76,6 @@ public class MainActivity extends APIRequest {
 
     private CoordinatorLayout mainLayout;
     private PopupWindow mPopupWindow;
-    PieChart mChart;
     View customView;
 
     private final static int CHART_1 = 0;
@@ -155,8 +160,39 @@ public class MainActivity extends APIRequest {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.scrollLayer);
+
+        final FloatingActionButton image = (FloatingActionButton) findViewById(R.id.img_arrow);
+        image.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                scrollView.scrollBy(0, 1500);
+            }
+        });
+
+        final FloatingActionButton image_up = (FloatingActionButton) findViewById(R.id.img_arrow_up);
+        image_up.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                scrollView.scrollBy(0, -1500);
+            }
+        });
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    image.setVisibility(View.GONE);
+                } else if (scrollY == 0) {
+                    image_up.setVisibility(View.GONE);
+                }
+                else {
+                    image_up.setVisibility(View.VISIBLE);
+                    image.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -170,7 +206,6 @@ public class MainActivity extends APIRequest {
             }
         });
         thread.start();
-
         createTags();
     }
 
@@ -186,7 +221,11 @@ public class MainActivity extends APIRequest {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                String str = getUserRank(R.id.mainLayout).toString();
+                JSONObject json = getUserRank(R.id.mainLayout);
+                if(json == null) {
+                    return;
+                }
+                String str = json.toString();
                 InputStream is = new ByteArrayInputStream(str.getBytes());
                 handler_.sendMessage(Message.obtain(handler_, RATE_HANDLER, is));
             }
@@ -199,7 +238,11 @@ public class MainActivity extends APIRequest {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                String str = getCategoryNames(R.id.mainLayout).toString();
+                JSONObject json = getCategoryNames(R.id.mainLayout);
+                if(json == null) {
+                    return;
+                }
+                String str = json.toString();
                 InputStream is = new ByteArrayInputStream(str.getBytes());
                 handler_.sendMessage(Message.obtain(handler_, TAGS_HANDLER, is));
             }
@@ -230,7 +273,11 @@ public class MainActivity extends APIRequest {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                String str = getAllPartiesEfficiencyByTag(R.id.mainLayout, tag).toString();
+                JSONObject json = getAllPartiesEfficiencyByTag(R.id.mainLayout, tag);
+                if(json == null) {
+                    return;
+                }
+                String str = json.toString();
                 InputStream is = new ByteArrayInputStream(str.getBytes());
                 handler_.sendMessage(Message.obtain(handler_, CHART_1, is));
             }
@@ -242,7 +289,11 @@ public class MainActivity extends APIRequest {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                String str = getAllLawProposalsByTag(R.id.mainLayout, tag).toString();
+                JSONObject json = getAllLawProposalsByTag(R.id.mainLayout, tag);
+                if(json == null) {
+                    return;
+                }
+                String str = json.toString();
                 InputStream is = new ByteArrayInputStream(str.getBytes());
                 handler_.sendMessage(Message.obtain(handler_, CHART_2, is));
             }
@@ -256,7 +307,11 @@ public class MainActivity extends APIRequest {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
-                String str = getAllAbsentFromVotesByTag(R.id.mainLayout, tag).toString();
+                JSONObject json = getAllAbsentFromVotesByTag(R.id.mainLayout, tag);
+                if(json == null) {
+                    return;
+                }
+                String str = json.toString();
                 InputStream is = new ByteArrayInputStream(str.getBytes());
                 handler_.sendMessage(Message.obtain(handler_, CHART_3, is));
             }
@@ -367,9 +422,10 @@ public class MainActivity extends APIRequest {
         });
 
         BarDataSet dataSet = new BarDataSet(valueSet, "מפלגות");
-        dataSet.setColors(colors);;
+        dataSet.setColors(colors);
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
+        barChart.getLegend().setEnabled(false);
 //        XAxis rot = barChart.getXAxis();
 //        rot.setLabelRotationAngle(-45);
 
@@ -381,7 +437,7 @@ public class MainActivity extends APIRequest {
     }
 
     protected void creatingChart(final JSONObject data, View pop){
-        mChart = (PieChart)pop.findViewById(R.id.piechart);
+        PieChart mChart = (PieChart)pop.findViewById(R.id.piechart);
 
 //        mChart = new PieChart(this);
         // add pie chart to main layout
@@ -403,7 +459,7 @@ public class MainActivity extends APIRequest {
         mChart.setRotationEnabled(true);
 
         // add data
-        addData(data);
+        addData(mChart, data);
 
         // customize legends
         Legend l = mChart.getLegend();
@@ -412,7 +468,7 @@ public class MainActivity extends APIRequest {
         l.setYEntrySpace(5);
     }
 
-    private void addData(JSONObject dataMem) {
+    private void addData(PieChart mChart, JSONObject dataMem) {
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
         ArrayList<String> xData = new ArrayList<>();
         int counter = 0;
