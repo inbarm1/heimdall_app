@@ -42,37 +42,34 @@
             android:gravity="right"
             android:text="בחר מפלגה" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
+            android:orientation="horizontal"
             android:padding="@dimen/activity_horizontal_margin">
+            <Spinner
+                android:id="@+id/party"
+                android:theme="@style/SpinnerStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_weight="1"
+                android:textColor="#212121" />
 
             <ImageView
                 android:id="@+id/ivContactItem1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_alignLeft="@+id/party"
-
                 android:src="@drawable/elections" />
 
-            <Spinner
-                android:id="@+id/party"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_toEndOf="@id/ivContactItem1"
-                android:layout_toRightOf="@id/ivContactItem1"
-                android:gravity="end"
-                android:textAlignment="textEnd"
-                android:textColor="#212121" />
 
-        </RelativeLayout>
+
+        </LinearLayout>
 
         <include layout="@layout/item_divider" />
 
@@ -88,12 +85,23 @@
             android:gravity="right"
             android:text="בחר עיסוק" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
+            android:orientation="horizontal"
             android:padding="@dimen/activity_horizontal_margin">
+
+            <Spinner
+                android:id="@+id/job"
+                android:layout_width="match_parent"
+                android:theme="@style/SpinnerStyle"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:textColor="#212121" />
 
             <ImageView
                 android:id="@+id/ivContactItem2"
@@ -103,21 +111,9 @@
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_alignLeft="@+id/job"
-
                 android:src="@drawable/briefcase" />
 
-            <Spinner
-                android:id="@+id/job"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_toEndOf="@id/ivContactItem2"
-                android:layout_toRightOf="@id/ivContactItem2"
-                android:textColor="#212121" />
-
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <include layout="@layout/item_divider" />
 
@@ -132,34 +128,41 @@
             android:layout_marginRight="64dp"
             android:gravity="right"
             android:text="בחר תאריך לידה" />
-        <RelativeLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
+            android:orientation="horizontal"
+            android:id="@+id/date_layout"
             android:padding="@dimen/activity_horizontal_margin">
 
             <TextView
-                android:id="@+id/birth_year_selection"
+                android:id="@+id/birth_date_selection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentTop="true"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="30dp"
+                android:textSize="16dp"
                 android:gravity="right"
-                android:text="@string/choose_date_text"/>
+                android:text="@string/choose_date_text"
+                android:textColor="#212121" />
+
 
             <ImageView
                 android:id="@+id/ivContactItem3"
                 android:layout_width="wrap_content"
-                android:layout_alignLeft="@+id/birth_year_selection"
+                android:layout_alignLeft="@+id/birth_date_selection"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:src="@drawable/cupcake" />
-
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <include layout="@layout/item_divider" />
         <TextView
@@ -174,12 +177,23 @@
             android:gravity="right"
             android:text="בחר עיר מגורים" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
+            android:orientation="horizontal"
             android:padding="@dimen/activity_horizontal_margin">
+
+            <AutoCompleteTextView
+                android:theme="@style/Autocomplete"
+                android:id="@+id/city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"
+                android:textColor="#212121" />
 
             <ImageView
                 android:id="@+id/ivContactItem5"
@@ -192,18 +206,10 @@
 
                 android:src="@drawable/ic_location_on_black" />
 
-            <Spinner
-                android:id="@+id/city"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_toEndOf="@id/ivContactItem5"
-                android:layout_toRightOf="@id/ivContactItem5"
-                android:textColor="#212121" />
 
 
-        </RelativeLayout>
+
+        </LinearLayout>
 
         <include layout="@layout/item_divider" />
 
@@ -219,12 +225,27 @@
             android:gravity="right"
             android:text="בחר רמת מעורבות" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
+            android:orientation="horizontal"
             android:padding="@dimen/activity_horizontal_margin">
+
+
+            <Spinner
+                android:id="@+id/involvment_spinner"
+                android:layout_width="match_parent"
+                android:theme="@style/SpinnerStyle"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:ellipsize="end"
+                android:stepSize="1.0"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#212121" />
 
             <ImageView
                 android:id="@+id/ivContactItem4"
@@ -239,22 +260,11 @@
                 />
 
 
-            <Spinner
-                android:id="@+id/involvment_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_toEndOf="@id/ivContactItem4"
-                android:layout_toRightOf="@id/ivContactItem4"
-                android:ellipsize="end"
-                android:stepSize="1.0"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121" />
 
 
 
-        </RelativeLayout>
+
+        </LinearLayout>
 
         <include layout="@layout/item_divider" />
 
@@ -265,6 +275,7 @@
             android:padding="@dimen/activity_horizontal_margin">
 
             <Button
+                android:id="@+id/register_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"
