@@ -35,6 +35,23 @@ public class APIRequest extends HttpsConnection {
     public final String START_DATE = "start_date";
     public final String END_DATE = "end_date";
 
+    public final String PRECENT_SAME= "same";
+    public final String PRECENT_ABSENT= "member_absent";
+    public final String PRECENT_DIFFERENT= "different";
+
+    public final String IS_USER_PARTY= "is_users_party";
+    public final String MATCH= "match";
+
+    public final String USER_INFO="user_info";
+
+    public final String JOB_FOR = "job_for";
+    public final String JOB_AGAINST = "job_against";
+    public final String RESIDENT_FOR = "resident_for";
+    public final String RESIDENT_AGAINST = "resident_against";
+    public final String AGE_FOR = "age_for";
+    public final String AGE_AGAINST = "age_against";
+
+
     protected Map<String, Integer> rate = new HashMap<>();
 
 
