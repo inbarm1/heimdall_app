@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -131,6 +132,23 @@ public class PersonalStatisticsActivity extends APIRequest {
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.scroll_personal);
+
+        final FloatingActionButton image = (FloatingActionButton) findViewById(R.id.img_arrow2);
+        image.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                scrollView.scrollBy(0, 1500);
+            }
+        });
+
+        final FloatingActionButton image_up = (FloatingActionButton) findViewById(R.id.img_arrow_up2);
+        image_up.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                scrollView.scrollBy(0, -1500);
+            }
+        });
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

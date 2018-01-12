@@ -186,7 +186,25 @@
             </RelativeLayout>
 
         </LinearLayout>
-
-
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/img_arrow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="5dp"
+        android:src="@drawable/arrow"
+        app:layout_anchorGravity="bottom|center|end"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/img_arrow_up2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:layout_margin="5dp"
+        android:src="@drawable/up_arrow"
+        android:visibility="gone"
+        app:layout_anchorGravity="top|center|end"/>
+
 </android.support.design.widget.CoordinatorLayout>
