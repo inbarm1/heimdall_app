@@ -1,11 +1,17 @@
 package com.example.inbar.heimdall;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.DrawableRes;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -254,5 +260,17 @@ public class APIRequest extends HttpsConnection {
         } catch (JSONException e){
             throw new RuntimeException(e);
         }
+    }
+
+    protected String readFromMessage(Message msg) throws IOException {
+        InputStream is = (InputStream)msg.obj;
+        BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        StringBuilder responseStrBuilder = new StringBuilder();
+
+        String inputStr;
+        while ((inputStr = streamReader.readLine()) != null)
+            responseStrBuilder.append(inputStr);
+
+        return responseStrBuilder.toString();
     }
 }
