@@ -3,11 +3,14 @@ package com.example.inbar.heimdall.Law;
 import android.view.View;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.inbar.heimdall.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,24 +59,26 @@ public class Law {
     LawActivity lawActivity;
 
 
-    public Law(String name, JSONObject lawObject) {
+    public Law(String name, JSONObject lawObject, LawActivity lawActivity) {
         this.name = name;
         try {
             this.voteStat = VoteStatus.valueOf(lawObject.getString(USER_VOTED).toUpperCase());
             this.description = lawObject.getString(DESC);
             this.link = lawObject.getString(LINK);
             this.tags = getTagsAsArray(lawObject.getJSONArray(TAGS));
+            this.lawActivity = lawActivity;
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void setLawActivity(LawActivity lawActivity) {
-        this.lawActivity = lawActivity;
+    public void setUserDistAndElectedVotes() {
+        this.setElectedVotes();
+        this.setUserDist();
     }
 
-    public Future<JSONObject> setUserDist() {
-        return es.submit(new Callable<JSONObject>() {
+    private void setUserDist() {
+        this.userDist = es.submit(new Callable<JSONObject>() {
 
             @Override
             public JSONObject call() throws Exception {
@@ -82,8 +87,8 @@ public class Law {
         });
     }
 
-    public Future<JSONObject> setElectedVotes() {
-        return es.submit(new Callable<JSONObject>() {
+    private void setElectedVotes() {
+        this.electedVotes = es.submit(new Callable<JSONObject>() {
 
             @Override
             public JSONObject call() throws Exception {
@@ -140,8 +145,9 @@ public class Law {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
         return null;
     }
+
+
 }
 
