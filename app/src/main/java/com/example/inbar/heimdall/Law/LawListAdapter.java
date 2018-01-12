@@ -9,23 +9,51 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.inbar.heimdall.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
-import java.util.List;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by Eilon on 05/01/2018.
  */
 
 public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleViewHolder> {
-    private Law[]  mLaws;
+    private ArrayList<Law> mLaws;
     protected LawActivity lawActivity;
 
-    public LawListAdapter(Law[] laws, LawActivity father) {
+    public LawListAdapter(ArrayList<Law> laws, LawActivity father) {
         mLaws = laws;
         lawActivity = father;
+    }
 
+    public void getLaws(final Date startDate, final Date endDate) {
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy");
+                JSONObject json = lawActivity.getLawsByDateInterval(R.id.lawLayout, sdfr.format(startDate), sdfr.format(endDate));
+                HashMap<String, JSONObject> laws = new Gson().fromJson(json.toString(),
+                        new TypeToken<HashMap<String, JSONObject>>() {}.getType());
+                for (HashMap.Entry<String, JSONObject> entry: laws.entrySet()) {
+                    String lawName = entry.getKey();
+                    JSONObject lawDetails = entry.getValue();
+                    mLaws.add(new Law(lawName, lawDetails, lawActivity));
+                }
+
+                LawListAdapter.this.notifyDataSetChanged();
+
+                for (Law law: mLaws) law.setUserDistAndElectedVotes();
+            }
+        });
+        thread.start();
     }
 
     @Override
@@ -39,7 +67,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
 
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
-        final Law law = mLaws[position];
+        final Law law = mLaws.get(position);
         holder.nameTextView.setText(law.getName());
         holder.roleTextView.setText(law.getDescription());
         holder.moreInfoButton.setOnClickListener(new VoteButtonListener(law));
@@ -47,7 +75,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
 
     @Override
     public int getItemCount() {
-        return mLaws.length;
+        return mLaws.size();
     }
 
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {
