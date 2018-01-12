@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.example.inbar.heimdall.R;
 
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import java.util.List;
 
 /**
@@ -74,6 +76,22 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         }
     }
 
+    public static class MoreInfoButtonListener implements View.OnClickListener {
+        private Law mLaw;
+
+        public MoreInfoButtonListener(Law law) {
+            mLaw = law;
+            int x = 1;
+        }
+
+        @Override
+        public void onClick(View v) {
+            //the view is the button, we need to get it's parnet
+            View parent = (View) v.getParent();
+            ExpandableLayout expandableLayout = ((ExpandableLayout) parent.findViewById(R.id.expandable_layout));
+            expandableLayout.toggle();
+        }
+    }
 
 }
 

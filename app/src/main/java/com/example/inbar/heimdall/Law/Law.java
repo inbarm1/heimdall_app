@@ -3,11 +3,14 @@ package com.example.inbar.heimdall.Law;
 import android.view.View;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.inbar.heimdall.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -140,8 +143,9 @@ public class Law {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
         return null;
     }
+
+
 }
 
