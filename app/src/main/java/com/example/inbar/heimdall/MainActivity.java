@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 
@@ -76,19 +77,9 @@ public class MainActivity extends APIRequest {
     private final static int CHART_2 = 1;
     private final static int CHART_3 = 2;
     private final static int TAGS_HANDLER = 3;
+    private final static int RATE_HANDLER = 4;
     private static String userPartyName;
 
-    private String readFromMessage(Message msg) throws IOException {
-        InputStream is = (InputStream)msg.obj;
-        BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-        StringBuilder responseStrBuilder = new StringBuilder();
-
-        String inputStr;
-        while ((inputStr = streamReader.readLine()) != null)
-            responseStrBuilder.append(inputStr);
-
-        return responseStrBuilder.toString();
-    }
 
     private Handler handler_ = new Handler(){
         @Override
@@ -111,6 +102,11 @@ public class MainActivity extends APIRequest {
                         JSONObject category = new JSONObject(readFromMessage(msg));
                         analyzeTags(category);
                         break;
+                    case RATE_HANDLER:
+                        JSONObject data4 = new JSONObject(readFromMessage(msg));
+                        String rank = data4.getString("user_rank");
+                        ImageView img= (ImageView) findViewById(R.id.rate);
+                        img.setImageResource(rate.get(rank));
 
                 }
             }catch(IOException e){
@@ -176,13 +172,26 @@ public class MainActivity extends APIRequest {
         thread.start();
 
         createTags();
-        //createCharts(null);
     }
 
     private void createCharts(String tag){
+        getRate();
         createEfficiencyChar(tag);
         createMissingChar(tag);
         createProposalsChar(tag);
+    }
+
+    private void getRate() {
+
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                String str = getUserRank(R.id.mainLayout).toString();
+                InputStream is = new ByteArrayInputStream(str.getBytes());
+                handler_.sendMessage(Message.obtain(handler_, RATE_HANDLER, is));
+            }
+        });
+        thread.start();
     }
 
     private void createTags() {

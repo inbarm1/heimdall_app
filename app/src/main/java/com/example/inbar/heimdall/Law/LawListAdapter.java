@@ -15,14 +15,15 @@ import java.util.List;
  */
 
 public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleViewHolder> {
-    private List<Law> mLaws;
+    private Law[]  mLaws;
 
-    public LawListAdapter(List<Law> laws) {
+    public LawListAdapter(Law[] laws) {
         mLaws = laws;
     }
 
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int type) {
+        int resource = R.layout.single_law_layout;
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.single_law_layout, parent, false);
         SimpleViewHolder holder = new SimpleViewHolder(v);
@@ -31,14 +32,14 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
 
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
-        final Law law = mLaws.get(position);
-        holder.nameTextView.setText(law.getName());
-        holder.roleTextView.setText(law.getRole());
+        final Law law = mLaws[position];
+        holder.nameTextView.setText(law.name);
+        holder.roleTextView.setText(law.description);
     }
 
     @Override
     public int getItemCount() {
-        return mLaws.size();
+        return mLaws.length;
     }
 
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {

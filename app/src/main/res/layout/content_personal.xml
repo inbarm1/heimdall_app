@@ -68,7 +68,7 @@
                     android:textColor="#727272" />
 
                 <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/chart1"
+                    android:id="@+id/chart1p"
                     android:layout_marginTop="40dp"
                     android:layout_width="match_parent"
                     android:layout_height="450dp" />
@@ -96,7 +96,7 @@
                     android:textColor="#727272" />
 
                 <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/chart2"
+                    android:id="@+id/chart2p"
                     android:layout_marginTop="40dp"
                     android:layout_width="match_parent"
                     android:layout_height="450dp" />
@@ -124,7 +124,7 @@
                     android:textColor="#727272" />
 
                 <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/chart3"
+                    android:id="@+id/chart3p"
                     android:layout_marginTop="40dp"
                     android:layout_width="match_parent"
                     android:layout_height="450dp" />

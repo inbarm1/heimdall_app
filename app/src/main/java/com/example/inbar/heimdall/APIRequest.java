@@ -1,14 +1,21 @@
 package com.example.inbar.heimdall;
 
+import android.os.Bundle;
+import android.os.Message;
+import android.support.annotation.DrawableRes;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-/**
- * Created by oferh_000 on 06-Jan-18.
- */
+import java.util.HashMap;
+import java.util.Map;
 
 public class APIRequest extends HttpsConnection {
     private final String SUCCESS = "Success";
@@ -28,6 +35,37 @@ public class APIRequest extends HttpsConnection {
     public final String START_DATE = "start_date";
     public final String END_DATE = "end_date";
 
+    public final String PRECENT_SAME= "same";
+    public final String PRECENT_ABSENT= "member_absent";
+    public final String PRECENT_DIFFERENT= "different";
+
+    public final String IS_USER_PARTY= "is_users_party";
+    public final String MATCH= "match";
+
+    public final String USER_INFO="user_info";
+
+    public final String JOB_FOR = "job_for";
+    public final String JOB_AGAINST = "job_against";
+    public final String RESIDENT_FOR = "resident_for";
+    public final String RESIDENT_AGAINST = "resident_against";
+    public final String AGE_FOR = "age_for";
+    public final String AGE_AGAINST = "age_against";
+
+
+    protected Map<String, Integer> rate = new HashMap<>();
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        rate.put("תייר",R.drawable.rank1d);
+        rate.put("אזרח",R.drawable.rank2d);
+        rate.put("עסקן",R.drawable.rank3d);
+        rate.put("ראש עיר",R.drawable.rank4d);
+        rate.put("חבר כנסת",R.drawable.rank5d);
+        rate.put("לוביסט",R.drawable.rank6d);
+        rate.put("טייקון",R.drawable.rank7d);
+    }
 
     public boolean isRegistered(int idLayer){
         return sendJson(idLayer, new JSONObject(), "/isRegistered").equals("Success");
@@ -95,10 +133,10 @@ public class APIRequest extends HttpsConnection {
         }
     }
 
-    public String getUserRank(int idLayer){
+    public JSONObject getUserRank(int idLayer){
         JSONObject request = new JSONObject();
         try {
-            return (new JSONObject(sendJson(idLayer, request, "/getUserRank"))).getString("user_rank");
+            return (new JSONObject(sendJson(idLayer, request, "/getUserRank")));
         }
         catch (JSONException e){
             throw new RuntimeException(e);
@@ -239,5 +277,17 @@ public class APIRequest extends HttpsConnection {
         } catch (JSONException e){
             throw new RuntimeException(e);
         }
+    }
+
+    protected String readFromMessage(Message msg) throws IOException {
+        InputStream is = (InputStream)msg.obj;
+        BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        StringBuilder responseStrBuilder = new StringBuilder();
+
+        String inputStr;
+        while ((inputStr = streamReader.readLine()) != null)
+            responseStrBuilder.append(inputStr);
+
+        return responseStrBuilder.toString();
     }
 }

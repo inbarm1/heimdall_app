@@ -81,7 +81,8 @@ public class NevActivity extends FirebaseActivity
             Intent intent = new Intent(NevActivity.this,ProfileActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_personal_statistics) {
-
+            Intent intent = new Intent(NevActivity.this,PersonalStatisticsActivity.class);
+            startActivity(intent);
         }  else if (id == R.id.nav_general_statistics) {
             Intent intent = new Intent(NevActivity.this,MainActivity.class);
             startActivity(intent);
