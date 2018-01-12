@@ -245,6 +245,18 @@ public class APIRequest extends HttpsConnection {
         }
     }
 
+    public JSONObject getLawKnessetVotes(int idLayer, String lawName) {
+        JSONObject request = new JSONObject();
+        try {
+            request.put(LAW_NAME, lawName);
+            return new JSONObject(sendJson(idLayer, request, "/getLawKnessetVotes"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
+        }
+    }
+
     public JSONObject getAllAbsentFromVotesByTag(int idLayer, String tag) {
         JSONObject request = new JSONObject();
         try {
