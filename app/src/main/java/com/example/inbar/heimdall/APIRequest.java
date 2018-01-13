@@ -322,6 +322,17 @@ public class APIRequest extends HttpsConnection {
         }
     }
 
+    protected JSONObject getUserInfo(int idLayer){
+        JSONObject request = new JSONObject();
+        try {
+            return new JSONObject(sendJson(idLayer, request, "/getUserInfo"));
+        } catch (JSONException e){
+            e.printStackTrace();
+            onConnectionFailed(idLayer);
+            return null;
+        }
+    }
+
     protected String readFromMessage(Message msg) throws IOException {
         InputStream is = (InputStream)msg.obj;
         BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
