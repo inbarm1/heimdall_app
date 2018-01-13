@@ -1,5 +1,6 @@
 package com.example.inbar.heimdall;
 
+import android.app.Notification;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -13,12 +14,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -45,17 +43,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static android.graphics.Color.WHITE;
 import static android.graphics.Color.rgb;
 
 public class MainActivity extends APIRequest {
