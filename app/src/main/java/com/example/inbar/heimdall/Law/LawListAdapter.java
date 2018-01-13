@@ -49,12 +49,15 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                     mLaws.add(new Law(lawName, lawDetails, lawActivity));
                 }
 
-                LawListAdapter.this.notifyDataSetChanged();
-
                 for (Law law: mLaws) law.setUserDistAndElectedVotes();
             }
         });
+
         thread.start();
+
+        while (thread.isAlive()) {};
+
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -71,7 +74,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         final Law law = mLaws.get(position);
         holder.nameTextView.setText(law.getName());
         holder.roleTextView.setText(law.getDescription());
-        holder.moreInfoButton.setOnClickListener(new VoteButtonListener(law));
+        holder.moreInfoButton.setOnClickListener(new MoreInfoButtonListener(law));
     }
 
     @Override
@@ -93,7 +96,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         }
     }
 
-    public class VoteButtonListener implements View.OnClickListener {
+    public static class VoteButtonListener implements View.OnClickListener {
         private Law mLaw;
 
         public VoteButtonListener(Law law){
@@ -110,7 +113,6 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
 
         public MoreInfoButtonListener(Law law) {
             mLaw = law;
-            int x = 1;
         }
 
         @Override

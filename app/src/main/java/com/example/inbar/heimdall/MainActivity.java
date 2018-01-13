@@ -385,7 +385,7 @@ public class MainActivity extends APIRequest {
                 customView = inflater.inflate(R.layout.activity_pop_piechart,null);
 
                 // Initialize a new instance of popup window
-                 mPopupWindow = new PopupWindow(
+                mPopupWindow = new PopupWindow(
                         customView,
                         CoordinatorLayout.LayoutParams.WRAP_CONTENT,
                         CoordinatorLayout.LayoutParams.WRAP_CONTENT
@@ -415,8 +415,6 @@ public class MainActivity extends APIRequest {
                 mPopupWindow.showAtLocation(mainLayout, Gravity.CENTER,0,0);
 
                 creatingChart(map.get(name), customView);
-//                Toast.makeText(MainActivity.this,
-//                        (name + " = " + map.get(name).toString()), Toast.LENGTH_SHORT).show();
             }
 
             @Override
