@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -25,18 +24,17 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
-public class RegisterActivity extends AbsRegisterActivity {
+public abstract class AbsRegisterActivity extends APIRequest {
     String job, party, residency;
     JSONObject cat=null;
     HashSet<String> residencySet = new HashSet<>();
     InvolvementLevel involvementLevel;
-    com.example.inbar.heimdall.DatePicker dateFragment = new com.example.inbar.heimdall.DatePicker();
+    DatePicker dateFragment = new DatePicker();
 
     ExecutorService es = Executors.newSingleThreadExecutor();
 
@@ -57,14 +55,6 @@ public class RegisterActivity extends AbsRegisterActivity {
                 return register(R.layout.activity_register, dateFragment.getYear(), job, residency, party, involvementLevel);
             }
         });
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-        publicOnCreate();
-
     }
 
     protected void publicOnCreate() {
@@ -103,15 +93,15 @@ public class RegisterActivity extends AbsRegisterActivity {
                 Intent intent = null;
                 try {
                     if (register.get()) {
-                        intent = new Intent(RegisterActivity.this, MainActivity.class);
+                        intent = new Intent(AbsRegisterActivity.this, MainActivity.class);
                     }
                     else{
                         Log.d("error","register failed");
-                        intent = new Intent(RegisterActivity.this, SignInActivity.class);
+                        intent = new Intent(AbsRegisterActivity.this, SignInActivity.class);
                         onConnectionFailed(R.layout.activity_register);
                     }
                 } catch (Exception e) {
-                    intent = new Intent(RegisterActivity.this, SignInActivity.class);
+                    intent = new Intent(AbsRegisterActivity.this, SignInActivity.class);
                     onConnectionFailed(R.layout.activity_register);
                 }finally {
                     startActivity(intent);
@@ -168,7 +158,7 @@ public class RegisterActivity extends AbsRegisterActivity {
         }
         if (doSort)
             Collections.sort(values);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(RegisterActivity.this, android.R.layout.simple_list_item_1, values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(AbsRegisterActivity.this, android.R.layout.simple_list_item_1, values);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         a.setThreshold(1);
         a.setTextColor(Color.BLACK);
@@ -179,7 +169,7 @@ public class RegisterActivity extends AbsRegisterActivity {
         Spinner s = (Spinner) findViewById(layout_id);
         if (doSort)
             Collections.sort(values);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(RegisterActivity.this, android.R.layout.simple_list_item_1, values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(AbsRegisterActivity.this, android.R.layout.simple_list_item_1, values);
         s.setPrompt(defaultOption);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         s.setAdapter(adapter);

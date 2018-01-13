@@ -17,6 +17,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/register_large_title"
             android:textSize="20dp"
             android:textColor="@color/colorPrimaryDark"
             android:text="@string/register_content_title"
@@ -24,6 +25,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/register_content_text"
             android:textSize="15dp"
             android:textColor="@color/colorPrimaryDark"
             android:text="@string/register_content_text"
@@ -31,7 +33,7 @@
 
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/party_text"
             android:layout_width="341dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -115,7 +117,7 @@
 
         </LinearLayout>
 
-        <include layout="@layout/item_divider" />
+        <include layout="@layout/item_divider" android:id="@+id/date_divider"/>
 
         <TextView
             android:id="@+id/birth_date_text"
