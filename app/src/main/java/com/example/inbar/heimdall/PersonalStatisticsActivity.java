@@ -107,7 +107,7 @@ public class PersonalStatisticsActivity extends APIRequest {
                     case RATE_HANDLER:
                         JSONObject data4 = new JSONObject(readFromMessage(msg));
                         String rank = data4.getString("user_rank");
-                        ImageView img = (ImageView) findViewById(R.id.ratep);
+                        ImageView img = (ImageView) findViewById(R.id.rate);
                         img.setImageResource(rate.get(rank));
 
                 }
