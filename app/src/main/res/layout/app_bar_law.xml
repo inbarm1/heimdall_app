@@ -31,16 +31,19 @@
                 android:id="@+id/fromDateButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="setStartDate"
                 android:text="From Date" />
             <Button
                 android:id="@+id/toDateButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="setEndDate"
                 android:text="To Date" />
             <Button
                 android:id="@+id/filterLaws"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="refreshLawsForAdapter"
                 android:text="Filter" />
 
 
