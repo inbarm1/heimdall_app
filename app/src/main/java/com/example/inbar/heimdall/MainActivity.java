@@ -430,6 +430,12 @@ public class MainActivity extends APIRequest {
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
         barChart.getLegend().setEnabled(false);
+
+        XAxis xAxistemp = barChart.getXAxis();
+        xAxistemp.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxistemp.setSpaceBetweenLabels(6);
+//        xAxistemp.setXOffset(12);
+        xAxistemp.setTextSize(8);
 //        XAxis rot = barChart.getXAxis();
 //        rot.setLabelRotationAngle(-45);
 
