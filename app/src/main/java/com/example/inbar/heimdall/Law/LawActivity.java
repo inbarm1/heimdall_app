@@ -64,41 +64,9 @@ public class LawActivity extends APIRequest {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private LawListAdapter mAdapter;
-    private Date startDate;
-    private Date endDate;
+    private DatePicker startDate;
+    private DatePicker endDate;
 
-    public static class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-
-        private boolean isStartDate;
-        LawActivity lawActivity;
-
-
-        public void setDateToChange(LawActivity lawActivity, boolean isStartDate) {
-            this.isStartDate = isStartDate;
-            this.lawActivity = lawActivity;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            Date date = new GregorianCalendar(year, month, day).getTime();
-
-            if (isStartDate) {
-                lawActivity.startDate = date;
-            } else lawActivity.endDate = date;
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,13 +80,13 @@ public class LawActivity extends APIRequest {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);
-        mAdapter = new LawListAdapter(getLaws(), this);
+        mAdapter = new LawListAdapter(new ArrayList<Law>(), this);
 
         //Get default dates for laws
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, -1);
-        startDate = cal.getTime();
-        endDate = new Date();
+        Date startDate = cal.getTime();
+        Date endDate = new Date();
         mAdapter.getLaws(startDate, endDate);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -132,55 +100,14 @@ public class LawActivity extends APIRequest {
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-//    public void showDatePickerDialog(View v) {
-//        DialogFragment newFragment = new DatePickerFragment();
-//        newFragment.show(getFragmentManager(), "datePicker");
-//    }
-
-    public void setStartDate(View v){
-        DatePickerFragment newFragment = new DatePickerFragment();
-        newFragment.setDateToChange(this, true);
-        newFragment.show(getFragmentManager(), "Start Date");
-    }
-
-    public ArrayList<Law> getLaws() {
-        ArrayList<Law> laws = new ArrayList<>();//=  ;//Util.getPeopleList(this);
-        for (int i = 0; i < 30; i++) {
-            Law l1 = null;
-            try {
-                l1 = createLaw(i);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            laws.add(l1);
-        }
-        return laws;
-    }
-
-    public void setEndDate(View v){
-        DatePickerFragment newFragment = new DatePickerFragment();
-        newFragment.setDateToChange(this, false);
-        newFragment.show(getFragmentManager(), "End Date");
-    }
 
     public void refreshLawsForAdapter(View v) {
+        DatePicker startDatePicker = (DatePicker) findViewById(R.id.fromDatePicker);
+        DatePicker endDatePicker = (DatePicker) findViewById(R.id.toDatePicker);
+        Date startDate = new GregorianCalendar(startDatePicker.getYear(), startDatePicker.getMonth(), startDatePicker.getDayOfMonth()).getTime();
+        Date endDate = new GregorianCalendar(endDatePicker.getYear(), endDatePicker.getMonth(), endDatePicker.getDayOfMonth()).getTime();
         mAdapter.getLaws(startDate, endDate);
     }
-
-    public Law createLaw(int i) throws JSONException {
-        String jsonS = String.format("{'fuck law %s': {'link' : 'www.pornhub.com, 'description' : 'bla bla', 'tags' : ['eilon','ram'], 'user_voted' : 'for'  }", i);
-        JSONObject subJson = new JSONObject();
-        subJson.put("link", "pornhub.com " + String.valueOf(i));
-        subJson.put("description", "bla bla " + String.valueOf(i));
-        List<String> tags = new ArrayList<>();
-        tags.add("eilon " + String.valueOf(i));
-        tags.add("the king " + String.valueOf(i));
-        subJson.put("tags", tags);
-        subJson.put("user_voted", "for");
-        return new Law("law " + String.valueOf(i), subJson, this);
-    }
-
-
 
 }
 
