@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -75,6 +76,8 @@ public class PersonalStatisticsActivity extends APIRequest {
     private static final String ABSENT_PRE   = "נמנע";
     private static final String DIFF_PRE     = "הצבעות שונות";
     private static final String SAME_PRE     = "הצבעות זהות";
+    private static final String REMOVE_PARTY = "ח”כ יחיד – אורלי לוי-אבקסיס";
+    private static final String REMOVE_PARTY2 = "אינם חברי כנסת";
 
 
     private Handler handler_ = new Handler(){
@@ -218,6 +221,9 @@ public class PersonalStatisticsActivity extends APIRequest {
             int counter = 0;
             while( partyName.hasNext() ) {
                 final String name = (String)partyName.next();
+                if (name.equals(REMOVE_PARTY) || name.equals(REMOVE_PARTY2)) {
+                    continue;
+                }
                 // Add party name
                 xAxis.add(name);
                 // Get party's data
@@ -262,11 +268,15 @@ public class PersonalStatisticsActivity extends APIRequest {
         dataSet.setColors(colors);
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
-//        XAxis rot = barChart.getXAxis();
-//        rot.setLabelRotationAngle(-45);
+        barChart.getLegend().setEnabled(false);
+        barChart.setExtraTopOffset(40);
 
-//        barChart.setDragEnabled(true); // on by default
-//        barChart.setVisibleXRange(3,3); // sets the viewport to show 3 bars
+        XAxis xAxistemp = barChart.getXAxis();
+        xAxistemp.setSpaceBetweenLabels(0);
+        xAxistemp.setLabelsToSkip(0);
+        xAxistemp.setTextSize(8);
+        xAxistemp.setLabelRotationAngle(-45);
+
         barChart.setDescription("");
         barChart.animateXY(2000, 2000);
         barChart.invalidate();
