@@ -44,8 +44,8 @@ public class HttpsConnection extends NevActivity {
 
     protected HttpURLConnection getConnection(final int id_layer, String subDomain){
         try {
-            URL url = new URL("http://api.heimdall.ga"+subDomain);
-            //URL url = new URL("http://192.168.1.25:8080"+subDomain);
+            //URL url = new URL("http://api.heimdall.ga"+subDomain);
+            URL url = new URL("http://192.168.1.25:8080"+subDomain);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(150000);
@@ -65,23 +65,20 @@ public class HttpsConnection extends NevActivity {
     protected String sendJson(final int idLayer, final JSONObject message, String subDomain) {
         HttpURLConnection connection = null;
         try {
-            if(token == null) {
-                Task<GetTokenResult> getTokenResultTask = FirebaseAuth.getInstance().getCurrentUser()
-                        .getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                            public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                if (task.isSuccessful()) {
-                                    token = task.getResult().getToken();
-                                } else {
-                                    //throw new task.getException();
-                                }
+            Task<GetTokenResult> getTokenResultTask = FirebaseAuth.getInstance().getCurrentUser()
+                    .getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                            if (task.isSuccessful()) {
+                                token = task.getResult().getToken();
+                            } else {
+                                //throw new task.getException();
                             }
-                        });
-                while(!getTokenResultTask.isComplete()){}
-            }
+                        }
+                    });
+            while(!getTokenResultTask.isComplete()){}
 
 
-
-            message.put(USER_TOKEN, token);
+            message.put(USER_TOKEN, getTokenResultTask.getResult().getToken());
 
             connection = getConnection(idLayer, subDomain);
 

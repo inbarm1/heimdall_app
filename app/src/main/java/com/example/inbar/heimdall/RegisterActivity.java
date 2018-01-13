@@ -52,7 +52,6 @@ public class RegisterActivity extends APIRequest {
         return es.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-
                 return register(R.layout.activity_register, dateFragment.getYear(), job, residency, party, involvementLevel);
             }
         });
@@ -93,6 +92,7 @@ public class RegisterActivity extends APIRequest {
                     return;
                 };
                 Future<Boolean> register = register();
+                while(!register.isDone()){}
                 Intent intent = null;
                 try {
                     if (register.get()) {
