@@ -1,5 +1,6 @@
 package com.example.inbar.heimdall.Law;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
@@ -97,17 +98,17 @@ public class Law {
         }
     }
 
-    public void setUserDistAndElectedVotes() {
-        this.setElectedVotes();
-        this.setUserDist();
+    public void setUserDistAndElectedVotes(LawActivity l) {
+        this.setElectedVotes(l);
+        this.setUserDist(l);
     }
 
-    private void setUserDist() {
-        this.userDist = lawActivity.getUserDistribution(R.id.lawLayout, name);
+    private void setUserDist(LawActivity l) {
+        this.userDist = l.getUserDistribution(R.id.lawLayout, name);
     }
 
-    private void setElectedVotes() {
-        this.electedVotes = lawActivity.getLawKnessetVotes(R.id.lawLayout, name);
+    private void setElectedVotes(LawActivity l) {
+        this.electedVotes = l.getLawKnessetVotes(R.id.lawLayout, name);
     }
 
     public String getName() {
@@ -318,7 +319,7 @@ public class Law {
         barChart.invalidate();
     }
 
-    protected void creatingChart(final JSONObject data, View pop){
+    protected void createChart(final JSONObject data, View pop){
         PieChart mChart = (PieChart)pop.findViewById(R.id.piechart);
 
 //        mChart = new PieChart(this);
@@ -409,6 +410,8 @@ public class Law {
 
         return colors;
     }
+
+
 
 
 }

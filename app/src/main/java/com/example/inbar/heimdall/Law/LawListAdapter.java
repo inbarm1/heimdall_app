@@ -49,7 +49,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                     mLaws.add(new Law(lawName, lawDetails, lawActivity));
                 }
 
-                for (Law law: mLaws) law.setUserDistAndElectedVotes();
+                for (Law law: mLaws) law.setUserDistAndElectedVotes(lawActivity);
             }
         });
 

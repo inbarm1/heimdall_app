@@ -66,6 +66,9 @@ public class LawActivity extends APIRequest {
     private LawListAdapter mAdapter;
     private Date startDate;
     private Date endDate;
+    private PopupWindow mStatisticsPopupWindow;
+    View mStatisticscustomView;
+    boolean mStatisticsBlocking = false;
 
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
