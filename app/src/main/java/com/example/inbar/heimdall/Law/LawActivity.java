@@ -37,8 +37,11 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +63,20 @@ public class LawActivity extends APIRequest {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);
-        mAdapter = new LawListAdapter(getLaws(), this);
+        mAdapter = new LawListAdapter(new ArrayList<Law>(), this);
+
+        //Get default dates for laws
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        Date startDate = cal.getTime();
+        Date endDate = new Date();
+
+        try {
+            mAdapter.getClass().getMethod("getLaws").invoke(startDate, endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         mRecyclerView.setAdapter(mAdapter);
 
         id_drawer_layout = R.id.drawer_layout_law;
@@ -92,7 +108,7 @@ public class LawActivity extends APIRequest {
         return laws;
     }
 
-    public static Law createLaw(int i) throws JSONException {
+    public Law createLaw(int i) throws JSONException {
         String jsonS = String.format("{'fuck law %s': {'link' : 'www.pornhub.com, 'description' : 'bla bla', 'tags' : ['eilon','ram'], 'user_voted' : 'for'  }", i);
         JSONObject subJson = new JSONObject();
         subJson.put("link", "pornhub.com " + String.valueOf(i));
@@ -102,8 +118,9 @@ public class LawActivity extends APIRequest {
         tags.add("the king " + String.valueOf(i));
         subJson.put("tags", tags);
         subJson.put("user_voted", "for");
-        return new Law("law " + String.valueOf(i), subJson);
+        return new Law("law " + String.valueOf(i), subJson, this);
     }
+
 }
 
 

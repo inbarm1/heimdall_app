@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -88,6 +89,9 @@ public class PersonalStatisticsActivity extends APIRequest {
                     case CHART_2:
                         JSONObject data2 = new JSONObject(readFromMessage(msg));
                         creatingPieChart(R.id.chart2p, data2);
+                        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.scroll_personal);
+                        int y = (scrollView.getChildAt(0).getMeasuredHeight() -scrollView.getMeasuredHeight());
+                        scrollView.setScrollY(y);
                         break;
                     case TAGS_HANDLER2:
                         JSONArray category2 = new JSONArray(readFromMessage(msg));
@@ -129,6 +133,23 @@ public class PersonalStatisticsActivity extends APIRequest {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.scroll_personal);
+
+        final FloatingActionButton image = (FloatingActionButton) findViewById(R.id.img_arrow2);
+        image.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                scrollView.scrollBy(0, 1500);
+            }
+        });
+
+        final FloatingActionButton image_up = (FloatingActionButton) findViewById(R.id.img_arrow_up2);
+        image_up.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                scrollView.scrollBy(0, -1500);
+            }
+        });
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -166,8 +187,8 @@ public class PersonalStatisticsActivity extends APIRequest {
 
     private void createLawPieChart(final String elected, final String tagElected) {
         if (elected == null || elected.equals(NONE_TAG)){
-            TextView test = (TextView)findViewById(R.id.no_data);
-            test.setCursorVisible(true);
+            TextView text = (TextView)findViewById(R.id.no_data);
+            text.setVisibility(View.VISIBLE);
             return;
         }
         Thread thread = new Thread(new Runnable(){
@@ -331,7 +352,7 @@ public class PersonalStatisticsActivity extends APIRequest {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 TextView test = (TextView)findViewById(R.id.no_data);
-                test.setCursorVisible(false);
+                test.setVisibility(View.GONE);
                 currentElectedPosition = position;
                 createLawPieChart(tags2.get(position), tags.get(currentTagPosition));
             }
@@ -421,9 +442,6 @@ public class PersonalStatisticsActivity extends APIRequest {
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
         l.setXEntrySpace(7);
         l.setYEntrySpace(5);
-
-        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.scroll_personal);
-        scrollView.scrollBy(0, 1500);
     }
 
     private void addData(PieChart mChart, JSONObject dataMem) {
