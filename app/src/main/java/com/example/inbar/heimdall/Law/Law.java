@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -172,11 +173,9 @@ public class Law {
 
 
     public void DrawVotesGraph(View fatherView, int charId) {
-        JSONObject voteJson;
-        try {
-            voteJson = this.electedVotes.get();
-        } catch (Exception e){
-            e.printStackTrace();
+        JSONObject voteJson = this.getElectedVotes();
+        if (voteJson == null){
+            Log.d("DrawVotesGraph","get elected votes from law returned null");
             return;
         }
         String [] voteTypes = {"for" , "against", "abstained", "missing"};
