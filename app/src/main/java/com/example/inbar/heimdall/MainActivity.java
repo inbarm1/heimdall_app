@@ -1,5 +1,6 @@
 package com.example.inbar.heimdall;
 
+import android.app.Notification;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -13,12 +14,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -45,17 +43,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static android.graphics.Color.WHITE;
 import static android.graphics.Color.rgb;
 
 public class MainActivity extends APIRequest {
@@ -69,6 +64,8 @@ public class MainActivity extends APIRequest {
     public static final String PROPOSALS_T  = "הצעות חוק";
     public static final String MISSING_T    = "העדרויות";
     public static final String TITLE_PIE    = "התפלגות";
+    private static final String REMOVE_PARTY = "ח”כ יחיד – אורלי לוי-אבקסיס";
+    private static final String REMOVE_PARTY2 = "אינם חברי כנסת";
     public static final String GENERAL      = "כללי";
     Map<String, JSONObject> chart1 = new HashMap<>();
     Map<String, JSONObject> chart2 = new HashMap<>();
@@ -335,6 +332,9 @@ public class MainActivity extends APIRequest {
             while( partyName.hasNext() ) {
                 final String name = (String)partyName.next();
                 // Add party name
+                if (name.equals(REMOVE_PARTY) || name.equals(REMOVE_PARTY2)) {
+                    continue;
+                }
                 xAxis.add(name);
                 // Get party's data
                 if ( parties.get(name) instanceof JSONObject ) {
@@ -385,7 +385,7 @@ public class MainActivity extends APIRequest {
                 customView = inflater.inflate(R.layout.activity_pop_piechart,null);
 
                 // Initialize a new instance of popup window
-                 mPopupWindow = new PopupWindow(
+                mPopupWindow = new PopupWindow(
                         customView,
                         CoordinatorLayout.LayoutParams.WRAP_CONTENT,
                         CoordinatorLayout.LayoutParams.WRAP_CONTENT
@@ -415,8 +415,6 @@ public class MainActivity extends APIRequest {
                 mPopupWindow.showAtLocation(mainLayout, Gravity.CENTER,0,0);
 
                 creatingChart(map.get(name), customView);
-//                Toast.makeText(MainActivity.this,
-//                        (name + " = " + map.get(name).toString()), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -430,17 +428,14 @@ public class MainActivity extends APIRequest {
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
         barChart.getLegend().setEnabled(false);
+        barChart.setExtraTopOffset(40);
 
         XAxis xAxistemp = barChart.getXAxis();
-        xAxistemp.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxistemp.setSpaceBetweenLabels(6);
-//        xAxistemp.setXOffset(12);
+        xAxistemp.setSpaceBetweenLabels(0);
+        xAxistemp.setLabelsToSkip(0);
         xAxistemp.setTextSize(8);
-//        XAxis rot = barChart.getXAxis();
-//        rot.setLabelRotationAngle(-45);
+        xAxistemp.setLabelRotationAngle(-45);
 
-//        barChart.setDragEnabled(true); // on by default
-//        barChart.setVisibleXRange(3,3); // sets the viewport to show 3 bars
         barChart.setDescription("");
         barChart.animateXY(2000, 2000);
         barChart.invalidate();

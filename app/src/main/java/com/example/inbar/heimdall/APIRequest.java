@@ -1,14 +1,31 @@
 package com.example.inbar.heimdall;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.NotificationCompat;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.example.inbar.heimdall.Law.Law;
+import com.example.inbar.heimdall.Law.LawActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,7 +34,10 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.graphics.Color.rgb;
+
 public class APIRequest extends HttpsConnection {
+    private int number_of_notification = 0;
     private final String SUCCESS = "Success";
 
     public final String  BIRTH_YEAR = "birth_year";
@@ -50,6 +70,8 @@ public class APIRequest extends HttpsConnection {
     public final String RESIDENT_AGAINST = "resident_against";
     public final String AGE_FOR = "age_for";
     public final String AGE_AGAINST = "age_against";
+
+    private final static int NOTIFICATION = 0;
 
 
     protected Map<String, Integer> rate = new HashMap<>();
@@ -344,4 +366,98 @@ public class APIRequest extends HttpsConnection {
 
         return responseStrBuilder.toString();
     }
+
+    private Handler handler_ = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            try {
+                switch (msg.what) {
+                    case NOTIFICATION:
+                        JSONArray data = new JSONArray(readFromMessage(msg));
+                        getAllNotification(data);
+                        break;
+                }
+            }catch(IOException e){
+                throw new RuntimeException(e);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
+    };
+
+    protected void getNotificationsData(final View view) {
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                JSONArray json = lawNotification(view.getId());
+                if(json == null) {
+                    return;
+                }
+                String str = json.toString();
+                InputStream is = new ByteArrayInputStream(str.getBytes());
+                handler_.sendMessage(Message.obtain(handler_, NOTIFICATION, is));
+            }
+        });
+        thread.start();
+    }
+
+    private void getAllNotification(JSONArray notifications) {
+        number_of_notification += notifications.length();
+        sendNotification();
+    }
+
+
+    public void sendNotification() {
+        String CHANNEL_ID = "my_channel_01";
+        String CHANNEL_NAME = "my Channel Name";
+        int NOTIFICATION_ID = 1;
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        NotificationChannel notificationChannel = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            notificationChannel = new NotificationChannel(CHANNEL_ID,
+                    CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setShowBadge(true);
+            notificationChannel.setLightColor(rgb(135,206,235));
+            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        // prepare intent which is triggered if the
+        // notification is selected
+        Intent intent = new Intent(this, LawActivity.class);
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Context mContext = getApplicationContext();
+        Notification myNotification = new NotificationCompat.Builder(mContext, CHANNEL_ID)
+                .setContentTitle("You have been notify")
+                .setContentText("This is your Notifiaction Text")
+                .setNumber(20)
+                .setColor(rgb(135,206,235))
+                .setSmallIcon(R.drawable.zynga_logotype)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setContentIntent(resultPendingIntent)
+                .setAutoCancel(true)
+                .setSound(alarmSound)
+                .build();
+
+        notificationManager.notify(NOTIFICATION_ID, myNotification);
+    }
+
 }
