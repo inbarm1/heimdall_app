@@ -257,11 +257,12 @@ public class PersonalStatisticsActivity extends APIRequest {
 
             }
         });
-
+        
         BarDataSet dataSet = new BarDataSet(valueSet, "מפלגות");
         dataSet.setColors(colors);
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
+
 //        XAxis rot = barChart.getXAxis();
 //        rot.setLabelRotationAngle(-45);
 
