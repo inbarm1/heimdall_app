@@ -45,12 +45,12 @@ public class FirebaseActivity extends AppCompatActivity {
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
 
-        Configuration config = getResources().getConfiguration();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            Configuration configuration = getResources().getConfiguration();
-            configuration.setLayoutDirection(new Locale("he"));
-            getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-        }
+//        Configuration config = getResources().getConfiguration();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//            Configuration configuration = getResources().getConfiguration();
+//            configuration.setLayoutDirection(new Locale("he"));
+//            getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+//        }
 
         // [END initialize_auth]
     }

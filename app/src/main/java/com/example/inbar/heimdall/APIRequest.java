@@ -414,6 +414,9 @@ public class APIRequest extends HttpsConnection{
         number_of_notification = 20;
         sendNotification();
         buildCounterDrawable();
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        MenuItem menuItem = menu.findItem(R.id.testAction);
+//        menuItem.setIcon(buildCounterDrawable());
     }
 
 
@@ -469,30 +472,15 @@ public class APIRequest extends HttpsConnection{
     }
 
     private void buildCounterDrawable() {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.activity_main, null);
+        TextView textView = (TextView) findViewById(R.id.count);
 
         if (number_of_notification == 0) {
-            View counterTextPanel = view.findViewById(R.id.counterValuePanel);
+            View counterTextPanel = (View)findViewById(R.id.counterValuePanel);
             counterTextPanel.setVisibility(View.GONE);
         } else {
-            TextView textView = (TextView) view.findViewById(R.id.count);
-            textView.setText("" + number_of_notification);
+            textView = (TextView) findViewById(R.id.count);
+            textView.setText(String.valueOf(number_of_notification));
         }
-
-        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.EXACTLY));
-        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
-
-        view.setDrawingCacheEnabled(true);
-        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//        Bitmap bitmap = BitmapFactory.decodeFile(objElement, options);
-//        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
-        view.setDrawingCacheEnabled(false);
-
-//        return new BitmapDrawable(getResources(), bitmap);
     }
 
 }
