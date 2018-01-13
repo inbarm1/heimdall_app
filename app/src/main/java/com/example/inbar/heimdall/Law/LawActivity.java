@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -25,11 +26,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.example.inbar.heimdall.APIRequest;
 import com.example.inbar.heimdall.HttpsConnection;
+import com.example.inbar.heimdall.MainActivity;
 import com.example.inbar.heimdall.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -130,6 +133,14 @@ public class LawActivity extends APIRequest {
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        ImageView img = (ImageView) findViewById(R.id.counterBackground);
+        img.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(LawActivity.this,LawActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 //    public void showDatePickerDialog(View v) {
