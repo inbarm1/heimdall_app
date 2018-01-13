@@ -52,13 +52,10 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                 for (Law law: mLaws) law.setUserDistAndElectedVotes();
             }
         });
+
         thread.start();
 
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        while (thread.isAlive()) {};
 
         this.notifyDataSetChanged();
     }
