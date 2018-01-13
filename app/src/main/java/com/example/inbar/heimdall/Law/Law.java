@@ -71,8 +71,8 @@ public class Law {
     private String description;
     private String link;
     private ArrayList<String> tags;
-    private Future<JSONObject> userDist;
-    private Future<JSONObject> electedVotes;
+    private JSONObject userDist;
+    private JSONObject electedVotes;
     LawActivity lawActivity;
 
 
@@ -95,23 +95,11 @@ public class Law {
     }
 
     private void setUserDist() {
-        this.userDist = es.submit(new Callable<JSONObject>() {
-
-            @Override
-            public JSONObject call() throws Exception {
-                return lawActivity.getUserDistribution(R.id.lawLayout, name);
-            }
-        });
+        this.userDist = lawActivity.getUserDistribution(R.id.lawLayout, name);
     }
 
     private void setElectedVotes() {
-        this.electedVotes = es.submit(new Callable<JSONObject>() {
-
-            @Override
-            public JSONObject call() throws Exception {
-                return lawActivity.getLawKnessetVotes(R.id.lawLayout, name);
-            }
-        });
+        this.electedVotes = lawActivity.getLawKnessetVotes(R.id.lawLayout, name);
     }
 
     public String getName() {
@@ -144,34 +132,18 @@ public class Law {
     }
 
     public JSONObject getUserDist() {
-        while (!userDist.isDone()){};
-        try {
-            return userDist.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return userDist;
     }
 
     public JSONObject getElectedVotes() {
-        while (!electedVotes.isDone()){};
-        try {
-            return electedVotes.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return electedVotes;
     }
 
 
     private void DrawVotesGraph(View fatherView, int charId) {
         JSONObject voteJson;
         try {
-            voteJson = this.electedVotes.get();
+            voteJson = this.getElectedVotes();
         } catch (Exception e){
             e.printStackTrace();
             return;
