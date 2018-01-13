@@ -1,11 +1,16 @@
 package com.example.inbar.heimdall.Law;
 
+import android.view.View;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.inbar.heimdall.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +19,11 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by Eilon on 05/01/2018.
@@ -31,26 +41,60 @@ public class Law {
     public static final String RESIDENT_AGAINST = "resident_against";
     public static final String AGE_FOR = "age_for";
     public static final String AGE_AGAINST = "age_against";
+    public static final String USER_INFO = "user_info";
+    public static final String JOB = "job";
+    public static final String RESIDENCY = "residency";
+    public static final String AGE = "age";
 
-    private String name;
+
+    ExecutorService es = Executors.newSingleThreadExecutor();
+
+    String name;
     private VoteStatus voteStat;
     private String description;
     private String link;
     private ArrayList<String> tags;
-    private HashMap<String, HashMap<String, Float>> userDist;
-    public View.OnClickListener moreInfoButtonListener;
+    private Future<JSONObject> userDist;
+    private Future<JSONObject> electedVotes;
+    LawActivity lawActivity;
 
-    public Law(String name, JSONObject lawObject) {
+
+    public Law(String name, JSONObject lawObject, LawActivity lawActivity) {
         this.name = name;
         try {
             this.voteStat = VoteStatus.valueOf(lawObject.getString(USER_VOTED).toUpperCase());
             this.description = lawObject.getString(DESC);
             this.link = lawObject.getString(LINK);
             this.tags = getTagsAsArray(lawObject.getJSONArray(TAGS));
+            this.lawActivity = lawActivity;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.moreInfoButtonListener = new MoreInfoButtonListener(this);
+    }
+
+    public void setUserDistAndElectedVotes() {
+        this.setElectedVotes();
+        this.setUserDist();
+    }
+
+    private void setUserDist() {
+        this.userDist = es.submit(new Callable<JSONObject>() {
+
+            @Override
+            public JSONObject call() throws Exception {
+                return lawActivity.getUserDistribution(R.id.lawLayout, name);
+            }
+        });
+    }
+
+    private void setElectedVotes() {
+        this.electedVotes = es.submit(new Callable<JSONObject>() {
+
+            @Override
+            public JSONObject call() throws Exception {
+                return lawActivity.getLawKnessetVotes(R.id.lawLayout, name);
+            }
+        });
     }
 
     public String getName() {
@@ -82,27 +126,28 @@ public class Law {
         return tags;
     }
 
-
-    public void setUserDist(JSONObject distObject) {
-        Type type = new TypeToken<HashMap<String, HashMap<String, Float>>>(){}.getType();
-        userDist = new Gson().fromJson(distObject.toString(), type);
-    }
-
-    public HashMap<String, HashMap<String, Float>> getUserDist() {
-        return userDist;
-    }
-
-    public static class MoreInfoButtonListener implements View.OnClickListener {
-        private Law mLaw;
-
-        public MoreInfoButtonListener(Law law){
-            mLaw = law;
+    public JSONObject getUserDist() {
+        try {
+            return userDist.get();
+    } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(v.getContext(), "Law PRESSED = " +mLaw.getName() , Toast.LENGTH_SHORT).show();
-        }
+        return null;
     }
+
+    public JSONObject getElectedVotes() {
+        try {
+            return electedVotes.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 }
 

@@ -77,6 +77,7 @@ public class MainActivity extends APIRequest {
     private CoordinatorLayout mainLayout;
     private PopupWindow mPopupWindow;
     View customView;
+    boolean blocking = false;
 
     private final static int CHART_1 = 0;
     private final static int CHART_2 = 1;
@@ -252,7 +253,7 @@ public class MainActivity extends APIRequest {
 
     private void createFirstView(final ArrayList<String> tags) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
-        Spinner spinTag = (Spinner)findViewById(R.id.tag);
+        Spinner spinTag = (Spinner)findViewById(R.id.tagp);
         spinTag.setAdapter(adapter);
 
         spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -371,7 +372,7 @@ public class MainActivity extends APIRequest {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 // display msg when value selected
-                if (e == null)
+                if (e == null || blocking)
                     return;
 
 
@@ -396,6 +397,8 @@ public class MainActivity extends APIRequest {
                     mPopupWindow.setElevation(5.0f);
                 }
 
+                blocking = true;
+
                 // Get a reference for the custom view close button
                 ImageButton closeButton = (ImageButton) customView.findViewById(R.id.ib_close);
 
@@ -405,6 +408,7 @@ public class MainActivity extends APIRequest {
                     public void onClick(View view) {
                         // Dismiss the popup window
                         mPopupWindow.dismiss();
+                        blocking = false;
                     }
                 });
 
