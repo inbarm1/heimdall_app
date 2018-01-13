@@ -69,6 +69,9 @@ public class LawActivity extends APIRequest {
     private LawListAdapter mAdapter;
     private Date startDate;
     private Date endDate;
+    private PopupWindow mStatisticsPopupWindow;
+    View mStatisticscustomView;
+    boolean mStatisticsBlocking = false;
 
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
@@ -115,7 +118,7 @@ public class LawActivity extends APIRequest {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);
-        mAdapter = new LawListAdapter(getLaws(), this);
+        mAdapter = new LawListAdapter(new ArrayList<Law>(), this);
 
         //Get default dates for laws
         Calendar cal = Calendar.getInstance();

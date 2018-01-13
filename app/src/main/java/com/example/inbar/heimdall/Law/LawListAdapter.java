@@ -49,7 +49,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                     mLaws.add(new Law(lawName, lawDetails, lawActivity));
                 }
 
-                for (Law law: mLaws) law.setUserDistAndElectedVotes();
+                for (Law law: mLaws) law.setUserDistAndElectedVotes(lawActivity);
             }
         });
 
@@ -121,6 +121,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             View parent = (View) v.getParent();
             ExpandableLayout expandableLayout = ((ExpandableLayout) parent.findViewById(R.id.expandable_layout));
             expandableLayout.toggle();
+            mLaw.DrawVotesGraph(parent,R.id.VoteLikeMe);
         }
     }
 
