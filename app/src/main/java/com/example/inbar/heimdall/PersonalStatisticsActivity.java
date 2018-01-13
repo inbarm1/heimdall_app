@@ -262,7 +262,6 @@ public class PersonalStatisticsActivity extends APIRequest {
         dataSet.setColors(colors);
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
-
 //        XAxis rot = barChart.getXAxis();
 //        rot.setLabelRotationAngle(-45);
 
