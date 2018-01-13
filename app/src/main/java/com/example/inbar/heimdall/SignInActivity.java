@@ -121,9 +121,9 @@ public class SignInActivity extends APIRequest implements
     public void onStart() {
         super.onStart();
         // Check for existing Google Sign In account, if the user is already signed in
-// the GoogleSignInAccount will be non-null.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser, true);
+        // the GoogleSignInAccount will be non-null.
+        // FirebaseUser currentUser = mAuth.getCurrentUser();
+        // updateUI(currentUser, false);
     }
 
     @Override
