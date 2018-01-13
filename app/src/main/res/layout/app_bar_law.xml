@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="refreshLawsForAdapter"
                 android:text="Filter" />
-            
+
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

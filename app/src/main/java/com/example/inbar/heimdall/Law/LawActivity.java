@@ -1,62 +1,24 @@
 package com.example.inbar.heimdall.Law;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.app.FragmentManager;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageButton;
-import android.widget.PopupWindow;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import com.example.inbar.heimdall.APIRequest;
-import com.example.inbar.heimdall.HttpsConnection;
 import com.example.inbar.heimdall.R;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import static android.graphics.Color.rgb;
 
@@ -64,8 +26,12 @@ public class LawActivity extends APIRequest {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private LawListAdapter mAdapter;
-    private DatePicker startDate;
-    private DatePicker endDate;
+    public DatePickerDialog fromDatePicker;
+    public DatePickerDialog toDatePicker;
+    public EditText fromDateText;
+    public EditText toDateText;
+    public Date fromDate;
+    public Date toDate;
 
 
     @Override
@@ -85,9 +51,9 @@ public class LawActivity extends APIRequest {
         //Get default dates for laws
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, -1);
-        Date startDate = cal.getTime();
-        Date endDate = new Date();
-        mAdapter.getLaws(startDate, endDate);
+        fromDate = cal.getTime();
+        toDate = new Date();
+        mAdapter.getLaws(fromDate, toDate);
         mRecyclerView.setAdapter(mAdapter);
 
         id_drawer_layout = R.id.drawer_layout_law;
@@ -98,15 +64,65 @@ public class LawActivity extends APIRequest {
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        fromDateText = (EditText) findViewById(R.id.fromDateText);
+        toDateText = (EditText) findViewById(R.id.toDateText);
+
+        fromDateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // calender class's instance and get current date , month and year from calender
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+                // date picker dialog
+                fromDatePicker = new DatePickerDialog(LawActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // set day of month , month and year value in the edit text
+                                fromDateText.setText(dayOfMonth + "/"
+                                        + (monthOfYear + 1) + "/" + year);
+                                fromDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
+                            }
+                        }, mYear, mMonth, mDay);
+                fromDatePicker.show();
+            }
+        });
+
+        toDateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // calender class's instance and get current date , month and year from calender
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+                // date picker dialog
+                toDatePicker = new DatePickerDialog(LawActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // set day of month , month and year value in the edit text
+                                toDateText.setText(dayOfMonth + "/"
+                                        + (monthOfYear + 1) + "/" + year);
+                                toDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
+
+                            }
+                        }, mYear, mMonth, mDay);
+                toDatePicker.show();
+            }
+        });
     }
 
 
     public void refreshLawsForAdapter(View v) {
-        DatePicker startDatePicker = (DatePicker) findViewById(R.id.fromDatePicker);
-        DatePicker endDatePicker = (DatePicker) findViewById(R.id.toDatePicker);
-        Date startDate = new GregorianCalendar(startDatePicker.getYear(), startDatePicker.getMonth(), startDatePicker.getDayOfMonth()).getTime();
-        Date endDate = new GregorianCalendar(endDatePicker.getYear(), endDatePicker.getMonth(), endDatePicker.getDayOfMonth()).getTime();
-        mAdapter.getLaws(startDate, endDate);
+        mAdapter.getLaws(fromDate, toDate);
     }
 
 }
