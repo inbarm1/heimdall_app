@@ -33,6 +33,8 @@ public class LawActivity extends APIRequest {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
+    private Date startDate;
+    private Date endDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +48,12 @@ public class LawActivity extends APIRequest {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);
         mAdapter = new LawListAdapter(new ArrayList<Law>(), this);
-
+        
         //Get default dates for laws
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, -1);
-        Date startDate = cal.getTime();
-        Date endDate = new Date();
+        startDate = cal.getTime();
+        endDate = new Date();
 
         try {
             mAdapter.getClass().getMethod("getLaws").invoke(startDate, endDate);
@@ -75,6 +77,10 @@ public class LawActivity extends APIRequest {
         DialogFragment newFragment = new Utils.DatePickerFragment();
         newFragment.show(getFragmentManager(),"datePicker");
     }
+
+    public void setStartDate(){}
+
+    public void setEndDate(){}
 
 //    public static Law createLaw(int i) throws JSONException {
 //        String jsonS = String.format("{'fuck law %s': {'link' : 'www.pornhub.com, 'description' : 'bla bla', 'tags' : ['eilon','ram'], 'user_voted' : 'for'  }",i);

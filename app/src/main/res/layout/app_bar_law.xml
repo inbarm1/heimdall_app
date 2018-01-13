@@ -18,6 +18,22 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
+            <Button
+                android:id="@+id/fromDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="From Date" />
+            <Button
+                android:id="@+id/toDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="To Date" />
+            <Button
+                android:id="@+id/filterLaws"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Filter" />
+
             <ImageView
                 android:id="@+id/rate"
                 android:layout_width="50dp"
