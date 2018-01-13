@@ -168,7 +168,7 @@ public class Law {
     }
 
 
-    private void DrawVotesGraph(View fatherView, int charId) {
+    public void DrawVotesGraph(View fatherView, int charId) {
         JSONObject voteJson;
         try {
             voteJson = this.electedVotes.get();
@@ -222,7 +222,7 @@ public class Law {
     }
 
 
-    private void createBarChart(JSONObject nameToPrecntage, int char_id, String myName, View v) {
+    private void createBarChart(JSONObject nameToPercentage, int char_id, String myName, View v) {
 
         BarChart barChart = (BarChart) v.findViewById(char_id);
         final ArrayList<BarEntry> valueList = new ArrayList<>();
@@ -230,11 +230,11 @@ public class Law {
         ArrayList<Integer> colors = new ArrayList<>();
 
         try {
-            Iterator<String> names = nameToPrecntage.keys();
+            Iterator<String> names = nameToPercentage.keys();
             int counter = 0;
             while( names.hasNext() ) {
                 final String name = (String)names.next();
-                float val = (float) nameToPrecntage.getDouble(name);
+                float val = (float) nameToPercentage.getDouble(name);
                 // bar name
                 xAxis.add(name);
                 //bar size

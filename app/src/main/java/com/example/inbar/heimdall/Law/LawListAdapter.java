@@ -118,6 +118,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             View parent = (View) v.getParent();
             ExpandableLayout expandableLayout = ((ExpandableLayout) parent.findViewById(R.id.expandable_layout));
             expandableLayout.toggle();
+            mLaw.DrawVotesGraph(parent,R.id.VoteLikeMe);
         }
     }
 
