@@ -6,18 +6,24 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.example.inbar.heimdall.Law.Law;
 import com.example.inbar.heimdall.Law.LawActivity;
 
 import org.json.JSONArray;
@@ -36,8 +42,8 @@ import java.util.Map;
 
 import static android.graphics.Color.rgb;
 
-public class APIRequest extends HttpsConnection {
-    private int number_of_notification = 0;
+public class APIRequest extends HttpsConnection{
+    protected int number_of_notification = 0;
     private final String SUCCESS = "Success";
 
     public final String  BIRTH_YEAR = "birth_year";
@@ -405,7 +411,9 @@ public class APIRequest extends HttpsConnection {
 
     private void getAllNotification(JSONArray notifications) {
         number_of_notification += notifications.length();
+        number_of_notification = 20;
         sendNotification();
+        buildCounterDrawable();
     }
 
 
@@ -445,8 +453,8 @@ public class APIRequest extends HttpsConnection {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Context mContext = getApplicationContext();
         Notification myNotification = new NotificationCompat.Builder(mContext, CHANNEL_ID)
-                .setContentTitle("You have been notify")
-                .setContentText("This is your Notifiaction Text")
+                .setContentTitle("You have " + + number_of_notification + " unreviewed new laws")
+//                .setContentText("This is your Notifiaction Text")
                 .setNumber(20)
                 .setColor(rgb(135,206,235))
                 .setSmallIcon(R.drawable.zynga_logotype)
@@ -458,6 +466,33 @@ public class APIRequest extends HttpsConnection {
                 .build();
 
         notificationManager.notify(NOTIFICATION_ID, myNotification);
+    }
+
+    private void buildCounterDrawable() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.activity_main, null);
+
+        if (number_of_notification == 0) {
+            View counterTextPanel = view.findViewById(R.id.counterValuePanel);
+            counterTextPanel.setVisibility(View.GONE);
+        } else {
+            TextView textView = (TextView) view.findViewById(R.id.count);
+            textView.setText("" + number_of_notification);
+        }
+
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.EXACTLY));
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+
+        view.setDrawingCacheEnabled(true);
+        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//        Bitmap bitmap = BitmapFactory.decodeFile(objElement, options);
+//        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+        view.setDrawingCacheEnabled(false);
+
+//        return new BitmapDrawable(getResources(), bitmap);
     }
 
 }
