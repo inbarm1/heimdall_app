@@ -1,6 +1,5 @@
 package com.example.inbar.heimdall.Law;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
@@ -26,11 +25,16 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -73,8 +77,8 @@ public class Law {
     private String description;
     private String link;
     private ArrayList<String> tags;
-    private Future<JSONObject> userDist;
-    private Future<JSONObject> electedVotes;
+    private JSONObject userDist;
+    private JSONObject electedVotes;
     LawActivity lawActivity;
     boolean blocking;
     PopupWindow mPopupWindow;
@@ -99,23 +103,11 @@ public class Law {
     }
 
     private void setUserDist() {
-        this.userDist = es.submit(new Callable<JSONObject>() {
-
-            @Override
-            public JSONObject call() throws Exception {
-                return lawActivity.getUserDistribution(R.id.lawLayout, name);
-            }
-        });
+        this.userDist = lawActivity.getUserDistribution(R.id.lawLayout, name);
     }
 
     private void setElectedVotes() {
-        this.electedVotes = es.submit(new Callable<JSONObject>() {
-
-            @Override
-            public JSONObject call() throws Exception {
-                return lawActivity.getLawKnessetVotes(R.id.lawLayout, name);
-            }
-        });
+        this.electedVotes = lawActivity.getLawKnessetVotes(R.id.lawLayout, name);
     }
 
     public String getName() {
@@ -148,27 +140,11 @@ public class Law {
     }
 
     public JSONObject getUserDist() {
-        while (!userDist.isDone()){};
-        try {
-            return userDist.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return userDist;
     }
 
     public JSONObject getElectedVotes() {
-        while (!electedVotes.isDone()){};
-        try {
-            return electedVotes.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return electedVotes;
     }
 
 
@@ -342,7 +318,7 @@ public class Law {
         barChart.invalidate();
     }
 
-    protected void createChart(final JSONObject data, View pop){
+    protected void creatingChart(final JSONObject data, View pop){
         PieChart mChart = (PieChart)pop.findViewById(R.id.piechart);
 
 //        mChart = new PieChart(this);
