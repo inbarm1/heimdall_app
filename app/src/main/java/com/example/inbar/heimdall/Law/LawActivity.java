@@ -27,7 +27,6 @@ public class LawActivity extends APIRequest {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private LawListAdapter mAdapter;
-<<<<<<< HEAD
     public DatePickerDialog fromDatePicker;
     public DatePickerDialog toDatePicker;
     public EditText fromDateText;
