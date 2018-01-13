@@ -42,6 +42,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                 JSONObject json = lawActivity.getLawsByDateInterval(R.id.lawLayout, sdfr.format(startDate), sdfr.format(endDate));
                 HashMap<String, JSONObject> laws = new Gson().fromJson(json.toString(),
                         new TypeToken<HashMap<String, JSONObject>>() {}.getType());
+                mLaws.clear();
                 for (HashMap.Entry<String, JSONObject> entry: laws.entrySet()) {
                     String lawName = entry.getKey();
                     JSONObject lawDetails = entry.getValue();

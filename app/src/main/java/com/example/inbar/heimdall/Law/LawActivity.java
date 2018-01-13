@@ -1,5 +1,7 @@
 package com.example.inbar.heimdall.Law;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.Color;
@@ -20,6 +22,8 @@ import android.app.FragmentManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.Toast;
@@ -47,6 +51,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Calendar;
 import java.util.Date;
@@ -58,7 +63,42 @@ import static android.graphics.Color.rgb;
 public class LawActivity extends APIRequest {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
+    private LawListAdapter mAdapter;
+    private Date startDate;
+    private Date endDate;
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        private boolean isStartDate;
+        LawActivity lawActivity;
+
+
+        public void setDateToChange(LawActivity lawActivity, boolean isStartDate) {
+            this.isStartDate = isStartDate;
+            this.lawActivity = lawActivity;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            Date date = new GregorianCalendar(year, month, day).getTime();
+
+            if (isStartDate) {
+                lawActivity.startDate = date;
+            } else lawActivity.endDate = date;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,15 +116,9 @@ public class LawActivity extends APIRequest {
         //Get default dates for laws
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, -1);
-        Date startDate = cal.getTime();
-        Date endDate = new Date();
-
-        try {
-            mAdapter.getClass().getMethod("getLaws").invoke(startDate, endDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        startDate = cal.getTime();
+        endDate = new Date();
+        mAdapter.getLaws(startDate, endDate);
         mRecyclerView.setAdapter(mAdapter);
 
         id_drawer_layout = R.id.drawer_layout_law;
@@ -97,9 +131,15 @@ public class LawActivity extends APIRequest {
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void showDatePickerDialog(View v) {
-        DialogFragment newFragment = new Utils.DatePickerFragment();
-        newFragment.show(getFragmentManager(), "datePicker");
+//    public void showDatePickerDialog(View v) {
+//        DialogFragment newFragment = new DatePickerFragment();
+//        newFragment.show(getFragmentManager(), "datePicker");
+//    }
+
+    public void setStartDate(View v){
+        DatePickerFragment newFragment = new DatePickerFragment();
+        newFragment.setDateToChange(this, true);
+        newFragment.show(getFragmentManager(), "Start Date");
     }
 
     public ArrayList<Law> getLaws() {
@@ -114,6 +154,16 @@ public class LawActivity extends APIRequest {
             laws.add(l1);
         }
         return laws;
+    }
+
+    public void setEndDate(View v){
+        DatePickerFragment newFragment = new DatePickerFragment();
+        newFragment.setDateToChange(this, false);
+        newFragment.show(getFragmentManager(), "End Date");
+    }
+
+    public void refreshLawsForAdapter(View v) {
+        mAdapter.getLaws(startDate, endDate);
     }
 
     public Law createLaw(int i) throws JSONException {
