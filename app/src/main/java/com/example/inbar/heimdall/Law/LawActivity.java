@@ -2,6 +2,7 @@ package com.example.inbar.heimdall.Law;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,12 +28,19 @@ import com.example.inbar.heimdall.APIRequest;
 import com.example.inbar.heimdall.HttpsConnection;
 import com.example.inbar.heimdall.R;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,7 +71,7 @@ public class LawActivity extends APIRequest {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);
-        mAdapter = new LawListAdapter(new ArrayList<Law>(), this);
+        mAdapter = new LawListAdapter(getLaws(), this);
 
         //Get default dates for laws
         Calendar cal = Calendar.getInstance();
@@ -94,8 +102,8 @@ public class LawActivity extends APIRequest {
         newFragment.show(getFragmentManager(), "datePicker");
     }
 
-    public Law[] getLaws() {
-        Law[] laws = new Law[30];//=  ;//Util.getPeopleList(this);
+    public ArrayList<Law> getLaws() {
+        ArrayList<Law> laws = new ArrayList<>();//=  ;//Util.getPeopleList(this);
         for (int i = 0; i < 30; i++) {
             Law l1 = null;
             try {
@@ -103,7 +111,7 @@ public class LawActivity extends APIRequest {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            laws[i] = (l1);
+            laws.add(l1);
         }
         return laws;
     }
@@ -120,6 +128,8 @@ public class LawActivity extends APIRequest {
         subJson.put("user_voted", "for");
         return new Law("law " + String.valueOf(i), subJson, this);
     }
+
+
 
 }
 

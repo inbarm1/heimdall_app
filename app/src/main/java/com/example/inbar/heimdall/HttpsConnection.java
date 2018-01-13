@@ -81,7 +81,7 @@ public class HttpsConnection extends NevActivity {
 
 
 
-            message.put(USER_TOKEN, token);
+            message.put("10", token);
 
             connection = getConnection(idLayer, subDomain);
 
