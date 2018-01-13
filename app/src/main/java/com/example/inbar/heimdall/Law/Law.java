@@ -1,11 +1,15 @@
 package com.example.inbar.heimdall.Law;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
+import android.support.design.widget.CoordinatorLayout;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.graphics.drawable.Drawable;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.ImageButton;
+import android.widget.PopupWindow;
 
 import com.example.inbar.heimdall.R;
 import com.github.mikephil.charting.charts.BarChart;
@@ -19,6 +23,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -40,6 +46,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.graphics.Color.rgb;
 
 /**
@@ -74,6 +81,8 @@ public class Law {
     private JSONObject userDist;
     private JSONObject electedVotes;
     LawActivity lawActivity;
+    boolean blocking;
+    PopupWindow mPopupWindow;
 
 
     public Law(String name, JSONObject lawObject, LawActivity lawActivity) {
@@ -89,17 +98,17 @@ public class Law {
         }
     }
 
-    public void setUserDistAndElectedVotes() {
-        this.setElectedVotes();
-        this.setUserDist();
+    public void setUserDistAndElectedVotes(LawActivity l) {
+        this.setElectedVotes(l);
+        this.setUserDist(l);
     }
 
-    private void setUserDist() {
-        this.userDist = lawActivity.getUserDistribution(R.id.lawLayout, name);
+    private void setUserDist(LawActivity l) {
+        this.userDist = l.getUserDistribution(R.id.lawLayout, name);
     }
 
-    private void setElectedVotes() {
-        this.electedVotes = lawActivity.getLawKnessetVotes(R.id.lawLayout, name);
+    private void setElectedVotes(LawActivity l) {
+        this.electedVotes = l.getLawKnessetVotes(R.id.lawLayout, name);
     }
 
     public String getName() {
@@ -140,12 +149,10 @@ public class Law {
     }
 
 
-    private void DrawVotesGraph(View fatherView, int charId) {
-        JSONObject voteJson;
-        try {
-            voteJson = this.getElectedVotes();
-        } catch (Exception e){
-            e.printStackTrace();
+    public void DrawVotesGraph(View fatherView, int charId) {
+        JSONObject voteJson = this.getElectedVotes();
+        if (voteJson == null){
+            Log.d("DrawVotesGraph","get elected votes from law returned null");
             return;
         }
         String [] voteTypes = {"for" , "against", "abstained", "missing"};
@@ -161,6 +168,7 @@ public class Law {
             }
             String myParty = "";
             JSONObject nameToPercent = new JSONObject();
+            Map<String,JSONObject> pieMap = new HashMap<>();
             int myCnt;
             int totalCnt;
             Iterator<String> partyNameIter =  voteJson.keys();
@@ -183,9 +191,18 @@ public class Law {
                         totalCnt += cnt;
                     }
                 }
+                JSONObject dataJson = new JSONObject();
+                for (String type : voteTypes) {
+                    JSONObject singleVoteTypeJson = votesJson.getJSONObject(type);
+                    if (singleVoteTypeJson.has("count")) {
+                        int cnt = singleVoteTypeJson.getInt("count");
+                        dataJson.put(type,(float)cnt/totalCnt);
+                    }
+                }
+                pieMap.put(currName,dataJson);
                 nameToPercent.put(currName,((float)myCnt/totalCnt) * 100 );
             }
-            createBarChart(nameToPercent,charId,myParty, fatherView);
+            createBarChart(nameToPercent,pieMap,charId,myParty, fatherView);
         } catch (Exception e){
             e.printStackTrace();
             return;
@@ -194,19 +211,21 @@ public class Law {
     }
 
 
-    private void createBarChart(JSONObject nameToPrecntage, int char_id, String myName, View v) {
+    private void createBarChart(JSONObject nameToPercentage,Map<String,JSONObject> pieMap, int char_id, String myName, View v) {
 
         BarChart barChart = (BarChart) v.findViewById(char_id);
         final ArrayList<BarEntry> valueList = new ArrayList<>();
         final ArrayList<String> xAxis = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
+        final View myView = v;
+        final Map<String, JSONObject> map = pieMap;
 
         try {
-            Iterator<String> names = nameToPrecntage.keys();
+            Iterator<String> names = nameToPercentage.keys();
             int counter = 0;
             while( names.hasNext() ) {
                 final String name = (String)names.next();
-                float val = (float) nameToPrecntage.getDouble(name);
+                float val = (float) nameToPercentage.getDouble(name);
                 // bar name
                 xAxis.add(name);
                 //bar size
@@ -222,62 +241,62 @@ public class Law {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // set a chart value selected listener
-//        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-//
-//            @Override
-//            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-//                // display msg when value selected
-//                if (e == null || blocking)
-//                    return;
-//
-//
-//                // Get the application context
-//                Context mContext = getApplicationContext();
-//                String name = xAxis.get(e.getXIndex());
-//                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-//
-//                // Inflate the custom layout/view
-//                customView = inflater.inflate(R.layout.activity_pop_piechart,null);
-//
-//                // Initialize a new instance of popup window
-//                mPopupWindow = new PopupWindow(
-//                        customView,
-//                        CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-//                        CoordinatorLayout.LayoutParams.WRAP_CONTENT
-//                );
-//
-//                // Set an elevation value for popup window
-//                // Call requires API level 21
-//                if(Build.VERSION.SDK_INT>=21){
-//                    mPopupWindow.setElevation(5.0f);
-//                }
-//
-//                blocking = true;
-//
-//                // Get a reference for the custom view close button
-//                ImageButton closeButton = (ImageButton) customView.findViewById(R.id.ib_close);
-//
-//                // Set a click listener for the popup window close button
-//                closeButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        // Dismiss the popup window
-//                        mPopupWindow.dismiss();
-//                        blocking = false;
-//                    }
-//                });
-//
-//                mPopupWindow.showAtLocation(mainLayout, Gravity.CENTER,0,0);
-//
-//                creatingChart(map.get(name), customView);
-//            }
-//
-//            @Override
-//            public void onNothingSelected() {
-//
-//            }
-//        });
+         //set a chart value selected listener
+        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                // display msg when value selected
+                if (e == null || blocking)
+                    return;
+
+
+                // Get the application context
+                Context mContext = lawActivity.getApplicationContext();
+                String name = xAxis.get(e.getXIndex());
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+                // Inflate the custom layout/view
+                View customView = inflater.inflate(R.layout.activity_pop_piechart,null);
+
+                // Initialize a new instance of popup window
+                mPopupWindow = new PopupWindow(
+                        customView,
+                        CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                        CoordinatorLayout.LayoutParams.WRAP_CONTENT
+                );
+
+                // Set an elevation value for popup window
+                // Call requires API level 21
+                if(Build.VERSION.SDK_INT>=21){
+                    mPopupWindow.setElevation(5.0f);
+                }
+
+                blocking = true;
+
+                // Get a reference for the custom view close button
+                ImageButton closeButton = (ImageButton) customView.findViewById(R.id.ib_close);
+
+                // Set a click listener for the popup window close button
+                closeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Dismiss the popup window
+                        mPopupWindow.dismiss();
+                        blocking = false;
+                    }
+                });
+
+                mPopupWindow.showAtLocation(myView, Gravity.CENTER,0,0);
+
+                createChart(map.get(name), customView);
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
 
         BarDataSet dataSet = new BarDataSet(valueList, "מפלגות");
         dataSet.setColors(colors);
@@ -300,7 +319,7 @@ public class Law {
         barChart.invalidate();
     }
 
-    protected void creatingChart(final JSONObject data, View pop){
+    protected void createChart(final JSONObject data, View pop){
         PieChart mChart = (PieChart)pop.findViewById(R.id.piechart);
 
 //        mChart = new PieChart(this);
@@ -391,6 +410,8 @@ public class Law {
 
         return colors;
     }
+
+
 
 
 }

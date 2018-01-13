@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 
 import com.example.inbar.heimdall.APIRequest;
 import com.example.inbar.heimdall.R;
@@ -26,12 +27,20 @@ public class LawActivity extends APIRequest {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private LawListAdapter mAdapter;
+<<<<<<< HEAD
     public DatePickerDialog fromDatePicker;
     public DatePickerDialog toDatePicker;
     public EditText fromDateText;
     public EditText toDateText;
     public Date fromDate;
     public Date toDate;
+
+    private Date startDate;
+    private Date endDate;
+    private PopupWindow mStatisticsPopupWindow;
+    View mStatisticscustomView;
+    boolean mStatisticsBlocking = false;
+
 
 
     @Override
