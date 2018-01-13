@@ -11,27 +11,35 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
-public class ProfileActivity extends APIRequest {
+public class ProfileActivity extends RegisterActivity {
+    ExecutorService es = Executors.newSingleThreadExecutor();
+
+    private Future<JSONArray> getUserDetails(){
+        return es.submit(new Callable<JSONArray>() {
+            @Override
+            public JSONArray call() throws Exception {
+                return null;
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_main);
+        publicOnCreate();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarProfile);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         id_drawer_layout = R.id.drawer_layout_profile;
         DrawerLayout drawer = (DrawerLayout) findViewById(id_drawer_layout);
@@ -39,17 +47,6 @@ public class ProfileActivity extends APIRequest {
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        ArrayList<String> years = new ArrayList<String>();
-        int thisYear = Calendar.getInstance().get(Calendar.YEAR);
-        for (int i = thisYear; i > 1948; i--) {
-            years.add(Integer.toString(i));
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, years);
-
-        Spinner spinYear = (Spinner)findViewById(R.id.year);
-        spinYear.setAdapter(adapter);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

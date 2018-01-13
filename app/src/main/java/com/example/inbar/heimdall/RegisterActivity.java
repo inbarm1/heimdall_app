@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -61,6 +62,11 @@ public class RegisterActivity extends APIRequest {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        publicOnCreate();
+
+    }
+
+    protected void publicOnCreate() {
         JSONObject cat = null;
         Future<JSONObject> categories = getCategories();
         try {
@@ -80,7 +86,6 @@ public class RegisterActivity extends APIRequest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void setRegisterBtnView() {
@@ -152,7 +157,7 @@ public class RegisterActivity extends APIRequest {
     }
 
     private void setAutoCompleteContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
-        AutoCompleteTextView a = (AutoCompleteTextView) findViewById(layout_id);
+        final AutoCompleteTextView a = (AutoCompleteTextView) findViewById(layout_id);
         ArrayList<String> values = new ArrayList<>();
         for (int i = 0; i < j_values.length(); i++) {
             String value = (String) j_values.get(i);
@@ -163,10 +168,9 @@ public class RegisterActivity extends APIRequest {
             Collections.sort(values);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(RegisterActivity.this, android.R.layout.simple_list_item_1, values);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
-        a.setAdapter(adapter);
         a.setThreshold(1);
         a.setTextColor(Color.BLACK);
-        ;
+
     }
 
     private void setSpinnerContent(int layout_id, ArrayList<String> values, String defaultOption, boolean doSort) throws JSONException {
