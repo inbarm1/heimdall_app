@@ -127,9 +127,10 @@ public class Law {
     }
 
     public JSONObject getUserDist() {
+        while (!userDist.isDone()){};
         try {
             return userDist.get();
-    } catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -138,6 +139,7 @@ public class Law {
     }
 
     public JSONObject getElectedVotes() {
+        while (!electedVotes.isDone()){};
         try {
             return electedVotes.get();
         } catch (InterruptedException e) {
