@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -74,6 +76,8 @@ public class PersonalStatisticsActivity extends APIRequest {
     private static final String ABSENT_PRE   = "נמנע";
     private static final String DIFF_PRE     = "הצבעות שונות";
     private static final String SAME_PRE     = "הצבעות זהות";
+    private static final String REMOVE_PARTY = "ח”כ יחיד – אורלי לוי-אבקסיס";
+    private static final String REMOVE_PARTY2 = "אינם חברי כנסת";
 
 
     private Handler handler_ = new Handler(){
@@ -88,6 +92,9 @@ public class PersonalStatisticsActivity extends APIRequest {
                     case CHART_2:
                         JSONObject data2 = new JSONObject(readFromMessage(msg));
                         creatingPieChart(R.id.chart2p, data2);
+                        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.scroll_personal);
+                        int y = (scrollView.getChildAt(0).getMeasuredHeight() -scrollView.getMeasuredHeight());
+                        scrollView.setScrollY(y);
                         break;
                     case TAGS_HANDLER2:
                         JSONArray category2 = new JSONArray(readFromMessage(msg));
@@ -129,6 +136,23 @@ public class PersonalStatisticsActivity extends APIRequest {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.scroll_personal);
+
+        final FloatingActionButton image = (FloatingActionButton) findViewById(R.id.img_arrow2);
+        image.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                scrollView.scrollBy(0, 1500);
+            }
+        });
+
+        final FloatingActionButton image_up = (FloatingActionButton) findViewById(R.id.img_arrow_up2);
+        image_up.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                scrollView.scrollBy(0, -1500);
+            }
+        });
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -166,8 +190,8 @@ public class PersonalStatisticsActivity extends APIRequest {
 
     private void createLawPieChart(final String elected, final String tagElected) {
         if (elected == null || elected.equals(NONE_TAG)){
-            TextView test = (TextView)findViewById(R.id.no_data);
-            test.setCursorVisible(true);
+            TextView text = (TextView)findViewById(R.id.no_data);
+            text.setVisibility(View.VISIBLE);
             return;
         }
         Thread thread = new Thread(new Runnable(){
@@ -197,6 +221,9 @@ public class PersonalStatisticsActivity extends APIRequest {
             int counter = 0;
             while( partyName.hasNext() ) {
                 final String name = (String)partyName.next();
+                if (name.equals(REMOVE_PARTY) || name.equals(REMOVE_PARTY2)) {
+                    continue;
+                }
                 // Add party name
                 xAxis.add(name);
                 // Get party's data
@@ -236,16 +263,20 @@ public class PersonalStatisticsActivity extends APIRequest {
 
             }
         });
-
+        
         BarDataSet dataSet = new BarDataSet(valueSet, "מפלגות");
         dataSet.setColors(colors);
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
-//        XAxis rot = barChart.getXAxis();
-//        rot.setLabelRotationAngle(-45);
+        barChart.getLegend().setEnabled(false);
+        barChart.setExtraTopOffset(40);
 
-//        barChart.setDragEnabled(true); // on by default
-//        barChart.setVisibleXRange(3,3); // sets the viewport to show 3 bars
+        XAxis xAxistemp = barChart.getXAxis();
+        xAxistemp.setSpaceBetweenLabels(0);
+        xAxistemp.setLabelsToSkip(0);
+        xAxistemp.setTextSize(8);
+        xAxistemp.setLabelRotationAngle(-45);
+
         barChart.setDescription("");
         barChart.animateXY(2000, 2000);
         barChart.invalidate();
@@ -331,7 +362,7 @@ public class PersonalStatisticsActivity extends APIRequest {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 TextView test = (TextView)findViewById(R.id.no_data);
-                test.setCursorVisible(false);
+                test.setVisibility(View.GONE);
                 currentElectedPosition = position;
                 createLawPieChart(tags2.get(position), tags.get(currentTagPosition));
             }
@@ -421,9 +452,6 @@ public class PersonalStatisticsActivity extends APIRequest {
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
         l.setXEntrySpace(7);
         l.setYEntrySpace(5);
-
-        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.scroll_personal);
-        scrollView.scrollBy(0, 1500);
     }
 
     private void addData(PieChart mChart, JSONObject dataMem) {

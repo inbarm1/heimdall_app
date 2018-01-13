@@ -69,6 +69,8 @@ public class MainActivity extends APIRequest {
     public static final String PROPOSALS_T  = "הצעות חוק";
     public static final String MISSING_T    = "העדרויות";
     public static final String TITLE_PIE    = "התפלגות";
+    private static final String REMOVE_PARTY = "ח”כ יחיד – אורלי לוי-אבקסיס";
+    private static final String REMOVE_PARTY2 = "אינם חברי כנסת";
     public static final String GENERAL      = "כללי";
     Map<String, JSONObject> chart1 = new HashMap<>();
     Map<String, JSONObject> chart2 = new HashMap<>();
@@ -77,6 +79,7 @@ public class MainActivity extends APIRequest {
     private CoordinatorLayout mainLayout;
     private PopupWindow mPopupWindow;
     View customView;
+    boolean blocking = false;
 
     private final static int CHART_1 = 0;
     private final static int CHART_2 = 1;
@@ -334,6 +337,9 @@ public class MainActivity extends APIRequest {
             while( partyName.hasNext() ) {
                 final String name = (String)partyName.next();
                 // Add party name
+                if (name.equals(REMOVE_PARTY) || name.equals(REMOVE_PARTY2)) {
+                    continue;
+                }
                 xAxis.add(name);
                 // Get party's data
                 if ( parties.get(name) instanceof JSONObject ) {
@@ -371,7 +377,7 @@ public class MainActivity extends APIRequest {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 // display msg when value selected
-                if (e == null)
+                if (e == null || blocking)
                     return;
 
 
@@ -396,6 +402,8 @@ public class MainActivity extends APIRequest {
                     mPopupWindow.setElevation(5.0f);
                 }
 
+                blocking = true;
+
                 // Get a reference for the custom view close button
                 ImageButton closeButton = (ImageButton) customView.findViewById(R.id.ib_close);
 
@@ -405,6 +413,7 @@ public class MainActivity extends APIRequest {
                     public void onClick(View view) {
                         // Dismiss the popup window
                         mPopupWindow.dismiss();
+                        blocking = false;
                     }
                 });
 
@@ -426,11 +435,14 @@ public class MainActivity extends APIRequest {
         BarData data = new BarData(xAxis, dataSet);
         barChart.setData(data);
         barChart.getLegend().setEnabled(false);
-//        XAxis rot = barChart.getXAxis();
-//        rot.setLabelRotationAngle(-45);
+        barChart.setExtraTopOffset(40);
 
-//        barChart.setDragEnabled(true); // on by default
-//        barChart.setVisibleXRange(3,3); // sets the viewport to show 3 bars
+        XAxis xAxistemp = barChart.getXAxis();
+        xAxistemp.setSpaceBetweenLabels(0);
+        xAxistemp.setLabelsToSkip(0);
+        xAxistemp.setTextSize(8);
+        xAxistemp.setLabelRotationAngle(-45);
+
         barChart.setDescription("");
         barChart.animateXY(2000, 2000);
         barChart.invalidate();

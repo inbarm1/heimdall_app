@@ -11,6 +11,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
@@ -29,6 +33,9 @@ import java.util.Iterator;
 public class HttpsConnection extends NevActivity {
 
     private final String USER_TOKEN="user_token";
+    private String token;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +44,10 @@ public class HttpsConnection extends NevActivity {
 
     protected HttpURLConnection getConnection(final int id_layer, String subDomain){
         try {
-            //URL url = new URL("http://api.heimdall.ga"+subDomain);
-            URL url = new URL("http://192.168.1.25:8080"+subDomain);
+            URL url = new URL("http://api.heimdall.ga"+subDomain);
+            //URL url = new URL("http://192.168.1.25:8080"+subDomain);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000);
+            conn.setReadTimeout(150000);
             conn.setConnectTimeout(150000);
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
@@ -55,11 +62,24 @@ public class HttpsConnection extends NevActivity {
         }
     }
 
-    protected String sendJson(final int idLayer, JSONObject message, String subDomain) {
+    protected String sendJson(final int idLayer, final JSONObject message, String subDomain) {
         HttpURLConnection connection = null;
         try {
-            String token = FirebaseInstanceId.getInstance().getToken();
-            message.put(USER_TOKEN, 10);
+            Task<GetTokenResult> getTokenResultTask = FirebaseAuth.getInstance().getCurrentUser()
+                    .getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                            if (task.isSuccessful()) {
+                                token = task.getResult().getToken();
+                            } else {
+                                //throw new task.getException();
+                            }
+                        }
+                    });
+            while(!getTokenResultTask.isComplete()){}
+
+
+            message.put(USER_TOKEN, getTokenResultTask.getResult().getToken());
+
             connection = getConnection(idLayer, subDomain);
 
             sendToConnection(message, connection);

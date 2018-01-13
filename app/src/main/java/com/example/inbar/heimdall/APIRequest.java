@@ -68,7 +68,8 @@ public class APIRequest extends HttpsConnection {
     }
 
     public boolean isRegistered(int idLayer){
-        return sendJson(idLayer, new JSONObject(), "/isRegistered").equals("Success");
+        String resp = sendJson(idLayer, new JSONObject(), "/isRegistered");
+        return resp.contains(SUCCESS);
     }
 
     public boolean register(int idLayer, int birthYear, String jobCategory, String residency, String party, InvolvementLevel involvementLevel){
@@ -89,7 +90,7 @@ public class APIRequest extends HttpsConnection {
             e.printStackTrace();
             onConnectionFailed(idLayer);
         }
-        if (sendJson(idLayer, request, "/register").equals(SUCCESS))
+        if (sendJson(idLayer, request, "/register").contains(SUCCESS))
             return true;
         return false;
     }
