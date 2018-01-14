@@ -1,5 +1,6 @@
 package com.example.inbar.heimdall.Law;
 
+import android.app.Notification;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
@@ -15,12 +16,17 @@ import com.google.gson.reflect.TypeToken;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.logging.LogRecord;
+import android.os.Message;
+import android.os.Handler;
 
 /**
  * Created by Eilon on 05/01/2018.
@@ -29,7 +35,19 @@ import java.util.HashMap;
 public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleViewHolder> {
     private ArrayList<Law> mLaws;
     protected LawActivity lawActivity;
-    private StatisticsPopupMngr mStatPopupMngr;
+
+    private static final int LAWS_UPDATED = 0;
+
+    private Handler listAdapterHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case LAWS_UPDATED:
+                    LawListAdapter.this.notifyDataSetChanged();
+                    break;
+            }
+        }
+    };
 
     public LawListAdapter(ArrayList<Law> laws, LawActivity father) {
         mLaws = laws;
@@ -42,24 +60,26 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             public void run(){
                 SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy");
                 JSONObject json = lawActivity.getLawsByDateInterval(R.id.lawLayout, sdfr.format(startDate), sdfr.format(endDate));
-                HashMap<String, JSONObject> laws = new Gson().fromJson(json.toString(),
-                        new TypeToken<HashMap<String, JSONObject>>() {}.getType());
+                Iterator<?> lawsNames = json.keys();
+
                 mLaws.clear();
-                for (HashMap.Entry<String, JSONObject> entry: laws.entrySet()) {
-                    String lawName = entry.getKey();
-                    JSONObject lawDetails = entry.getValue();
-                    mLaws.add(new Law(lawName, lawDetails, lawActivity));
+                while (lawsNames.hasNext()) {
+                    String lawName = (String)lawsNames.next();
+                    JSONObject lawDetails = null;
+                    try {
+                        lawDetails = (JSONObject) json.get(lawName);
+                        mLaws.add(new Law(lawName, lawDetails, lawActivity));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                for (Law law: mLaws) law.setUserDistAndElectedVotes(lawActivity);
+//                for (Law law: mLaws) law.setUserDistAndElectedVotes(lawActivity);
+                listAdapterHandler.sendMessage(Message.obtain(listAdapterHandler, LAWS_UPDATED));
             }
         });
 
         thread.start();
-
-        while (thread.isAlive()) {};
-
-        this.notifyDataSetChanged();
     }
 
     @Override

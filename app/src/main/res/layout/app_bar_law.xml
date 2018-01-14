@@ -12,6 +12,61 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <include layout="@layout/app_bar" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="20dp"
+                android:text="@string/app_name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/colorAccent" />
+
+            <ImageView
+                android:id="@+id/rate"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="250dp"
+                android:scaleType="center"/>
+
+        </android.support.v7.widget.Toolbar>
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/fromDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#d4d4d4"
+                android:padding="15dp"
+                android:textColor="#897"
+                android:textColorHint="#090"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="From.."/>
+            <Button
+                android:id="@+id/toDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#d4d4d4"
+                android:padding="15dp"
+                android:textColor="#897"
+                android:textColorHint="#090"
+                android:textStyle="bold"
+                android:text="To.."/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="refreshLawsForAdapter"
+                android:text="Filter" />
+
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 

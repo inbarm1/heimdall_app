@@ -1,5 +1,7 @@
 package com.example.inbar.heimdall.Law;
 
+import com.example.inbar.heimdall.UserVote;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -74,7 +76,7 @@ public class Law {
     ExecutorService es = Executors.newSingleThreadExecutor();
 
     String name;
-    public VoteStatus voteStat;
+    private UserVote voteStat;
     private String description;
     private String link;
     private ArrayList<String> tags;
@@ -88,7 +90,9 @@ public class Law {
     public Law(String name, JSONObject lawObject, LawActivity lawActivity) {
         this.name = name;
         try {
-            this.voteStat = VoteStatus.valueOf(lawObject.getString(USER_VOTED).toUpperCase());
+            this.voteStat = lawObject.getString(USER_VOTED).equals("for") ? UserVote.VOTED_FOR :
+                    lawObject.getString(USER_VOTED).equals("no_vote") ? UserVote.NO_VOTE : UserVote.VOTED_AGAINST;
+
             this.description = lawObject.getString(DESC);
             this.link = lawObject.getString(LINK);
             this.tags = getTagsAsArray(lawObject.getJSONArray(TAGS));
@@ -108,14 +112,15 @@ public class Law {
     }
 
     private void setElectedVotes(LawActivity l) {
-        this.electedVotes = l.getLawKnessetVotes(R.id.lawLayout, name);
+        UserVote myVote = voteStat == UserVote.NO_VOTE ? UserVote.VOTED_AGAINST : voteStat;
+        this.electedVotes = l.getLawKnessetVotes(R.id.lawLayout, name, myVote);
     }
 
     public String getName() {
         return name;
     }
 
-    public VoteStatus getVoteStat() {
+    public UserVote getVoteStat() {
         return voteStat;
     }
 
@@ -159,9 +164,9 @@ public class Law {
         try {
             //build the json
             String interstedIn = "";
-            if (this.voteStat == VoteStatus.FOR ){
+            if (this.voteStat == UserVote.VOTED_FOR ){
                 interstedIn = "for";
-            }else if (this.voteStat == VoteStatus.AGAINST ) {
+            }else if (this.voteStat == UserVote.VOTED_AGAINST ) {
                 interstedIn = "against";
             }else{
                 return;
