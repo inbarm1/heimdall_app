@@ -1,8 +1,8 @@
 package com.example.inbar.heimdall.Law;
 
-import android.app.Notification;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.inbar.heimdall.R;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -23,9 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.logging.LogRecord;
+
 import android.os.Message;
 import android.os.Handler;
 
@@ -36,6 +33,7 @@ import android.os.Handler;
 public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleViewHolder> {
     private ArrayList<Law> mLaws;
     protected LawActivity lawActivity;
+    private StatisticsPopupMngr mStatsPopupMngr;
 
     private static final int LAWS_UPDATED = 0;
 
@@ -53,6 +51,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     public LawListAdapter(ArrayList<Law> laws, LawActivity father) {
         mLaws = laws;
         lawActivity = father;
+        mStatsPopupMngr = buildStatsPopupMngr();
     }
 
     public void getLaws(final Calendar startC, final Calendar endC) {
@@ -99,8 +98,9 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         final Law law = mLaws.get(position);
         holder.nameTextView.setText(law.getName());
-        holder.descriptionTextView.setText(law.getDescription());
         holder.moreInfoButton.setOnClickListener(new MoreInfoButtonListener(law));
+        holder.showStatsButton.setOnClickListener( new ShowStatsButtonListener(law,mStatsPopupMngr));
+        holder.showDescriptionButton.setOnClickListener( new ShowDescriptionButtonListener(law,mStatsPopupMngr));
     }
 
     @Override
@@ -111,16 +111,17 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView nameTextView;
-        protected TextView descriptionTextView;
         protected Button moreInfoButton;
         protected Button showStatsButton;
+        protected Button showDescriptionButton;
+
 
         public SimpleViewHolder(View v) {
             super(v);
             nameTextView = ((TextView)v.findViewById(R.id.nameTextView));
-            descriptionTextView = ((TextView)v.findViewById(R.id.lawDescriptionTextView));
             moreInfoButton = ((Button)v.findViewById(R.id.moreInfoButton));
             showStatsButton = ((Button)v.findViewById(R.id.showStatsButton));
+            showDescriptionButton = ((Button)v.findViewById(R.id.showDescriptionButton));
         }
     }
 
@@ -149,7 +150,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             View parent = (View) v.getParent();
             ExpandableLayout expandableLayout = ((ExpandableLayout) parent.findViewById(R.id.expandable_layout));
             expandableLayout.toggle();
-            mLaw.DrawVotesGraph(parent,R.id.VoteLikeMe);
+//            mLaw.DrawVotesGraph(parent,R.id.VoteLikeMe);
         }
     }
 
@@ -165,13 +166,29 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         @Override
         public void onClick(View v) {
             //the view is the button, we need to get it's parnet
-           mPopupMngr.openPopUp();
+           mPopupMngr.openPopUp(StatisticsPopupMngr.PopUpType.STATS,mLaw );
         }
     }
 
-    public StatisticsPopupMngr buildPopupClass(){
+    public static class ShowDescriptionButtonListener implements View.OnClickListener {
+        private Law mLaw;
+        private StatisticsPopupMngr mPopupMngr;
+
+        public ShowDescriptionButtonListener(Law law,StatisticsPopupMngr statPopupMngr) {
+            mLaw = law;
+            mPopupMngr = statPopupMngr;
+        }
+
+        @Override
+        public void onClick(View v) {
+            //the view is the button, we need to get it's parnet
+            mPopupMngr.openPopUp(StatisticsPopupMngr.PopUpType.DESCRIPTION,mLaw );
+        }
+    }
+
+    public StatisticsPopupMngr buildStatsPopupMngr(){
         Context context = this.lawActivity.getApplicationContext();
-        CoordinatorLayout lawPageLayout = this.lawActivity.findViewById(R.id.lawLayout);
+        NestedScrollView lawPageLayout = this.lawActivity.findViewById(R.id.lawLayout);
         return new StatisticsPopupMngr(context,lawPageLayout);
     }
     
