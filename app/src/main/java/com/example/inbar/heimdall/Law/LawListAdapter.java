@@ -117,10 +117,6 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         protected Button moreInfoButton;
         protected Button showStatsButton;
         protected Button showDescriptionButton;
-        protected Button upvoteButton;
-        protected Button downvoteButton;
-
-        protected ArrayList<String> tags;
         protected Button voteButton;
 
 
@@ -210,6 +206,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         NestedScrollView lawPageLayout = this.lawActivity.findViewById(R.id.lawLayout);
         return new StatisticsPopupMngr(context,lawPageLayout, lawActivity);
     }
+
 
 
 }
