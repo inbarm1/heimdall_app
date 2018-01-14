@@ -79,8 +79,8 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                     }
                 }
 
-//                for (Law law: mLaws) law.setUserDistAndElectedVotes(lawActivity);
                 listAdapterHandler.sendMessage(Message.obtain(listAdapterHandler, LAWS_UPDATED));
+                for (Law law: mLaws) law.setUserDistAndElectedVotes(lawActivity);
             }
         });
 
@@ -103,6 +103,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         holder.moreInfoButton.setOnClickListener(new MoreInfoButtonListener(law));
         holder.showStatsButton.setOnClickListener( new ShowStatsButtonListener(law,mStatsPopupMngr));
         holder.showDescriptionButton.setOnClickListener( new ShowDescriptionButtonListener(law,mStatsPopupMngr));
+        holder.voteButton.setOnClickListener(new VoteButtonListener(law,mStatsPopupMngr));
     }
 
     @Override
@@ -120,6 +121,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         protected Button downvoteButton;
 
         protected ArrayList<String> tags;
+        protected Button voteButton;
 
 
         public SimpleViewHolder(View v) {
@@ -128,18 +130,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             moreInfoButton = ((Button)v.findViewById(R.id.moreInfoButton));
             showStatsButton = ((Button)v.findViewById(R.id.showStatsButton));
             showDescriptionButton = ((Button)v.findViewById(R.id.showDescriptionButton));
-        }
-    }
-
-    public static class VoteButtonListener implements View.OnClickListener {
-        private Law mLaw;
-
-        public VoteButtonListener(Law law){
-            mLaw = law;
-        }
-        @Override
-        public void onClick(View v) {
-            
+            voteButton = ((Button)v.findViewById(R.id.VoteButton));
         }
     }
 
@@ -173,6 +164,22 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         public void onClick(View v) {
             //the view is the button, we need to get it's parnet
            mPopupMngr.openPopUp(StatisticsPopupMngr.PopUpType.STATS,mLaw );
+        }
+    }
+
+    public static class VoteButtonListener implements View.OnClickListener {
+        private Law mLaw;
+        private StatisticsPopupMngr mPopupMngr;
+
+        public VoteButtonListener(Law law,StatisticsPopupMngr statPopupMngr) {
+            mLaw = law;
+            mPopupMngr = statPopupMngr;
+        }
+
+        @Override
+        public void onClick(View v) {
+            //the view is the button, we need to get it's parnet
+            mPopupMngr.openPopUp(StatisticsPopupMngr.PopUpType.VOTE,mLaw );
         }
     }
 

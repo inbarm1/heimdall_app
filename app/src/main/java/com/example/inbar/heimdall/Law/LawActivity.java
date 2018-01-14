@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.example.inbar.heimdall.APIRequest;
 import com.example.inbar.heimdall.R;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -27,6 +29,7 @@ public class LawActivity extends APIRequest {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private LawListAdapter mAdapter;
+    public JSONArray TAGS;
 
 
     public TextView fromDateText;
@@ -79,6 +82,11 @@ public class LawActivity extends APIRequest {
         });
 
     }
+
+    private void loadTags() {
+
+    }
+
 
     private void setDatePickerView() {
         TextView fromTextView = findViewById(R.id.fromDateText);

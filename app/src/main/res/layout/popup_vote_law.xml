@@ -18,13 +18,42 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <ImageButton
-            android:id="@+id/ib_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/if_icon"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@null" />
+    <Button
+        android:id="@+id/upvoteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/downvoteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Spinner
+        android:id="@+id/tag1_spinner"
+        android:layout_width="match_parent"
+        android:theme="@style/SpinnerStyle"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:ellipsize="end"
+        android:stepSize="1.0"
+        android:layout_weight="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#212121" />
+
+    <Spinner
+        android:id="@+id/tag2_spinner"
+        android:layout_width="match_parent"
+        android:theme="@style/SpinnerStyle"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:ellipsize="end"
+        android:stepSize="1.0"
+        android:layout_weight="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#212121" />
+    <Button
+        android:id="@+id/submitVoteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
