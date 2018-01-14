@@ -30,6 +30,8 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.numetriclabz.numandroidcharts.ChartData;
+import com.numetriclabz.numandroidcharts.StackBarChart;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,8 +40,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.graphics.Color.rgb;
@@ -56,6 +63,16 @@ public class StatisticsPopupMngr {
     private LawActivity mLawActivity;
     private boolean isUp;
 
+    public static final String AGE_AGAINST = "age_against";
+    public static final String AGE_FOR = "age_for";
+    public static final String JOB_AGAINST = "job_against";
+    public static final String JOB_FOR = "job_for";
+    public static final String RESIDENT_AGAINST = "resident_against";
+    public static final String RESIDNET_FOR = "resident_for";
+    public static final String USER_INFO = "user_info";
+    public static final String JOB = "job";
+    public static final String RESIDENCY = "residency";
+
 
     public StatisticsPopupMngr(Context context, NestedScrollView lawActivityLayout, LawActivity lawActivity) {
         mContext = context;
@@ -66,6 +83,7 @@ public class StatisticsPopupMngr {
 
     public void DrawStats(Law law) {
         DrawElectedVotesGraph(law);
+        DrawUserDistribution(law);
     }
 
     public void openPopUp(PopUpType type, Law law) {
@@ -153,6 +171,60 @@ public class StatisticsPopupMngr {
             descriptionTextView.setText(law.getDescription());
         }
 
+    }
+
+    public void DrawChartDist(Law law, int layoutId, String forKey, String againstKey) {
+        StackBarChart chart = (StackBarChart) mPopupView.findViewById(layoutId);
+        List<String> lable = new ArrayList<>();
+        List<ChartData> values = new ArrayList<>();
+        try {
+            values = getDistFromJson(law, lable, forKey, againstKey);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        chart.setHorizontal_label(lable);
+        chart.setData(values);
+
+    }
+
+    public void DrawUserDistribution(Law law) {
+        DrawChartDist(law, R.id.jobChart, JOB_FOR, JOB_AGAINST);
+        DrawChartDist(law, R.id.cityChart, RESIDNET_FOR, RESIDENT_AGAINST);
+        DrawChartDist(law, R.id.ageChart, AGE_FOR, AGE_AGAINST);
+    }
+
+    public List<ChartData> getDistFromJson(Law law, List<String> lables, String forKey, String againstKey) throws JSONException {
+        ArrayList<Float> forChart = new ArrayList<>();
+        ArrayList<Float> againstChart = new ArrayList<>();
+        while (law.getUserDist() == null) {};
+        JSONObject forDataJson = (JSONObject) law.getUserDist().get(forKey);
+        JSONObject againstDataJson = (JSONObject) law.getUserDist().get(againstKey);
+
+        Set<String> keys = fromIteratorToSet(forDataJson.keys());
+        keys.addAll(fromIteratorToSet(againstDataJson.keys()));
+        for (String key: keys) {
+            lables.add(key);
+            Float forValue = forDataJson.has(key) ? Float.valueOf(((float) forDataJson.getDouble(key))*100) : Float.valueOf(0);
+            Float againstValue = againstDataJson.has(key) ? Float.valueOf(((float) againstDataJson.getDouble(key))*100) : Float.valueOf(0);
+            forChart.add(forValue);
+            againstChart.add(againstValue);
+        }
+
+        List<ChartData> values = new ArrayList<>();
+        values.add(new ChartData(forChart.toArray(new Float[forChart.size()]), "For"));
+        values.add(new ChartData(againstChart.toArray(new Float[againstChart.size()]), "For"));
+        return values;
+
+    }
+
+    public Set<String> fromIteratorToSet(Iterator<?> it) {
+
+        Set<String> result = new HashSet<>();
+        while (it.hasNext()) {
+            result.add((String) it.next());
+        }
+        return result;
     }
 
     public void DrawVotePopUp(final Law law) {
