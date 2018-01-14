@@ -139,7 +139,7 @@ public class RegisterActivity extends APIRequest {
     }
 
 
-    private void setSpinnerContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
+    public void setSpinnerContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
         Spinner s = (Spinner) findViewById(layout_id);
         ArrayList<String> values = new ArrayList<>();
         for (int i = 0; i < j_values.length(); i++) {
@@ -148,7 +148,6 @@ public class RegisterActivity extends APIRequest {
             values.add(value);
         }
         setSpinnerContent(layout_id, values, defaultOption, doSort);
-
     }
 
     private void setAutoCompleteContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
@@ -177,7 +176,6 @@ public class RegisterActivity extends APIRequest {
         s.setPrompt(defaultOption);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         s.setAdapter(adapter);
-
     }
 
     private boolean validateDate() {

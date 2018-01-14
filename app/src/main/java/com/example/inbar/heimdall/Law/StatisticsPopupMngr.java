@@ -3,14 +3,17 @@ package com.example.inbar.heimdall.Law;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.design.widget.CoordinatorLayout;
+import android.os.Message;
 import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.inbar.heimdall.R;
@@ -26,14 +29,14 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -50,13 +53,15 @@ public class StatisticsPopupMngr {
     private View mPopupView;
     private PopupWindow mPopupWindow;
     private NestedScrollView mLawActivityLayout;
+    private LawActivity mLawActivity;
     private boolean isUp;
 
 
-    public StatisticsPopupMngr(Context context, NestedScrollView lawActivityLayout) {
+    public StatisticsPopupMngr(Context context, NestedScrollView lawActivityLayout, LawActivity lawActivity) {
         mContext = context;
         mLawActivityLayout = lawActivityLayout;
         isUp = false;
+        mLawActivity = lawActivity;
     }
 
     public void DrawStats(Law law) {
@@ -148,6 +153,73 @@ public class StatisticsPopupMngr {
         }
     }
 
+    public void DrawVotePopUp(final Law law) {
+        Button upvoteButton = (Button) mPopupView.findViewById(R.id.upvoteButton);
+        upvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_FOR));
+
+        Button downvoteButton = (Button) mPopupView.findViewById(R.id.downvoteButton);
+        downvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_AGAINST));
+
+        try {
+            setSpinnerContent(R.id.tag1_spinner, mLawActivity.TAGS, null, true);
+            setSpinnerContent(R.id.tag2_spinner, mLawActivity.TAGS, null, true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Button submitButton = (Button) mPopupView.findViewById(R.id.submitVoteButton);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Thread thread = new Thread(new Runnable(){
+                    @Override
+                    public void run(){
+                        Spinner tag1Spinner = (Spinner) mPopupView.findViewById(R.id.tag1_spinner);
+                        Spinner tag2Spinner = (Spinner) mPopupView.findViewById(R.id.tag2_spinner);
+                        String tags = tag1Spinner.getSelectedItem().toString() + "," + tag2Spinner.getSelectedItem().toString();
+                        mLawActivity.lawVoteSubmit(R.id.lawLayout, law.getName(), law.getUserVote(), tags);
+                    }
+                });
+
+                thread.start();
+            }
+        });
+
+
+    }
+
+    public void setSpinnerContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
+        Spinner s = (Spinner) mPopupView.findViewById(layout_id);
+        ArrayList<String> values = new ArrayList<>();
+        for (int i = 0; i < j_values.length(); i++) {
+            String value = (String) j_values.get(i);
+            if (value.isEmpty()) continue;
+            values.add(value);
+        }
+        if (doSort)
+            Collections.sort(values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mLawActivity, android.R.layout.simple_list_item_1, values);
+        s.setPrompt(defaultOption);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+        s.setAdapter(adapter);
+    }
+
+
+    public static class VoteButtonListener implements View.OnClickListener {
+        private Law mLaw;
+        private UserVote mUserVote;
+
+        public VoteButtonListener(Law law, UserVote userVote) {
+            mLaw = law;
+            mUserVote = userVote;
+        }
+
+        @Override
+        public void onClick(View v) {
+            mLaw.userVote = mUserVote;
+        }
+    }
+
 
 
 
@@ -163,9 +235,9 @@ public class StatisticsPopupMngr {
         try {
             //build the json
             String interstedIn = "";
-            if (law.voteStat == UserVote.VOTED_FOR) {
+            if (law.userVote == UserVote.VOTED_FOR) {
                 interstedIn = "for";
-            } else if (law.voteStat == UserVote.VOTED_AGAINST) {
+            } else if (law.userVote == UserVote.VOTED_AGAINST) {
                 interstedIn = "against";
             } else {
                 return;
