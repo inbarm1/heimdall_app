@@ -77,7 +77,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                     }
                 }
 
-//                for (Law law: mLaws) law.setUserDistAndElectedVotes(lawActivity);
+                for (Law law: mLaws) law.setUserDistAndElectedVotes(lawActivity);
                 listAdapterHandler.sendMessage(Message.obtain(listAdapterHandler, LAWS_UPDATED));
             }
         });
