@@ -240,7 +240,8 @@ public class StatisticsPopupMngr {
             } else if (law.userVote == UserVote.VOTED_AGAINST) {
                 interstedIn = "against";
             } else {
-                return;
+                interstedIn = "for";
+                //return;
             }
             String myParty = "";
             JSONObject nameToPercent = new JSONObject();
@@ -498,9 +499,9 @@ public class StatisticsPopupMngr {
         try {
             //build the json
             String interstedIn = "";
-            if (law.voteStat == UserVote.VOTED_FOR) {
+            if (law.userVote == UserVote.VOTED_FOR) {
                 interstedIn = "for";
-            } else if (law.voteStat == UserVote.VOTED_AGAINST) {
+            } else if (law.userVote == UserVote.VOTED_AGAINST) {
                 interstedIn = "against";
             } else {
                 return;
