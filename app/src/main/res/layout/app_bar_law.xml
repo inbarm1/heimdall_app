@@ -13,6 +13,39 @@
 
         <include layout="@layout/app_bar" />
 
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#AAC8D3">
+            <TextView
+                android:id="@+id/toDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="140dp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:hint="עד תאריך"/>
+
+            <TextView
+                android:id="@+id/fromDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginStart="20dp"
+                android:textStyle="bold"
+                android:hint="מתאריך"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="20dp"
+                android:onClick="refreshLawsForAdapter"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:text="סנן" />
+
+        </android.support.v7.widget.Toolbar>
+
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_law" />

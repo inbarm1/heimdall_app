@@ -1,19 +1,20 @@
 package com.example.inbar.heimdall.Law;
 
-import com.example.inbar.heimdall.UserVote;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.example.inbar.heimdall.R;
+import com.example.inbar.heimdall.UserVote;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -28,155 +29,154 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import net.cachapa.expandablelayout.ExpandableLayout;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.graphics.Color.rgb;
 
 /**
- * Created by Eilon on 05/01/2018.
+ * Created by Eilon on 13/01/2018.
  */
 
-public class Law {
-
-    public static final String LINK = "link";
-    public static final String DESC = "description";
-    public static final String TAGS = "tags";
-    public static final String USER_VOTED = "user_voted";
-    public static final String JOB_FOR = "job_for";
-    public static final String JOB_AGAINST = "job_against";
-    public static final String RESIDENT_FOR = "resident_for";
-    public static final String RESIDENT_AGAINST = "resident_against";
-    public static final String AGE_FOR = "age_for";
-    public static final String AGE_AGAINST = "age_against";
-    public static final String USER_INFO = "user_info";
-    public static final String JOB = "job";
-    public static final String RESIDENCY = "residency";
-    public static final String AGE = "age";
+public class StatisticsPopupMngr {
+    private Context mContext;
+    private View mPopupView;
+    private PopupWindow mPopupWindow;
+    private NestedScrollView mLawActivityLayout;
+    private boolean isUp;
 
 
-    ExecutorService es = Executors.newSingleThreadExecutor();
-
-    String name;
-    UserVote voteStat;
-    private String description;
-    private String link;
-    private ArrayList<String> tags;
-    private JSONObject userDist;
-    private JSONObject electedVotes;
-    LawActivity lawActivity;
-    boolean blocking;
-    PopupWindow mPopupWindow;
-
-
-    public Law(String name, JSONObject lawObject, LawActivity lawActivity) {
-        this.name = name;
-        try {
-            this.voteStat = lawObject.getString(USER_VOTED).equals("for") ? UserVote.VOTED_FOR :
-                    lawObject.getString(USER_VOTED).equals("no_vote") ? UserVote.NO_VOTE : UserVote.VOTED_AGAINST;
-
-            this.description = lawObject.getString(DESC);
-            this.link = lawObject.getString(LINK);
-            this.tags = getTagsAsArray(lawObject.getJSONArray(TAGS));
-            this.lawActivity = lawActivity;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public StatisticsPopupMngr(Context context, NestedScrollView lawActivityLayout) {
+        mContext = context;
+        mLawActivityLayout = lawActivityLayout;
+        isUp = false;
     }
 
-    public void setUserDistAndElectedVotes(LawActivity l) {
-        this.setElectedVotes(l);
-        this.setUserDist(l);
+    public void DrawStats(Law law) {
+        DrawElectedVotesGraph(law);
     }
 
-    private void setUserDist(LawActivity l) {
-        this.userDist = l.getUserDistribution(R.id.lawLayout, name);
-    }
-
-    private void setElectedVotes(LawActivity l) {
-        UserVote myVote = voteStat == UserVote.NO_VOTE ? UserVote.VOTED_AGAINST : voteStat;
-        this.electedVotes = l.getLawKnessetVotes(R.id.lawLayout, name, myVote);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public UserVote getVoteStat() {
-        return voteStat;
-    }
-
-    public String getDescription() {
-        return description != null ? description : "";
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public ArrayList<String> getTags() {
-        return tags;
-    }
-
-    private ArrayList<String> getTagsAsArray(JSONArray jArray) throws JSONException {
-        ArrayList<String> tags = new ArrayList<>();
-        if (jArray == null) return tags;
-        for (int i = 0; i < jArray.length(); i++) {
-            tags.add(jArray.getString(i));
-        }
-        return tags;
-    }
-
-    public JSONObject getUserDist() {
-        return userDist;
-    }
-
-    public JSONObject getElectedVotes() {
-        return electedVotes;
-    }
-
-
-    public void DrawVotesGraph(View fatherView, int charId) {
-        JSONObject voteJson = this.getElectedVotes();
-        if (voteJson == null){
-            Log.d("DrawVotesGraph","get elected votes from law returned null");
+    public void openPopUp(PopUpType type, Law law) {
+        if (isUp) {
             return;
         }
-        String [] voteTypes = {"for" , "against", "abstained", "missing"};
+        int resource = 0;
+        switch (type) {
+            case STATS:
+                resource = R.layout.activity_pop_law_stats;
+                break;
+            case DESCRIPTION:
+                resource = R.layout.activity_pop_law_description;
+                break;
+            case VOTE:
+                resource = R.layout.activity_pop_law_description;
+                break;
+            default:
+                resource = R.layout.activity_pop_law_description;
+                break;
+        }
+
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        // Inflate the custom layout/view
+        mPopupView = inflater.inflate(resource, null);
+
+        // Initialize a new instance of popup window
+        mPopupWindow = new PopupWindow(
+                mPopupView,
+                NestedScrollView.LayoutParams.WRAP_CONTENT,
+                NestedScrollView.LayoutParams.WRAP_CONTENT
+        );
+
+        // Set an elevation value for popup window
+        // Call requires API level 21
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow.setElevation(5.0f);
+        }
+
+        // Get a reference for the custom view close button
+        ImageButton closeButton = (ImageButton) mPopupView.findViewById(R.id.ib_close);
+
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                mPopupWindow.dismiss();
+                isUp = false;
+            }
+        });
+
+        mPopupWindow.showAtLocation(mLawActivityLayout, Gravity.CENTER, 0, 0);
+        isUp = true;
+
+        switch (type) {
+            case STATS:
+                DrawStats(law);
+                break;
+            case DESCRIPTION:
+                DrawDescription(law);
+                break;
+            case VOTE:
+                break;
+            default:
+                return;
+        }
+
+    }
+
+    public static enum PopUpType {
+        STATS,
+        DESCRIPTION,
+        VOTE
+    }
+
+
+    public void DrawDescription(Law law) {
+        TextView descriptionTextView = ((TextView) mPopupView.findViewById(R.id.lawDescriptionTextView));
+        if (law.getDescription().length() < 5) {
+            descriptionTextView.setText("no description available");
+        } else {
+            descriptionTextView.setText(law.getDescription());
+        }
+
+    }
+
+
+
+
+    // shitty code starts here->
+
+    public void DrawElectedVotesGraph(Law law) {
+        JSONObject voteJson = law.getElectedVotes();
+        if (voteJson == null) {
+            Log.d("DrawVotesGraph", "get elected votes from law returned null");
+            return;
+        }
+        String[] voteTypes = {"for", "against", "abstained", "missing"};
         try {
             //build the json
             String interstedIn = "";
-            if (this.voteStat == UserVote.VOTED_FOR ){
+            if (law.voteStat == UserVote.VOTED_FOR) {
                 interstedIn = "for";
-            }else if (this.voteStat == UserVote.VOTED_AGAINST ) {
+            } else if (law.voteStat == UserVote.VOTED_AGAINST) {
                 interstedIn = "against";
-            }else{
+            } else {
                 return;
             }
             String myParty = "";
             JSONObject nameToPercent = new JSONObject();
-            Map<String,JSONObject> pieMap = new HashMap<>();
+            Map<String, JSONObject> pieMap = new HashMap<>();
             int myCnt;
             int totalCnt;
-            Iterator<String> partyNameIter =  voteJson.keys();
+            Iterator<String> partyNameIter = voteJson.keys();
             while (partyNameIter.hasNext()) {
                 myCnt = 0;
                 totalCnt = 0;
@@ -190,7 +190,7 @@ public class Law {
                     JSONObject singleVoteTypeJson = votesJson.getJSONObject(type);
                     if (singleVoteTypeJson.has("count")) {
                         int cnt = singleVoteTypeJson.getInt("count");
-                        if (type == interstedIn){
+                        if (type == interstedIn) {
                             myCnt += cnt;
                         }
                         totalCnt += cnt;
@@ -201,14 +201,14 @@ public class Law {
                     JSONObject singleVoteTypeJson = votesJson.getJSONObject(type);
                     if (singleVoteTypeJson.has("count")) {
                         int cnt = singleVoteTypeJson.getInt("count");
-                        dataJson.put(type,(float)cnt/totalCnt);
+                        dataJson.put(type, (float) cnt / totalCnt);
                     }
                 }
-                pieMap.put(currName,dataJson);
-                nameToPercent.put(currName,((float)myCnt/totalCnt) * 100 );
+                pieMap.put(currName, dataJson);
+                nameToPercent.put(currName, ((float) myCnt / totalCnt) * 100);
             }
-            createBarChart(nameToPercent,pieMap,charId,myParty, fatherView);
-        } catch (Exception e){
+            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView);
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }
@@ -216,7 +216,7 @@ public class Law {
     }
 
 
-    private void createBarChart(JSONObject nameToPercentage,Map<String,JSONObject> pieMap, int char_id, String myName, View v) {
+    private void createBarChart(JSONObject nameToPercentage, Map<String, JSONObject> pieMap, int char_id, String myName, View v) {
 
         BarChart barChart = (BarChart) v.findViewById(char_id);
         final ArrayList<BarEntry> valueList = new ArrayList<>();
@@ -228,8 +228,8 @@ public class Law {
         try {
             Iterator<String> names = nameToPercentage.keys();
             int counter = 0;
-            while( names.hasNext() ) {
-                final String name = (String)names.next();
+            while (names.hasNext()) {
+                final String name = (String) names.next();
                 float val = (float) nameToPercentage.getDouble(name);
                 // bar name
                 xAxis.add(name);
@@ -237,71 +237,71 @@ public class Law {
                 BarEntry entry = new BarEntry(val, counter);
                 valueList.add(entry);
                 if (name.equals(myName)) {
-                    colors.add(rgb(70,130,180));
+                    colors.add(rgb(70, 130, 180));
                 } else {
-                    colors.add(rgb(135,206,235));
+                    colors.add(rgb(135, 206, 235));
                 }
-                counter ++;
+                counter++;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-         //set a chart value selected listener
-        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-
-            @Override
-            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                // display msg when value selected
-                if (e == null || blocking)
-                    return;
-
-
-                // Get the application context
-                Context mContext = lawActivity.getApplicationContext();
-                String name = xAxis.get(e.getXIndex());
-                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-
-                // Inflate the custom layout/view
-                View customView = inflater.inflate(R.layout.activity_pop_piechart,null);
-
-                // Initialize a new instance of popup window
-                mPopupWindow = new PopupWindow(
-                        customView,
-                        CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                        CoordinatorLayout.LayoutParams.WRAP_CONTENT
-                );
-
-                // Set an elevation value for popup window
-                // Call requires API level 21
-                if(Build.VERSION.SDK_INT>=21){
-                    mPopupWindow.setElevation(5.0f);
-                }
-
-                blocking = true;
-
-                // Get a reference for the custom view close button
-                ImageButton closeButton = (ImageButton) customView.findViewById(R.id.ib_close);
-
-                // Set a click listener for the popup window close button
-                closeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // Dismiss the popup window
-                        mPopupWindow.dismiss();
-                        blocking = false;
-                    }
-                });
-
-                mPopupWindow.showAtLocation(myView, Gravity.CENTER,0,0);
-
-                createChart(map.get(name), customView);
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
+//        //set a chart value selected listener
+//        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+//
+//            @Override
+//            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+//                // display msg when value selected
+//                if (e == null || blocking)
+//                    return;
+//
+//
+//                // Get the application context
+//                Context mContext = lawActivity.getApplicationContext();
+//                String name = xAxis.get(e.getXIndex());
+//                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+//
+//                // Inflate the custom layout/view
+//                View customView = inflater.inflate(R.layout.activity_pop_piechart, null);
+//
+//                // Initialize a new instance of popup window
+//                mPopupWindow = new PopupWindow(
+//                        customView,
+//                        CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+//                        CoordinatorLayout.LayoutParams.WRAP_CONTENT
+//                );
+//
+//                // Set an elevation value for popup window
+//                // Call requires API level 21
+//                if (Build.VERSION.SDK_INT >= 21) {
+//                    mPopupWindow.setElevation(5.0f);
+//                }
+//
+//                blocking = true;
+//
+//                // Get a reference for the custom view close button
+//                ImageButton closeButton = (ImageButton) customView.findViewById(R.id.ib_close);
+//
+//                // Set a click listener for the popup window close button
+//                closeButton.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        // Dismiss the popup window
+//                        mPopupWindow.dismiss();
+//                        blocking = false;
+//                    }
+//                });
+//
+//                mPopupWindow.showAtLocation(myView, Gravity.CENTER, 0, 0);
+//
+//                createChart(map.get(name), customView);
+//            }
+//
+//            @Override
+//            public void onNothingSelected() {
+//
+//            }
+//        });
 
         BarDataSet dataSet = new BarDataSet(valueList, "מפלגות");
         dataSet.setColors(colors);
@@ -324,8 +324,8 @@ public class Law {
         barChart.invalidate();
     }
 
-    protected void createChart(final JSONObject data, View pop){
-        PieChart mChart = (PieChart)pop.findViewById(R.id.piechart);
+    protected void createChart(final JSONObject data, View pop) {
+        PieChart mChart = (PieChart) pop.findViewById(R.id.piechart);
 
 //        mChart = new PieChart(this);
         // add pie chart to main layout
@@ -362,10 +362,10 @@ public class Law {
         int counter = 0;
         Iterator<?> memName = dataMem.keys();
         try {
-            while(memName.hasNext()) {
+            while (memName.hasNext()) {
                 final String nameM = (String) memName.next();
                 xData.add(nameM);
-                float val = ((Number)dataMem.get(nameM)).floatValue() * 100;
+                float val = ((Number) dataMem.get(nameM)).floatValue() * 100;
                 yVals1.add(new Entry(val, counter));
                 counter++;
             }
@@ -415,9 +415,8 @@ public class Law {
 
         return colors;
     }
-
-
-
-
 }
+
+
+
 
