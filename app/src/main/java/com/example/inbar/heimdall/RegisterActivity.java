@@ -38,7 +38,13 @@ public class RegisterActivity extends AbsRegisterActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        publicOnCreate();
+        //publicOnCreate();
+        ArrayList<Callable<JSONObject>> callables=new ArrayList<>();
+        callables.add(public_get_data);
+        ArrayList<CallBack<Void,JSONObject>> callbacks=new ArrayList<>();
+        callbacks.add(public_load_callback);
+        AsyncCallbackExecutor profileLoadTask = new AsyncCallbackExecutor(this,callables,callbacks,true);
+        profileLoadTask.execute();
 
     }
 

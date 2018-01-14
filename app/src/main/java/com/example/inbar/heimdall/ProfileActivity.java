@@ -1,7 +1,9 @@
 package com.example.inbar.heimdall;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -9,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
@@ -23,11 +26,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 
 public class ProfileActivity extends AbsRegisterActivity {
@@ -36,39 +41,58 @@ public class ProfileActivity extends AbsRegisterActivity {
         return es.submit(new Callable<JSONObject>() {
             @Override
             public JSONObject call() throws Exception {
-                return getUserInfo(R.layout.profile_main);
+                Thread.sleep(1000*10);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("bla",3);
+                return jsonObject;
             }
         });
     }
+
+    Callable profile_get_data=new Callable<JSONObject>() {
+        @Override
+        public JSONObject call() throws Exception {
+            return getUserInfo(R.layout.profile_main);
+        }
+    };
+
+    CallBack<Void,JSONObject> profile_callback=new CallBack<Void, JSONObject>() {
+        @Override
+        public Void call(JSONObject val) {
+            try {
+                job = val.getString(JOB_CATEGORY);
+                residency = val.getString(RESIDENCY);
+                party = val.getString(PARTY);
+                involvementLevel = engInvolvementToInt(val.getString(INVOLVEMENT_LEVEL));
+            }catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            setSpinnerSelection(job,R.id.job);
+            setSpinnerSelection(party,R.id.party);
+            setSpinnerSelection(getHebInvolvement(involvementLevel),R.id.involvment_spinner);
+            setResidency();
+            setBtnLogics();
+            return null;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_main);
-        publicOnCreate();
+
+        /*set get data and callbacks then execute task*/
+        ArrayList<CallBack<Void,JSONObject>> callbacks=new ArrayList<>();
+        ArrayList<Callable<JSONObject>> callables=new ArrayList<>();
+        callbacks.add(public_load_callback);callbacks.add(profile_callback);
+        callables.add(public_get_data);callables.add(profile_get_data);
+        AsyncCallbackExecutor profileLoadTask = new AsyncCallbackExecutor(this,callables,callbacks,true);
+        profileLoadTask.execute();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarProfile);
         setSupportActionBar(toolbar);
 
-        Future<JSONObject> userDetails = getUserDetails();
-        JSONObject detailsObject=null;
-        try {
-            ProgressDialog dialog = ProgressDialog.show(this, "",
-                    "Loading. Please wait...", true);
-            while (!userDetails.isDone()) {
-                detailsObject = userDetails.get();
-            }
-            dialog.dismiss();
-            job=detailsObject.getString(JOB_CATEGORY);
-            residency=detailsObject.getString(RESIDENCY);
-            party=detailsObject.getString(PARTY);
-            involvementLevel=engInvolvementToInt(detailsObject.getString(INVOLVEMENT_LEVEL));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        setSpinnerSelection(job,R.id.job);
-        setSpinnerSelection(party,R.id.party);
-        setSpinnerSelection(getHebInvolvement(involvementLevel),R.id.involvment_spinner);
-        setResidency();
         id_drawer_layout = R.id.drawer_layout_profile;
         DrawerLayout drawer = (DrawerLayout) findViewById(id_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -82,7 +106,7 @@ public class ProfileActivity extends AbsRegisterActivity {
         navigationView.setNavigationItemSelectedListener(this);
         setText("עדכן את הפרטים על מנת לקבל את המידע המתאים ביותר עבורך",R.id.register_content_text);
         setText("עדכון פרטים",R.id.register_large_title);
-        setBtnLogics();
+
 
     }
 
@@ -136,7 +160,7 @@ public class ProfileActivity extends AbsRegisterActivity {
                 Future<Boolean> booleanFuture = updateUserDetails();
                 try {
                     if(booleanFuture.get()){
-                        showBar("הפרטים התעדכנו בהצלחה",Snackbar.LENGTH_LONG);
+                        showBar("הפרטים עודכנו בהצלחה",Snackbar.LENGTH_LONG);
                     }
                     else{
                         showBar("עדכון הפרטים נכשל",Snackbar.LENGTH_LONG);
@@ -149,4 +173,6 @@ public class ProfileActivity extends AbsRegisterActivity {
             }
         });
     }
+
+
 }

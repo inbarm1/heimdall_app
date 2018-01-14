@@ -42,16 +42,6 @@ public abstract class AbsRegisterActivity extends APIRequest {
 
     ExecutorService es = Executors.newSingleThreadExecutor();
 
-    public Future<JSONObject> getCategories() {
-        return es.submit(new Callable<JSONObject>() {
-
-            @Override
-            public JSONObject call() throws Exception {
-                return getCategoryNames(R.layout.activity_register);
-            }
-        });
-    }
-
     public Future<Boolean> register() {
         return es.submit(new Callable<Boolean>() {
             @Override
@@ -61,30 +51,7 @@ public abstract class AbsRegisterActivity extends APIRequest {
         });
     }
 
-    protected void publicOnCreate() {
-        if (cat==null) {
-            Future<JSONObject> categories = getCategories();
-            try {
-                cat = categories.get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        //set content to all spinners
-        try {
-            createResidencySet(cat.getJSONArray("residencies"));
-            setSpinnerContent(R.id.party, cat.getJSONArray("parties"), "בחר מפלגה", true);
-            setSpinnerContent(R.id.job, cat.getJSONArray("job_categories"), "בחר עיסוק", true);
-            setAutoCompleteContent(R.id.city, cat.getJSONArray("residencies"), "בחר עיר מגורים", true);
-            setInvolvementLevelView();
-            setDatePickerView();
-            setRegisterBtnView();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setRegisterBtnView() {
+    protected void setRegisterBtnView() {
         Button regBtn = (Button) findViewById(R.id.register_btn);
         regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,13 +81,13 @@ public abstract class AbsRegisterActivity extends APIRequest {
         });
     }
 
-    private void createResidencySet(JSONArray residencyArray) throws JSONException {
+    protected void createResidencySet(JSONArray residencyArray) throws JSONException {
         for (int i = 0; i < residencyArray.length(); i++) {
             residencySet.add((String) residencyArray.get(i));
         }
     }
 
-    private void setDatePickerView() {
+    protected void setDatePickerView() {
         LinearLayout dateLayout = findViewById(R.id.date_layout);
         dateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +98,7 @@ public abstract class AbsRegisterActivity extends APIRequest {
         });
     }
 
-    private void setInvolvementLevelView() throws JSONException {
+    protected void setInvolvementLevelView() throws JSONException {
         ArrayList<String> invovmentLevelOptions = new ArrayList<>();
         invovmentLevelOptions.add("גבוהה");
         invovmentLevelOptions.add("בינונית");
@@ -140,7 +107,7 @@ public abstract class AbsRegisterActivity extends APIRequest {
     }
 
 
-    private void setSpinnerContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
+    protected void setSpinnerContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
         Spinner s = (Spinner) findViewById(layout_id);
         ArrayList<String> values = new ArrayList<>();
         for (int i = 0; i < j_values.length(); i++) {
@@ -152,7 +119,7 @@ public abstract class AbsRegisterActivity extends APIRequest {
 
     }
 
-    private void setAutoCompleteContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
+    protected void setAutoCompleteContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
         final AutoCompleteTextView a = (AutoCompleteTextView) findViewById(layout_id);
         ArrayList<String> values = new ArrayList<>();
         for (int i = 0; i < j_values.length(); i++) {
@@ -188,7 +155,7 @@ public abstract class AbsRegisterActivity extends APIRequest {
 
     }
 
-    private void setSpinnerContent(int layout_id, ArrayList<String> values, String defaultOption, boolean doSort) throws JSONException {
+    protected void setSpinnerContent(int layout_id, ArrayList<String> values, String defaultOption, boolean doSort) throws JSONException {
         Spinner s = (Spinner) findViewById(layout_id);
         if (doSort)
             Collections.sort(values);
@@ -282,4 +249,28 @@ public abstract class AbsRegisterActivity extends APIRequest {
                 .show();
     }
 
+    CallBack<Void,JSONObject> public_load_callback=new CallBack<Void, JSONObject>() {
+        @Override
+        public Void call(JSONObject val) {
+            try {
+                createResidencySet(cat.getJSONArray("residencies"));
+                setSpinnerContent(R.id.party, cat.getJSONArray("parties"), "בחר מפלגה", true);
+                setSpinnerContent(R.id.job, cat.getJSONArray("job_categories"), "בחר עיסוק", true);
+                setAutoCompleteContent(R.id.city, cat.getJSONArray("residencies"), "בחר עיר מגורים", true);
+                setInvolvementLevelView();
+                setDatePickerView();
+                setRegisterBtnView();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    };
+    Callable public_get_data=new Callable<JSONObject>() {
+        @Override
+        public JSONObject call() throws Exception {
+            cat=getCategoryNames(R.layout.activity_profile);
+            return null;
+        }
+    };
 }
