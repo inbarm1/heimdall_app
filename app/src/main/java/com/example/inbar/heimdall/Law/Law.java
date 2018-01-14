@@ -1,5 +1,7 @@
 package com.example.inbar.heimdall.Law;
 
+import com.example.inbar.heimdall.UserVote;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -74,7 +76,7 @@ public class Law {
     ExecutorService es = Executors.newSingleThreadExecutor();
 
     String name;
-    private VoteStatus voteStat;
+    private UserVote voteStat;
     private String description;
     private String link;
     private ArrayList<String> tags;
@@ -88,7 +90,9 @@ public class Law {
     public Law(String name, JSONObject lawObject, LawActivity lawActivity) {
         this.name = name;
         try {
-            this.voteStat = VoteStatus.valueOf(lawObject.getString(USER_VOTED).toUpperCase());
+            this.voteStat = lawObject.getString(USER_VOTED).equals("for") ? UserVote.VOTED_FOR :
+                    lawObject.getString(USER_VOTED).equals("no_vote") ? UserVote.NO_VOTE : UserVote.VOTED_AGAINST;
+
             this.description = lawObject.getString(DESC);
             this.link = lawObject.getString(LINK);
             this.tags = getTagsAsArray(lawObject.getJSONArray(TAGS));
@@ -99,8 +103,10 @@ public class Law {
     }
 
     public void setUserDistAndElectedVotes(LawActivity l) {
-        this.setElectedVotes(l);
-        this.setUserDist(l);
+        if (this.voteStat != UserVote.NO_VOTE) {
+            this.setElectedVotes(l);
+            this.setUserDist(l);
+        }
     }
 
     private void setUserDist(LawActivity l) {
