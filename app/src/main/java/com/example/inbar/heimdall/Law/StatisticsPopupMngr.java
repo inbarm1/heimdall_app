@@ -170,7 +170,6 @@ public class StatisticsPopupMngr {
         } else {
             descriptionTextView.setText(law.getDescription());
         }
-
     }
 
     public void DrawChartDist(Law law, int layoutId, String forKey, String againstKey) {
@@ -335,7 +334,8 @@ public class StatisticsPopupMngr {
             } else if (law.userVote == UserVote.VOTED_AGAINST) {
                 interstedIn = "against";
             } else {
-                return;
+                interstedIn = "for";
+                //return;
             }
             String myParty = "";
             JSONObject nameToPercent = new JSONObject();
@@ -581,6 +581,69 @@ public class StatisticsPopupMngr {
 
         return colors;
     }
+
+
+    public void DrawUserDistGraph(Law law) {
+        JSONObject voteJson = law.getElectedVotes();
+        if (voteJson == null) {
+            Log.d("DrawVotesGraph", "get elected votes from law returned null");
+            return;
+        }
+        String[] voteTypes = {"for", "against", "abstained", "missing"};
+        try {
+            //build the json
+            String interstedIn = "";
+            if (law.userVote == UserVote.VOTED_FOR) {
+                interstedIn = "for";
+            } else if (law.userVote == UserVote.VOTED_AGAINST) {
+                interstedIn = "against";
+            } else {
+                return;
+            }
+            String myParty = "";
+            JSONObject nameToPercent = new JSONObject();
+            Map<String, JSONObject> pieMap = new HashMap<>();
+            int myCnt;
+            int totalCnt;
+            Iterator<String> partyNameIter = voteJson.keys();
+            while (partyNameIter.hasNext()) {
+                myCnt = 0;
+                totalCnt = 0;
+                String currName = partyNameIter.next();
+                JSONObject singlePartyJson = voteJson.getJSONObject(currName);
+                if (singlePartyJson.getBoolean("is_users_party")) {
+                    myParty = currName;
+                }
+                JSONObject votesJson = singlePartyJson.getJSONObject("elected_voted");
+                for (String type : voteTypes) {
+                    JSONObject singleVoteTypeJson = votesJson.getJSONObject(type);
+                    if (singleVoteTypeJson.has("count")) {
+                        int cnt = singleVoteTypeJson.getInt("count");
+                        if (type == interstedIn) {
+                            myCnt += cnt;
+                        }
+                        totalCnt += cnt;
+                    }
+                }
+                JSONObject dataJson = new JSONObject();
+                for (String type : voteTypes) {
+                    JSONObject singleVoteTypeJson = votesJson.getJSONObject(type);
+                    if (singleVoteTypeJson.has("count")) {
+                        int cnt = singleVoteTypeJson.getInt("count");
+                        dataJson.put(type, (float) cnt / totalCnt);
+                    }
+                }
+                pieMap.put(currName, dataJson);
+                nameToPercent.put(currName, ((float) myCnt / totalCnt) * 100);
+            }
+            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+    }
+
 }
 
 
