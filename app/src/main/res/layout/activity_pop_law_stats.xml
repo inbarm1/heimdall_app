@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_custom_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="2dp"
+    android:background="#F1F3F4"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="210dp"
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text="אחוז ההצבעה כמוני"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#727272" />
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/VoteLikeMe"
+            android:layout_marginTop="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="450dp" />
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/ib_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/if_icon"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@null" />
+
+
+
+</RelativeLayout>
