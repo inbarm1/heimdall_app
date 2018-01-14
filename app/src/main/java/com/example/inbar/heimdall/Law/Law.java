@@ -76,7 +76,7 @@ public class Law {
     ExecutorService es = Executors.newSingleThreadExecutor();
 
     String name;
-    private UserVote voteStat;
+    UserVote voteStat;
     private String description;
     private String link;
     private ArrayList<String> tags;

@@ -54,6 +54,13 @@
                         android:layout_height="wrap_content"
                         android:text="show statistics" />
 
+
+                    <Button
+                        android:id="@+id/VoteButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Vote" />
+
                 </LinearLayout>
 
 
