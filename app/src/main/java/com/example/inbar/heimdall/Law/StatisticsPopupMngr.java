@@ -1,41 +1,26 @@
 package com.example.inbar.heimdall.Law;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.inbar.heimdall.R;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.example.inbar.heimdall.UserVote;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Collections;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.graphics.Color.rgb;
@@ -49,13 +34,15 @@ public class StatisticsPopupMngr {
     private View mPopupView;
     private PopupWindow mPopupWindow;
     private NestedScrollView mLawActivityLayout;
+    private LawActivity mLawActivity;
     private boolean isUp;
 
 
-    public StatisticsPopupMngr(Context context, NestedScrollView lawActivityLayout) {
+    public StatisticsPopupMngr(Context context, NestedScrollView lawActivityLayout, LawActivity lawActivity) {
         mContext = context;
         mLawActivityLayout = lawActivityLayout;
         isUp = false;
+        mLawActivity = lawActivity;
     }
 
     public void DrawStats() {
@@ -139,6 +126,48 @@ public class StatisticsPopupMngr {
             descriptionTextView.setText(law.getDescription());
         }
 
+    }
+
+    public void DrawVotePopUp(Law law) {
+//        Button upvoteButton = (Button) mPopupView.findViewById(R.id.upvoteButton);
+//        upvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_FOR));
+//
+//        Button downvoteButton = (Button) mPopupView.findViewById(R.id.downvoteButton);
+//        downvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_AGAINST));
+
+
+    }
+
+    public void setSpinnerContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
+        Spinner s = (Spinner) mPopupView.findViewById(layout_id);
+        ArrayList<String> values = new ArrayList<>();
+        for (int i = 0; i < j_values.length(); i++) {
+            String value = (String) j_values.get(i);
+            if (value.isEmpty()) continue;
+            values.add(value);
+        }
+        if (doSort)
+            Collections.sort(values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mLawActivity, android.R.layout.simple_list_item_1, values);
+        s.setPrompt(defaultOption);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+        s.setAdapter(adapter);
+    }
+
+
+    public static class VoteButtonListener implements View.OnClickListener {
+        private Law mLaw;
+        private UserVote mUserVote;
+
+        public VoteButtonListener(Law law, UserVote userVote) {
+            mLaw = law;
+            mUserVote = userVote;
+        }
+
+        @Override
+        public void onClick(View v) {
+            mLaw.voteStat = mUserVote;
+        }
     }
 }
 

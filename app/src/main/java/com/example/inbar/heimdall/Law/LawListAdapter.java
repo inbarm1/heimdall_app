@@ -11,9 +11,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.inbar.heimdall.R;
+import com.example.inbar.heimdall.UserVote;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -114,6 +116,10 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         protected Button moreInfoButton;
         protected Button showStatsButton;
         protected Button showDescriptionButton;
+        protected Button upvoteButton;
+        protected Button downvoteButton;
+
+        protected ArrayList<String> tags;
 
 
         public SimpleViewHolder(View v) {
@@ -189,9 +195,9 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     public StatisticsPopupMngr buildStatsPopupMngr(){
         Context context = this.lawActivity.getApplicationContext();
         NestedScrollView lawPageLayout = this.lawActivity.findViewById(R.id.lawLayout);
-        return new StatisticsPopupMngr(context,lawPageLayout);
+        return new StatisticsPopupMngr(context,lawPageLayout, lawActivity);
     }
-    
+
 
 }
 

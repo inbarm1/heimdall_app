@@ -28,25 +28,17 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.graphics.Color.rgb;
@@ -59,7 +51,7 @@ public class Law {
 
     public static final String LINK = "link";
     public static final String DESC = "description";
-    public static final String TAGS = "tags";
+    public static final String TAGS = "originalTags";
     public static final String USER_VOTED = "user_voted";
     public static final String JOB_FOR = "job_for";
     public static final String JOB_AGAINST = "job_against";
@@ -76,10 +68,11 @@ public class Law {
     ExecutorService es = Executors.newSingleThreadExecutor();
 
     String name;
-    private UserVote voteStat;
+    UserVote voteStat;
     private String description;
     private String link;
-    private ArrayList<String> tags;
+    ArrayList<String> originalTags;
+    ArrayList<String> selectedTagsByUser;
     private JSONObject userDist;
     private JSONObject electedVotes;
     LawActivity lawActivity;
@@ -95,7 +88,7 @@ public class Law {
 
             this.description = lawObject.getString(DESC);
             this.link = lawObject.getString(LINK);
-            this.tags = getTagsAsArray(lawObject.getJSONArray(TAGS));
+            this.originalTags = getTagsAsArray(lawObject.getJSONArray(TAGS));
             this.lawActivity = lawActivity;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -132,8 +125,8 @@ public class Law {
         return link;
     }
 
-    public ArrayList<String> getTags() {
-        return tags;
+    public ArrayList<String> getOriginalTags() {
+        return originalTags;
     }
 
     private ArrayList<String> getTagsAsArray(JSONArray jArray) throws JSONException {
