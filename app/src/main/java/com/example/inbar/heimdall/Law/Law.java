@@ -5,6 +5,7 @@ import com.example.inbar.heimdall.UserVote;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,25 +29,19 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.graphics.Color.rgb;
@@ -59,7 +54,7 @@ public class Law {
 
     public static final String LINK = "link";
     public static final String DESC = "description";
-    public static final String TAGS = "tags";
+    public static final String TAGS = "originalTags";
     public static final String USER_VOTED = "user_voted";
     public static final String JOB_FOR = "job_for";
     public static final String JOB_AGAINST = "job_against";
@@ -76,10 +71,11 @@ public class Law {
     ExecutorService es = Executors.newSingleThreadExecutor();
 
     String name;
-    UserVote voteStat;
+    UserVote userVote;
     private String description;
     private String link;
-    private ArrayList<String> tags;
+    ArrayList<String> originalTags;
+    ArrayList<String> selectedTagsByUser;
     private JSONObject userDist;
     private JSONObject electedVotes;
     LawActivity lawActivity;
@@ -90,29 +86,44 @@ public class Law {
     public Law(String name, JSONObject lawObject, LawActivity lawActivity) {
         this.name = name;
         try {
-            this.voteStat = lawObject.getString(USER_VOTED).equals("for") ? UserVote.VOTED_FOR :
+            this.userVote = lawObject.getString(USER_VOTED).equals("for") ? UserVote.VOTED_FOR :
                     lawObject.getString(USER_VOTED).equals("no_vote") ? UserVote.NO_VOTE : UserVote.VOTED_AGAINST;
 
             this.description = lawObject.getString(DESC);
             this.link = lawObject.getString(LINK);
-            this.tags = getTagsAsArray(lawObject.getJSONArray(TAGS));
+            this.originalTags = getTagsAsArray(lawObject.getJSONArray(TAGS));
             this.lawActivity = lawActivity;
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void setUserDistAndElectedVotes(LawActivity l) {
-        this.setElectedVotes(l);
-        this.setUserDist(l);
+    public void setUserDistAndElectedVotes(final LawActivity l) {
+
+        Thread thread1 = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                Law.this.setElectedVotes(l);
+            }
+        });
+        Thread thread2 = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                Law.this.setUserDist(l);
+            }
+        });
+
+        thread1.start();
+        thread2.start();
+
     }
 
-    private void setUserDist(LawActivity l) {
+    private void setUserDist(final LawActivity l) {
         this.userDist = l.getUserDistribution(R.id.lawLayout, name);
     }
 
-    private void setElectedVotes(LawActivity l) {
-        UserVote myVote = voteStat == UserVote.NO_VOTE ? UserVote.VOTED_AGAINST : voteStat;
+    private void setElectedVotes(final LawActivity l) {
+        UserVote myVote = userVote == UserVote.NO_VOTE ? UserVote.VOTED_AGAINST : userVote;
         this.electedVotes = l.getLawKnessetVotes(R.id.lawLayout, name, myVote);
     }
 
@@ -120,8 +131,8 @@ public class Law {
         return name;
     }
 
-    public UserVote getVoteStat() {
-        return voteStat;
+    public UserVote getUserVote() {
+        return userVote;
     }
 
     public String getDescription() {
@@ -132,8 +143,8 @@ public class Law {
         return link;
     }
 
-    public ArrayList<String> getTags() {
-        return tags;
+    public ArrayList<String> getOriginalTags() {
+        return originalTags;
     }
 
     private ArrayList<String> getTagsAsArray(JSONArray jArray) throws JSONException {
@@ -164,9 +175,9 @@ public class Law {
         try {
             //build the json
             String interstedIn = "";
-            if (this.voteStat == UserVote.VOTED_FOR ){
+            if (this.userVote == UserVote.VOTED_FOR ){
                 interstedIn = "for";
-            }else if (this.voteStat == UserVote.VOTED_AGAINST ) {
+            }else if (this.userVote == UserVote.VOTED_AGAINST ) {
                 interstedIn = "against";
             }else{
                 return;
