@@ -145,7 +145,7 @@ public class APIRequest extends HttpsConnection{
             onConnectionFailed(idLayer);
         }
 
-        return request.keys().hasNext() && sendJson(idLayer, request, "/updatePersonalInfo").equals(SUCCESS);
+        return request.keys().hasNext() && sendJson(idLayer, request, "/updatePersonalInfo").contains(SUCCESS);
     }
 
     public JSONObject lawVoteSubmit(int idLayer, String lawName, UserVote userVote, String tag){
