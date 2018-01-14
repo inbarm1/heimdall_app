@@ -173,7 +173,7 @@ public class StatisticsPopupMngr {
             e.printStackTrace();
         }
 
-        ImageButton submitButton = (ImageButton) mPopupView.findViewById(R.id.submitVoteButton);
+        Button submitButton = (Button) mPopupView.findViewById(R.id.submitVoteButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
