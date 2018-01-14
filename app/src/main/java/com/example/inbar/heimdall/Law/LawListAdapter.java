@@ -174,8 +174,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         CoordinatorLayout lawPageLayout = this.lawActivity.findViewById(R.id.lawLayout);
         return new StatisticsPopupMngr(context,lawPageLayout);
     }
-
-
+    
 
 }
 
