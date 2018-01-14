@@ -1,14 +1,9 @@
 package com.example.inbar.heimdall.Law;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -17,15 +12,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import com.example.inbar.heimdall.APIRequest;
-import com.example.inbar.heimdall.HttpsConnection;
-import com.example.inbar.heimdall.MainActivity;
 import com.example.inbar.heimdall.R;
 
 import java.util.ArrayList;
@@ -41,8 +33,8 @@ public class LawActivity extends APIRequest {
     private LawListAdapter mAdapter;
     public DatePickerDialog fromDatePicker;
     public DatePickerDialog toDatePicker;
-    public EditText fromDateText;
-    public EditText toDateText;
+    public Button fromDateButton;
+    public Button toDateButton;
     public Date fromDate;
     public Date toDate;
 
@@ -54,6 +46,7 @@ public class LawActivity extends APIRequest {
 
 
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,10 +86,10 @@ public class LawActivity extends APIRequest {
             }
         });
 
-        fromDateText = (EditText) findViewById(R.id.fromDateText);
-        toDateText = (EditText) findViewById(R.id.toDateText);
+        fromDateButton = (Button) findViewById(R.id.fromDateText);
+        toDateButton = (Button) findViewById(R.id.toDateText);
 
-        fromDateText.setOnClickListener(new View.OnClickListener() {
+        fromDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // calender class's instance and get current date , month and year from calender
@@ -112,7 +105,7 @@ public class LawActivity extends APIRequest {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
-                                fromDateText.setText(dayOfMonth + "/"
+                                fromDateButton.setText(dayOfMonth + "/"
                                         + (monthOfYear + 1) + "/" + year);
                                 fromDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
                             }
@@ -121,7 +114,7 @@ public class LawActivity extends APIRequest {
             }
         });
 
-        toDateText.setOnClickListener(new View.OnClickListener() {
+        toDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // calender class's instance and get current date , month and year from calender
@@ -137,7 +130,7 @@ public class LawActivity extends APIRequest {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
-                                toDateText.setText(dayOfMonth + "/"
+                                toDateButton.setText(dayOfMonth + "/"
                                         + (monthOfYear + 1) + "/" + year);
                                 toDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
 

@@ -275,10 +275,11 @@ public class APIRequest extends HttpsConnection{
         }
     }
 
-    public JSONObject getLawKnessetVotes(int idLayer, String lawName) {
+    public JSONObject getLawKnessetVotes(int idLayer, String lawName,  UserVote userVote) {
         JSONObject request = new JSONObject();
         try {
             request.put(LAW_NAME, lawName);
+            request.put(VOTE, userVote.getName());
             return new JSONObject(sendJson(idLayer, request, "/getLawKnessetVotes"));
         } catch (JSONException e) {
             e.printStackTrace();

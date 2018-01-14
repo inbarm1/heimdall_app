@@ -103,10 +103,8 @@ public class Law {
     }
 
     public void setUserDistAndElectedVotes(LawActivity l) {
-        if (this.voteStat != UserVote.NO_VOTE) {
-            this.setElectedVotes(l);
-            this.setUserDist(l);
-        }
+        this.setElectedVotes(l);
+        this.setUserDist(l);
     }
 
     private void setUserDist(LawActivity l) {
@@ -114,7 +112,8 @@ public class Law {
     }
 
     private void setElectedVotes(LawActivity l) {
-        this.electedVotes = l.getLawKnessetVotes(R.id.lawLayout, name);
+        UserVote myVote = voteStat == UserVote.NO_VOTE ? UserVote.VOTED_AGAINST : voteStat;
+        this.electedVotes = l.getLawKnessetVotes(R.id.lawLayout, name, myVote);
     }
 
     public String getName() {
