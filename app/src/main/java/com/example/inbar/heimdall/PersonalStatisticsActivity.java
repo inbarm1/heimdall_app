@@ -1,6 +1,7 @@
 package com.example.inbar.heimdall;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,17 +9,22 @@ import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.inbar.heimdall.Law.LawActivity;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -42,6 +48,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import static android.graphics.Color.rgb;
@@ -168,6 +175,14 @@ public class PersonalStatisticsActivity extends APIRequest {
             }
         });
         thread.start();
+
+        ImageView img = (ImageView) findViewById(R.id.counterBackground);
+        img.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(PersonalStatisticsActivity.this,LawActivity.class);
+                startActivity(intent);
+            }
+        });
         createTags();
         getRate();
     }
@@ -319,20 +334,32 @@ public class PersonalStatisticsActivity extends APIRequest {
 
     private void analyzeTags2(JSONArray category) {
         try {
-            tags2.add(NONE_TAG);
-            for (int i=0; i< category.length(); i++) {
-                final String name = (String) category.get(i);
-                // Add party name
-                tags2.add(name);
-            }
-
+            setAutoCompleteContent(category, NONE_TAG, true);
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         createSecondView();
     }
 
+    private void setAutoCompleteContent(JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
+        AutoCompleteTextView a = (AutoCompleteTextView) findViewById(R.id.tagp2);
 
+        for (int i=0; i< j_values.length(); i++) {
+            final String name = (String) j_values.get(i);
+            // Add party name
+            tags2.add(name);
+        }
+
+        if (doSort)
+            Collections.sort(tags2);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(PersonalStatisticsActivity.this, android.R.layout.simple_list_item_1, tags2);
+//        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+        a.setContentDescription(NONE_TAG);
+        a.setAdapter(adapter);
+        a.setThreshold(1);
+        a.setTextColor(Color.BLACK);
+        ;
+    }
 
     private void createFirstView() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
@@ -354,24 +381,20 @@ public class PersonalStatisticsActivity extends APIRequest {
     }
 
     private void createSecondView() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags2);
-        Spinner spinTag = (Spinner)findViewById(R.id.tagp2);
-        spinTag.setAdapter(adapter);
+        final AutoCompleteTextView spinTag = (AutoCompleteTextView) findViewById(R.id.tagp2);
 
-        spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinTag.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View arg1, int pos,
+                                    long id) {
+
                 TextView test = (TextView)findViewById(R.id.no_data);
                 test.setVisibility(View.GONE);
-                currentElectedPosition = position;
-                createLawPieChart(tags2.get(position), tags.get(currentTagPosition));
-            }
+                currentElectedPosition = pos;
+                createLawPieChart(tags2.get(pos), tags.get(currentTagPosition));
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                createLawPieChart(null, null);
             }
-
         });
 
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
@@ -420,13 +443,23 @@ public class PersonalStatisticsActivity extends APIRequest {
     }
 
     protected void creatingPieChart(int char_id, JSONObject data){
+        float diff = 0;
+        float absent = 0;
+        float same = 0;
+        try {
+            diff = ((Number)data.get(PRECENT_DIFFERENT)).floatValue() * 100;
+            absent = ((Number)data.get(PRECENT_ABSENT)).floatValue() * 100;
+            same = ((Number)data.get(PRECENT_SAME)).floatValue() * 100;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (diff == 0 && absent == 0 && same == 0) {
+            TextView test = (TextView)findViewById(R.id.no_data);
+            test.setVisibility(View.VISIBLE);
+            return;
+        }
         View view = (View)findViewById(R.id.personal_layout);
         PieChart mChart = (PieChart)view.findViewById(char_id);
-
-//        mChart = new PieChart(this);
-        // add pie chart to main layout
-//        customView.(mChart, 1000, 500);
-//        customView.setBackgroundColor(Color.WHITE);
 
         // configure pie chart
         mChart.setUsePercentValues(true);
@@ -443,7 +476,7 @@ public class PersonalStatisticsActivity extends APIRequest {
         mChart.setRotationEnabled(true);
 
         // add data
-        addData(mChart, data);
+        addData(mChart, data, diff, absent, same);
 
         mChart.setVisibility(View.VISIBLE);
 
@@ -454,24 +487,18 @@ public class PersonalStatisticsActivity extends APIRequest {
         l.setYEntrySpace(5);
     }
 
-    private void addData(PieChart mChart, JSONObject dataMem) {
+    private void addData(PieChart mChart, JSONObject dataMem,  float diff,  float absent, float same) {
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
         ArrayList<String> xData = new ArrayList<>();
 
         Iterator<?> memName = dataMem.keys();
-        try {
-            float diff = ((Number)dataMem.get(PRECENT_DIFFERENT)).floatValue() * 100;
-            float absent = ((Number)dataMem.get(PRECENT_ABSENT)).floatValue() * 100;
-            float same = ((Number)dataMem.get(PRECENT_SAME)).floatValue() * 100;
-            xData.add(DIFF_PRE);
-            yVals1.add(new Entry(diff, 0));
-            xData.add(ABSENT_PRE);
-            yVals1.add(new Entry(absent, 1));
-            xData.add(SAME_PRE);
-            yVals1.add(new Entry(same, 2));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        xData.add(DIFF_PRE);
+        yVals1.add(new Entry(diff, 0));
+        xData.add(ABSENT_PRE);
+        yVals1.add(new Entry(absent, 1));
+        xData.add(SAME_PRE);
+        yVals1.add(new Entry(same, 2));
+
 
         // create pie data set
         PieDataSet dataSet = new PieDataSet(yVals1, "התאמה לחבר כנסת");

@@ -2,6 +2,7 @@ package com.example.inbar.heimdall;
 
 import android.app.Notification;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 
+import com.example.inbar.heimdall.Law.LawActivity;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -201,6 +203,13 @@ public class MainActivity extends APIRequest {
             public void run(){
                 String str = getUserAssociatedParty(R.id.mainLayout);
                 userPartyName = str;
+            }
+        });
+        ImageView img = (ImageView) findViewById(R.id.counterBackground);
+        img.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,LawActivity.class);
+                startActivity(intent);
             }
         });
         thread.start();

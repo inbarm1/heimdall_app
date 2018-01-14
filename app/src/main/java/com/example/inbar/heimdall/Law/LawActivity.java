@@ -1,6 +1,14 @@
 package com.example.inbar.heimdall.Law;
 
 import android.app.DatePickerDialog;
+
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -11,9 +19,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import com.example.inbar.heimdall.APIRequest;
+import com.example.inbar.heimdall.HttpsConnection;
+import com.example.inbar.heimdall.MainActivity;
 import com.example.inbar.heimdall.R;
 
 import java.util.ArrayList;
@@ -72,6 +84,14 @@ public class LawActivity extends APIRequest {
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        ImageView img = (ImageView) findViewById(R.id.counterBackground);
+        img.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(LawActivity.this,LawActivity.class);
+                startActivity(intent);
+            }
+        });
 
         fromDateText = (EditText) findViewById(R.id.fromDateText);
         toDateText = (EditText) findViewById(R.id.toDateText);

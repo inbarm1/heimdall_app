@@ -121,7 +121,7 @@ public class Law {
         return name;
     }
 
-    public VoteStatus getVoteStat() {
+    public UserVote getVoteStat() {
         return voteStat;
     }
 
@@ -165,9 +165,9 @@ public class Law {
         try {
             //build the json
             String interstedIn = "";
-            if (this.voteStat == VoteStatus.FOR ){
+            if (this.voteStat == UserVote.VOTED_FOR ){
                 interstedIn = "for";
-            }else if (this.voteStat == VoteStatus.AGAINST ) {
+            }else if (this.voteStat == UserVote.VOTED_AGAINST ) {
                 interstedIn = "against";
             }else{
                 return;

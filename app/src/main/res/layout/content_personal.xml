@@ -83,12 +83,14 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
+                android:layout_marginBottom="10dp"
                 android:padding="@dimen/activity_horizontal_margin">
 
                 <TextView
+                    android:id = "@+id/text1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="190dp"
+                    android:layout_marginStart="100dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginTop="8dp"
                     android:textStyle="bold"
@@ -97,10 +99,21 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#727272" />
 
-                <Spinner
+                <!--<Spinner-->
+                    <!--android:id="@+id/tagp2"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
+                    <!--android:textColor="#212121" />-->
+
+                <AutoCompleteTextView
+                    android:layout_marginTop="50dp"
+                    android:hint="בחר חבר כנסת"
+                    android:theme="@style/Autocomplete"
                     android:id="@+id/tagp2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:textColor="#212121" />
 
