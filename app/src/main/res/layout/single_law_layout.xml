@@ -32,8 +32,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimaryDark"
+                android:drawableBottom="@drawable/down_arrow2"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:text="מידע נוסף"  />
+                android:text="מידע נוסף"/>
 
             <net.cachapa.expandablelayout.ExpandableLayout
                 android:id="@+id/expandable_layout"

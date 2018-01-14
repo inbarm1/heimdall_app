@@ -146,6 +146,12 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             //the view is the button, we need to get it's parnet
             View parent = (View) v.getParent();
             ExpandableLayout expandableLayout = ((ExpandableLayout) parent.findViewById(R.id.expandable_layout));
+            Button b = (Button)v;
+            if (expandableLayout.isExpanded()) {
+                b.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.down_arrow2);
+            } else {
+                b.setCompoundDrawablesWithIntrinsicBounds(0,0, 0, R.drawable.up_arrow2);
+            }
             expandableLayout.toggle();
 //            mLaw.DrawVotesGraph(parent,R.id.VoteLikeMe);
         }
