@@ -1,13 +1,14 @@
 package com.example.inbar.heimdall.Law;
 
 import android.app.Notification;
+import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.inbar.heimdall.R;
 import com.google.gson.Gson;
@@ -98,7 +99,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         final Law law = mLaws.get(position);
         holder.nameTextView.setText(law.getName());
-        holder.roleTextView.setText(law.getDescription());
+        holder.descriptionTextView.setText(law.getDescription());
         holder.moreInfoButton.setOnClickListener(new MoreInfoButtonListener(law));
     }
 
@@ -110,14 +111,16 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView nameTextView;
-        protected TextView roleTextView;
+        protected TextView descriptionTextView;
         protected Button moreInfoButton;
+        protected Button showStatsButton;
 
         public SimpleViewHolder(View v) {
             super(v);
             nameTextView = ((TextView)v.findViewById(R.id.nameTextView));
-            roleTextView = ((TextView)v.findViewById(R.id.roleTextView));
+            descriptionTextView = ((TextView)v.findViewById(R.id.lawDescriptionTextView));
             moreInfoButton = ((Button)v.findViewById(R.id.moreInfoButton));
+            showStatsButton = ((Button)v.findViewById(R.id.showStatsButton));
         }
     }
 
@@ -149,6 +152,30 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             mLaw.DrawVotesGraph(parent,R.id.VoteLikeMe);
         }
     }
+
+    public static class ShowStatsButtonListener implements View.OnClickListener {
+        private Law mLaw;
+        private StatisticsPopupMngr mPopupMngr;
+
+        public ShowStatsButtonListener(Law law,StatisticsPopupMngr statPopupMngr) {
+            mLaw = law;
+            mPopupMngr = statPopupMngr;
+        }
+
+        @Override
+        public void onClick(View v) {
+            //the view is the button, we need to get it's parnet
+           mPopupMngr.openPopUp();
+        }
+    }
+
+    public StatisticsPopupMngr buildPopupClass(){
+        Context context = this.lawActivity.getApplicationContext();
+        CoordinatorLayout lawPageLayout = this.lawActivity.findViewById(R.id.lawLayout);
+        return new StatisticsPopupMngr(context,lawPageLayout);
+    }
+
+
 
 }
 
