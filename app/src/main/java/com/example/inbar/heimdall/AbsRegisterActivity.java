@@ -1,11 +1,15 @@
 package com.example.inbar.heimdall;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -161,7 +165,26 @@ public abstract class AbsRegisterActivity extends APIRequest {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(AbsRegisterActivity.this, android.R.layout.simple_list_item_1, values);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         a.setThreshold(1);
+        a.setAdapter(adapter);
+        a.setCursorVisible(false);
         a.setTextColor(Color.BLACK);
+        a.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                a.dismissDropDown();
+                InputMethodManager inputManager = (InputMethodManager) AbsRegisterActivity.this.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                View v = AbsRegisterActivity.this.getCurrentFocus();
+
+                if (v != null) {
+
+                    AbsRegisterActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+                    inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+                }
+            }
+        });
 
     }
 
@@ -190,13 +213,13 @@ public abstract class AbsRegisterActivity extends APIRequest {
         return true;
     }
 
-    private boolean validatejob() {
+    public boolean validatejob() {
         Spinner jobSpn = (Spinner) findViewById(R.id.job);
         job = jobSpn.getSelectedItem().toString();
         return true;
     }
 
-    private boolean validateResidency() {
+    public boolean validateResidency() {
         AutoCompleteTextView residencyAc = (AutoCompleteTextView) findViewById(R.id.city);
         residency = residencyAc.getText().toString();
         if (!residencySet.contains(residency)) {
@@ -206,7 +229,7 @@ public abstract class AbsRegisterActivity extends APIRequest {
         return true;
     }
 
-    private boolean validateInvolvement() {
+    public boolean validateInvolvement() {
         Spinner invSpn = (Spinner) findViewById(R.id.involvment_spinner);
         String involvementStr = invSpn.getSelectedItem().toString();
         switch (involvementStr) {
@@ -222,8 +245,28 @@ public abstract class AbsRegisterActivity extends APIRequest {
         }
         return true;
     }
+    public InvolvementLevel engInvolvementToInt(String involvementStr) {
+        switch (involvementStr) {
+            case "HIGH":
+                return InvolvementLevel.HIGH;
+            case "MEDIUM":
+                return InvolvementLevel.MEDIUM;
+            default:
+                return InvolvementLevel.LOW;
+        }
+    }
 
-    private boolean validateParty() {
+    public String getHebInvolvement(InvolvementLevel hebInvolvement){
+        switch (hebInvolvement){
+            case HIGH:
+                return "גבוהה";
+            case MEDIUM:
+                return "בינונית";
+            default:
+                return "נמוכה";
+        }
+    }
+    public boolean validateParty() {
         Spinner partySpn = (Spinner) findViewById(R.id.party);
         party = partySpn.getSelectedItem().toString();
         return true;
