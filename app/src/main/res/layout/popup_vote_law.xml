@@ -2,68 +2,113 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_pop_law_desc_layout_top1"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:padding="2dp"
-    android:background="#f1f3f4"
+    android:background="#EDF4F6"
     >
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/rl_pop_law_desc_layout1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#f1f3f4"
-        android:padding="2dp">
-
-
-    </android.support.v4.widget.NestedScrollView>
-
-    <ImageButton
-        android:background="@drawable/upvote_gray"
-        android:id="@+id/upvoteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <ImageButton
-        android:background="@drawable/downvote_gray"
-        android:id="@+id/downvoteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <Spinner
-        android:id="@+id/tag1_spinner"
-        android:layout_width="match_parent"
-        android:theme="@style/SpinnerStyle"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:ellipsize="end"
-        android:stepSize="1.0"
-        android:layout_weight="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#212121" />
-
-    <Spinner
-        android:id="@+id/tag2_spinner"
-        android:layout_width="match_parent"
-        android:theme="@style/SpinnerStyle"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:ellipsize="end"
-        android:stepSize="1.0"
-        android:layout_weight="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#212121" />
-    <ImageButton
-        android:id="@+id/submitVoteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <ImageButton
-        android:id="@+id/ib_close"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/if_icon"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="@null" />
+        android:background="#EDF4F6"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin">
+            <ImageButton
+                android:id="@+id/ib_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/if_icon"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@null" />
+
+        </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <ImageButton
+            android:background="@drawable/dislike_small"
+            android:id="@+id/downvoteButton"
+            android:layout_marginStart="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageButton
+            android:background="@drawable/like_small"
+            android:id="@+id/upvoteButton"
+            android:layout_marginStart="180dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="160dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:text="בחר תג 1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#727272" />
+
+        <Spinner
+            android:id="@+id/tag1_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginStart="50dp"
+            android:textColor="#212121" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="160dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:text="בחר תג 2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#727272" />
+
+        <Spinner
+            android:id="@+id/tag2_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginStart="50dp"
+            android:textColor="#212121" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin">
+        <Button
+            android:id="@+id/submitVoteButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimaryDark"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:text="אשר"  />
+
+    </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

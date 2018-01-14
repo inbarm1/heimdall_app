@@ -230,12 +230,12 @@ public class StatisticsPopupMngr {
         ImageButton upvoteButton = (ImageButton) mPopupView.findViewById(R.id.upvoteButton);
         upvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_FOR,
                 R.id.upvoteButton, mPopupView,
-                R.drawable.upvote_gray, R.drawable.upvote_green));
+                R.drawable.like_small, R.drawable.like));
 
         ImageButton downvoteButton = (ImageButton) mPopupView.findViewById(R.id.downvoteButton);
         downvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_AGAINST,
                 R.id.downvoteButton, mPopupView,
-                R.drawable.downvote_gray, R.drawable.downvote_red));
+                R.drawable.dislike_small, R.drawable.dislike));
 
         try {
             setSpinnerContent(R.id.tag1_spinner, mLawActivity.TAGS, null, true);
