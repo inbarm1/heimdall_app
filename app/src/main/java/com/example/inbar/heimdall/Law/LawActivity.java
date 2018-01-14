@@ -1,7 +1,6 @@
 package com.example.inbar.heimdall.Law;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,18 +11,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.example.inbar.heimdall.APIRequest;
 import com.example.inbar.heimdall.R;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.Calendar;
-import java.util.Date;
 
 import static android.graphics.Color.rgb;
 
@@ -31,15 +27,12 @@ public class LawActivity extends APIRequest {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private LawListAdapter mAdapter;
-    public DatePickerDialog fromDatePicker;
-    public DatePickerDialog toDatePicker;
-    public Button fromDateButton;
-    public Button toDateButton;
-    public Date fromDate;
-    public Date toDate;
 
-    private Date startDate;
-    private Date endDate;
+
+    public TextView fromDateText;
+    LawDatePicker fromDatePicker = new LawDatePicker();
+    LawDatePicker toDatePicker = new LawDatePicker();
+
     private PopupWindow mStatisticsPopupWindow;
     View mStatisticscustomView;
     boolean mStatisticsBlocking = false;
@@ -62,13 +55,12 @@ public class LawActivity extends APIRequest {
         mAdapter = new LawListAdapter(new ArrayList<Law>(), this);
 
         //Get default dates for laws
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -1);
-        fromDate = cal.getTime();
-        toDate = new Date();
-        mAdapter.getLaws(fromDate, toDate);
+        Calendar currDate = Calendar.getInstance();
+        Calendar lastMonthDate = Calendar.getInstance();
+        lastMonthDate.add(Calendar.MONTH, -1);
+        mAdapter.getLaws(lastMonthDate,  currDate);
         mRecyclerView.setAdapter(mAdapter);
-
+        setDatePickerView();
         id_drawer_layout = R.id.drawer_layout_law;
         DrawerLayout drawer = (DrawerLayout) findViewById(id_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -86,64 +78,31 @@ public class LawActivity extends APIRequest {
             }
         });
 
-        fromDateButton = (Button) findViewById(R.id.fromDateText);
-        toDateButton = (Button) findViewById(R.id.toDateText);
+    }
 
-        fromDateButton.setOnClickListener(new View.OnClickListener() {
+    private void setDatePickerView() {
+        TextView fromTextView = findViewById(R.id.fromDateText);
+        fromTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                // calender class's instance and get current date , month and year from calender
-                final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR); // current year
-                int mMonth = c.get(Calendar.MONTH); // current month
-                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
-                // date picker dialog
-                fromDatePicker = new DatePickerDialog(LawActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                // set day of month , month and year value in the edit text
-                                fromDateButton.setText(dayOfMonth + "/"
-                                        + (monthOfYear + 1) + "/" + year);
-                                fromDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
-                            }
-                        }, mYear, mMonth, mDay);
-                fromDatePicker.show();
+            public void onClick(View view) {
+                android.app.FragmentManager fragmentManager = getFragmentManager();
+                fromDatePicker.show(fragmentManager, "Choose Start Date");
             }
         });
 
-        toDateButton.setOnClickListener(new View.OnClickListener() {
+        toDatePicker.setToDate();
+        TextView toTextView = findViewById(R.id.toDateText);
+        toTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                // calender class's instance and get current date , month and year from calender
-                final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR); // current year
-                int mMonth = c.get(Calendar.MONTH); // current month
-                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
-                // date picker dialog
-                toDatePicker = new DatePickerDialog(LawActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                // set day of month , month and year value in the edit text
-                                toDateButton.setText(dayOfMonth + "/"
-                                        + (monthOfYear + 1) + "/" + year);
-                                toDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
-
-                            }
-                        }, mYear, mMonth, mDay);
-                toDatePicker.show();
+            public void onClick(View view) {
+                android.app.FragmentManager fragmentManager = getFragmentManager();
+                toDatePicker.show(fragmentManager, "Choose Start Date");
             }
         });
     }
 
-
     public void refreshLawsForAdapter(View v) {
-        mAdapter.getLaws(fromDate, toDate);
+        mAdapter.getLaws(fromDatePicker.c, toDatePicker.c);
     }
 
 }

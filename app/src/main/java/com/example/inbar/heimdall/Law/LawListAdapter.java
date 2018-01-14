@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,10 +54,13 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         lawActivity = father;
     }
 
-    public void getLaws(final Date startDate, final Date endDate) {
+    public void getLaws(final Calendar startC, final Calendar endC) {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
+                Date startDate = startC.getTime();
+                Date endDate = endC.getTime();
+
                 SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy");
                 JSONObject json = lawActivity.getLawsByDateInterval(R.id.lawLayout, sdfr.format(startDate), sdfr.format(endDate));
                 Iterator<?> lawsNames = json.keys();
