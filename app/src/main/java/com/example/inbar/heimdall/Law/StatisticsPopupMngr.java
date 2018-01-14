@@ -4,12 +4,14 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.example.inbar.heimdall.R;
 import com.github.mikephil.charting.charts.BarChart;
@@ -43,15 +45,14 @@ import static android.graphics.Color.rgb;
  */
 
 public class StatisticsPopupMngr {
-    private View mParentView;
     private Context mContext;
     private View mPopupView;
     private PopupWindow mPopupWindow;
-    private CoordinatorLayout mLawActivityLayout;
+    private NestedScrollView mLawActivityLayout;
     private boolean isUp;
 
 
-    public StatisticsPopupMngr(Context context, CoordinatorLayout lawActivityLayout) {
+    public StatisticsPopupMngr(Context context, NestedScrollView lawActivityLayout) {
         mContext = context;
         mLawActivityLayout = lawActivityLayout;
         isUp = false;
@@ -61,21 +62,33 @@ public class StatisticsPopupMngr {
 
     }
 
-    public void openPopUp() {
+    public void openPopUp(PopUpType type, Law law) {
         if (isUp){
             return;
+        }
+        int resource = 0;
+        switch (type){
+            case STATS:
+                resource = R.layout.activity_pop_law_stats;
+                break;
+            case DESCRIPTION:
+                resource = R.layout.activity_pop_law_description;
+                break;
+            default:
+                resource = R.layout.activity_pop_law_stats;
+                break;
         }
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
 
         // Inflate the custom layout/view
-        mPopupView = inflater.inflate(R.layout.activity_pop_law_stats, null);
+        mPopupView = inflater.inflate(resource, null);
 
         // Initialize a new instance of popup window
         mPopupWindow = new PopupWindow(
                 mPopupView,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT
+                NestedScrollView.LayoutParams.WRAP_CONTENT,
+                NestedScrollView.LayoutParams.WRAP_CONTENT
         );
 
         // Set an elevation value for popup window
@@ -99,6 +112,32 @@ public class StatisticsPopupMngr {
 
         mPopupWindow.showAtLocation(mLawActivityLayout, Gravity.CENTER, 0, 0);
         isUp = true;
+
+        switch (type){
+            case STATS:
+                DrawStats();
+                break;
+            case DESCRIPTION:
+                DrawDescription(law);
+            default:
+                return;
+        }
+
+    }
+
+    public static enum PopUpType{
+        STATS,
+        DESCRIPTION
+    }
+
+
+    public void DrawDescription(Law law){
+        TextView descriptionTextView = ((TextView) mPopupView.findViewById(R.id.lawDescriptionTextView));
+        if (law.getDescription() == ""){
+            descriptionTextView.setText("no description avilable");
+        }else {
+            descriptionTextView.setText(law.getDescription());
+        }
 
     }
 }
