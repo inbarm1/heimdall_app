@@ -11,9 +11,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.inbar.heimdall.R;
+import com.example.inbar.heimdall.UserVote;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -77,8 +79,8 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                     }
                 }
 
-//                for (Law law: mLaws) law.setUserDistAndElectedVotes(lawActivity);
                 listAdapterHandler.sendMessage(Message.obtain(listAdapterHandler, LAWS_UPDATED));
+                for (Law law: mLaws) law.setUserDistAndElectedVotes(lawActivity);
             }
         });
 
@@ -140,6 +142,12 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             //the view is the button, we need to get it's parnet
             View parent = (View) v.getParent();
             ExpandableLayout expandableLayout = ((ExpandableLayout) parent.findViewById(R.id.expandable_layout));
+            Button b = (Button)v;
+            if (expandableLayout.isExpanded()) {
+                b.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.down_arrow2);
+            } else {
+                b.setCompoundDrawablesWithIntrinsicBounds(0,0, 0, R.drawable.up_arrow2);
+            }
             expandableLayout.toggle();
 //            mLaw.DrawVotesGraph(parent,R.id.VoteLikeMe);
         }
@@ -196,7 +204,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     public StatisticsPopupMngr buildStatsPopupMngr(){
         Context context = this.lawActivity.getApplicationContext();
         NestedScrollView lawPageLayout = this.lawActivity.findViewById(R.id.lawLayout);
-        return new StatisticsPopupMngr(context,lawPageLayout);
+        return new StatisticsPopupMngr(context,lawPageLayout, lawActivity);
     }
 
 

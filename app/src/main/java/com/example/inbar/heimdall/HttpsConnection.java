@@ -162,8 +162,8 @@ public class HttpsConnection extends NevActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 //getConnection(id_layer);
-                finish();
-                moveTaskToBack(true);
+//                finish();
+//                moveTaskToBack(true);
                 return false;
             }
         });
@@ -173,8 +173,8 @@ public class HttpsConnection extends NevActivity {
                 new View.OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
-                        finish();
-                        moveTaskToBack(true);
+//                        finish();
+//                        moveTaskToBack(true);
                     }
                 }
         );

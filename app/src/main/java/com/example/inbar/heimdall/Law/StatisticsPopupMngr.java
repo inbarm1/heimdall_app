@@ -3,14 +3,17 @@ package com.example.inbar.heimdall.Law;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.design.widget.CoordinatorLayout;
+import android.os.Message;
 import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.inbar.heimdall.R;
@@ -26,17 +29,24 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.numetriclabz.numandroidcharts.ChartData;
+import com.numetriclabz.numandroidcharts.StackBarChart;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.graphics.Color.rgb;
@@ -50,17 +60,30 @@ public class StatisticsPopupMngr {
     private View mPopupView;
     private PopupWindow mPopupWindow;
     private NestedScrollView mLawActivityLayout;
+    private LawActivity mLawActivity;
     private boolean isUp;
 
+    public static final String AGE_AGAINST = "age_against";
+    public static final String AGE_FOR = "age_for";
+    public static final String JOB_AGAINST = "job_against";
+    public static final String JOB_FOR = "job_for";
+    public static final String RESIDENT_AGAINST = "resident_against";
+    public static final String RESIDNET_FOR = "resident_for";
+    public static final String USER_INFO = "user_info";
+    public static final String JOB = "job";
+    public static final String RESIDENCY = "residency";
 
-    public StatisticsPopupMngr(Context context, NestedScrollView lawActivityLayout) {
+
+    public StatisticsPopupMngr(Context context, NestedScrollView lawActivityLayout, LawActivity lawActivity) {
         mContext = context;
         mLawActivityLayout = lawActivityLayout;
         isUp = false;
+        mLawActivity = lawActivity;
     }
 
     public void DrawStats(Law law) {
         DrawElectedVotesGraph(law);
+        DrawUserDistribution(law);
     }
 
     public void openPopUp(PopUpType type, Law law) {
@@ -76,7 +99,7 @@ public class StatisticsPopupMngr {
                 resource = R.layout.activity_pop_law_description;
                 break;
             case VOTE:
-                resource = R.layout.activity_pop_law_description;
+                resource = R.layout.popup_vote_law;
                 break;
             default:
                 resource = R.layout.activity_pop_law_description;
@@ -125,6 +148,7 @@ public class StatisticsPopupMngr {
                 DrawDescription(law);
                 break;
             case VOTE:
+                DrawVotePopUp(law);
                 break;
             default:
                 return;
@@ -146,7 +170,148 @@ public class StatisticsPopupMngr {
         } else {
             descriptionTextView.setText(law.getDescription());
         }
+    }
 
+    public void DrawChartDist(Law law, int layoutId, String forKey, String againstKey) {
+        StackBarChart chart = (StackBarChart) mPopupView.findViewById(layoutId);
+        List<String> lable = new ArrayList<>();
+        List<ChartData> values = new ArrayList<>();
+        try {
+            values = getDistFromJson(law, lable, forKey, againstKey);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        chart.setHorizontal_label(lable);
+        chart.setData(values);
+
+    }
+
+    public void DrawUserDistribution(Law law) {
+        DrawChartDist(law, R.id.jobChart, JOB_FOR, JOB_AGAINST);
+        DrawChartDist(law, R.id.cityChart, RESIDNET_FOR, RESIDENT_AGAINST);
+        DrawChartDist(law, R.id.ageChart, AGE_FOR, AGE_AGAINST);
+    }
+
+    public List<ChartData> getDistFromJson(Law law, List<String> lables, String forKey, String againstKey) throws JSONException {
+        ArrayList<Float> forChart = new ArrayList<>();
+        ArrayList<Float> againstChart = new ArrayList<>();
+        while (law.getUserDist() == null) {};
+        JSONObject forDataJson = (JSONObject) law.getUserDist().get(forKey);
+        JSONObject againstDataJson = (JSONObject) law.getUserDist().get(againstKey);
+
+        Set<String> keys = fromIteratorToSet(forDataJson.keys());
+        keys.addAll(fromIteratorToSet(againstDataJson.keys()));
+        for (String key: keys) {
+            lables.add(key);
+            Float forValue = forDataJson.has(key) ? Float.valueOf(((float) forDataJson.getDouble(key))*100) : Float.valueOf(0);
+            Float againstValue = againstDataJson.has(key) ? Float.valueOf(((float) againstDataJson.getDouble(key))*100) : Float.valueOf(0);
+            forChart.add(forValue);
+            againstChart.add(againstValue);
+        }
+
+        List<ChartData> values = new ArrayList<>();
+        values.add(new ChartData(forChart.toArray(new Float[forChart.size()]), "For"));
+        values.add(new ChartData(againstChart.toArray(new Float[againstChart.size()]), "For"));
+        return values;
+
+    }
+
+    public Set<String> fromIteratorToSet(Iterator<?> it) {
+
+        Set<String> result = new HashSet<>();
+        while (it.hasNext()) {
+            result.add((String) it.next());
+        }
+        return result;
+    }
+
+    public void DrawVotePopUp(final Law law) {
+        ImageButton upvoteButton = (ImageButton) mPopupView.findViewById(R.id.upvoteButton);
+        upvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_FOR,
+                R.id.upvoteButton, mPopupView,
+                R.drawable.upvote_gray, R.drawable.upvote_green));
+
+        ImageButton downvoteButton = (ImageButton) mPopupView.findViewById(R.id.downvoteButton);
+        downvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_AGAINST,
+                R.id.downvoteButton, mPopupView,
+                R.drawable.downvote_gray, R.drawable.downvote_red));
+
+        try {
+            setSpinnerContent(R.id.tag1_spinner, mLawActivity.TAGS, null, true);
+            setSpinnerContent(R.id.tag2_spinner, mLawActivity.TAGS, null, true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ImageButton submitButton = (ImageButton) mPopupView.findViewById(R.id.submitVoteButton);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Thread thread = new Thread(new Runnable(){
+                    @Override
+                    public void run(){
+                        Spinner tag1Spinner = (Spinner) mPopupView.findViewById(R.id.tag1_spinner);
+                        Spinner tag2Spinner = (Spinner) mPopupView.findViewById(R.id.tag2_spinner);
+                        String tags = tag1Spinner.getSelectedItem().toString() + "," + tag2Spinner.getSelectedItem().toString();
+                        mLawActivity.lawVoteSubmit(R.id.lawLayout, law.getName(), law.getUserVote(), tags);
+                    }
+                });
+
+                thread.start();
+            }
+        });
+
+
+    }
+
+    public void setSpinnerContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
+        Spinner s = (Spinner) mPopupView.findViewById(layout_id);
+        ArrayList<String> values = new ArrayList<>();
+        for (int i = 0; i < j_values.length(); i++) {
+            String value = (String) j_values.get(i);
+            if (value.isEmpty()) continue;
+            values.add(value);
+        }
+        if (doSort)
+            Collections.sort(values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mLawActivity, android.R.layout.simple_list_item_1, values);
+        s.setPrompt(defaultOption);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+        s.setAdapter(adapter);
+    }
+
+
+    public static class VoteButtonListener implements View.OnClickListener {
+        private Law mLaw;
+        private final UserVote mUserVote;
+        private final int mIdLayout;
+        private View mPopupView;
+        private final int mGrayImgId;
+        private final int mColorImgId;
+
+        public VoteButtonListener(Law law, UserVote userVote, int idLayout, View popupView, int grayId, int colorId) {
+            mLaw = law;
+            mUserVote = userVote;
+            mIdLayout = idLayout;
+            mPopupView = popupView;
+            mGrayImgId = grayId;
+            mColorImgId = colorId;
+        }
+
+        @Override
+        public void onClick(View v) {
+            ImageButton btn = (ImageButton) mPopupView.findViewById(mIdLayout);
+            if (mLaw.userVote == mUserVote)
+            {
+                mLaw.userVote = UserVote.NO_VOTE;
+                btn.setImageResource(mGrayImgId);
+
+            }else{
+                btn.setImageResource(mColorImgId);
+                mLaw.userVote = mUserVote;
+            }
+        }
     }
 
 
@@ -164,12 +329,13 @@ public class StatisticsPopupMngr {
         try {
             //build the json
             String interstedIn = "";
-            if (law.voteStat == UserVote.VOTED_FOR) {
+            if (law.userVote == UserVote.VOTED_FOR) {
                 interstedIn = "for";
-            } else if (law.voteStat == UserVote.VOTED_AGAINST) {
+            } else if (law.userVote == UserVote.VOTED_AGAINST) {
                 interstedIn = "against";
             } else {
-                return;
+                interstedIn = "for";
+                //return;
             }
             String myParty = "";
             JSONObject nameToPercent = new JSONObject();
@@ -415,6 +581,69 @@ public class StatisticsPopupMngr {
 
         return colors;
     }
+
+
+    public void DrawUserDistGraph(Law law) {
+        JSONObject voteJson = law.getElectedVotes();
+        if (voteJson == null) {
+            Log.d("DrawVotesGraph", "get elected votes from law returned null");
+            return;
+        }
+        String[] voteTypes = {"for", "against", "abstained", "missing"};
+        try {
+            //build the json
+            String interstedIn = "";
+            if (law.userVote == UserVote.VOTED_FOR) {
+                interstedIn = "for";
+            } else if (law.userVote == UserVote.VOTED_AGAINST) {
+                interstedIn = "against";
+            } else {
+                return;
+            }
+            String myParty = "";
+            JSONObject nameToPercent = new JSONObject();
+            Map<String, JSONObject> pieMap = new HashMap<>();
+            int myCnt;
+            int totalCnt;
+            Iterator<String> partyNameIter = voteJson.keys();
+            while (partyNameIter.hasNext()) {
+                myCnt = 0;
+                totalCnt = 0;
+                String currName = partyNameIter.next();
+                JSONObject singlePartyJson = voteJson.getJSONObject(currName);
+                if (singlePartyJson.getBoolean("is_users_party")) {
+                    myParty = currName;
+                }
+                JSONObject votesJson = singlePartyJson.getJSONObject("elected_voted");
+                for (String type : voteTypes) {
+                    JSONObject singleVoteTypeJson = votesJson.getJSONObject(type);
+                    if (singleVoteTypeJson.has("count")) {
+                        int cnt = singleVoteTypeJson.getInt("count");
+                        if (type == interstedIn) {
+                            myCnt += cnt;
+                        }
+                        totalCnt += cnt;
+                    }
+                }
+                JSONObject dataJson = new JSONObject();
+                for (String type : voteTypes) {
+                    JSONObject singleVoteTypeJson = votesJson.getJSONObject(type);
+                    if (singleVoteTypeJson.has("count")) {
+                        int cnt = singleVoteTypeJson.getInt("count");
+                        dataJson.put(type, (float) cnt / totalCnt);
+                    }
+                }
+                pieMap.put(currName, dataJson);
+                nameToPercent.put(currName, ((float) myCnt / totalCnt) * 100);
+            }
+            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+    }
+
 }
 
 
