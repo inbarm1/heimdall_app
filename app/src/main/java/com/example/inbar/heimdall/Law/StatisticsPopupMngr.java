@@ -81,7 +81,7 @@ public class StatisticsPopupMngr {
                 resource = R.layout.activity_pop_law_description;
                 break;
             case VOTE:
-                resource = R.layout.activity_pop_law_description;
+                resource = R.layout.popup_vote_law;
                 break;
             default:
                 resource = R.layout.activity_pop_law_description;
@@ -130,6 +130,7 @@ public class StatisticsPopupMngr {
                 DrawDescription(law);
                 break;
             case VOTE:
+                DrawVotePopUp(law);
                 break;
             default:
                 return;
@@ -154,11 +155,15 @@ public class StatisticsPopupMngr {
     }
 
     public void DrawVotePopUp(final Law law) {
-        Button upvoteButton = (Button) mPopupView.findViewById(R.id.upvoteButton);
-        upvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_FOR));
+        ImageButton upvoteButton = (ImageButton) mPopupView.findViewById(R.id.upvoteButton);
+        upvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_FOR,
+                R.id.upvoteButton, mPopupView,
+                R.drawable.upvote_gray, R.drawable.upvote_green));
 
-        Button downvoteButton = (Button) mPopupView.findViewById(R.id.downvoteButton);
-        downvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_AGAINST));
+        ImageButton downvoteButton = (ImageButton) mPopupView.findViewById(R.id.downvoteButton);
+        downvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_AGAINST,
+                R.id.downvoteButton, mPopupView,
+                R.drawable.downvote_gray, R.drawable.downvote_red));
 
         try {
             setSpinnerContent(R.id.tag1_spinner, mLawActivity.TAGS, null, true);
@@ -167,7 +172,7 @@ public class StatisticsPopupMngr {
             e.printStackTrace();
         }
 
-        Button submitButton = (Button) mPopupView.findViewById(R.id.submitVoteButton);
+        ImageButton submitButton = (ImageButton) mPopupView.findViewById(R.id.submitVoteButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -207,16 +212,33 @@ public class StatisticsPopupMngr {
 
     public static class VoteButtonListener implements View.OnClickListener {
         private Law mLaw;
-        private UserVote mUserVote;
+        private final UserVote mUserVote;
+        private final int mIdLayout;
+        private View mPopupView;
+        private final int mGrayImgId;
+        private final int mColorImgId;
 
-        public VoteButtonListener(Law law, UserVote userVote) {
+        public VoteButtonListener(Law law, UserVote userVote, int idLayout, View popupView, int grayId, int colorId) {
             mLaw = law;
             mUserVote = userVote;
+            mIdLayout = idLayout;
+            mPopupView = popupView;
+            mGrayImgId = grayId;
+            mColorImgId = colorId;
         }
 
         @Override
         public void onClick(View v) {
-            mLaw.userVote = mUserVote;
+            ImageButton btn = (ImageButton) mPopupView.findViewById(mIdLayout);
+            if (mLaw.userVote == mUserVote)
+            {
+                mLaw.userVote = UserVote.NO_VOTE;
+                btn.setImageResource(mGrayImgId);
+
+            }else{
+                btn.setImageResource(mColorImgId);
+                mLaw.userVote = mUserVote;
+            }
         }
     }
 

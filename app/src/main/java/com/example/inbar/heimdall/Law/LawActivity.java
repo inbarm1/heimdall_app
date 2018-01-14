@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,9 +20,14 @@ import com.example.inbar.heimdall.APIRequest;
 import com.example.inbar.heimdall.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 
 import static android.graphics.Color.rgb;
 
@@ -49,8 +55,7 @@ public class LawActivity extends APIRequest {
         setContentView(R.layout.law_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
+        loadTags();
         number_of_notification = 0;
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -85,7 +90,20 @@ public class LawActivity extends APIRequest {
     }
 
     private void loadTags() {
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
 
+                JSONObject json = LawActivity.this.getCategoryNames(R.id.lawLayout);
+                try {
+                    LawActivity.this.TAGS = (JSONArray) json.get(TAG);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
     }
 
 
