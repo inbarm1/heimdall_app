@@ -7,29 +7,21 @@
     android:padding="2dp"
     android:background="#EDF4F6">
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/ib_close"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|center"-->
-        <!--android:layout_margin="5dp"-->
-        <!--android:src="@drawable/arrow"-->
-        <!--app:layout_anchorGravity="top|center"/>-->
-
     <ImageButton
         android:id="@+id/ib_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:src="@drawable/if_icon"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="@null" />
+        android:background="@color/colorAccent" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/rl_pop_law_desc_layout"
         android:layout_width="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="45dp"
         android:layout_height="wrap_content"
         android:background="#EDF4F6"
         android:padding="2dp">
