@@ -223,6 +223,17 @@ public class Law {
 
     }
 
+    public int getLawVoteIconDrawableId(){
+        switch (userVote){
+            case VOTED_AGAINST:
+                return R.drawable.thumb_down;
+            case VOTED_FOR:
+                return R.drawable.thumb_up;
+            case NO_VOTE:
+            default:
+                return R.drawable.no_vote;
+        }
+    }
 
     private void createBarChart(JSONObject nameToPercentage,Map<String,JSONObject> pieMap, int char_id, String myName, View v) {
 
