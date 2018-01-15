@@ -22,7 +22,7 @@
 
             <Spinner
                 android:id="@+id/chooseTagSpinner"
-                android:layout_width="170dp"
+                android:layout_width="160dp"
                 android:textSize="10sp"
                 android:layout_height="wrap_content"
                 android:textColor="#212121" />

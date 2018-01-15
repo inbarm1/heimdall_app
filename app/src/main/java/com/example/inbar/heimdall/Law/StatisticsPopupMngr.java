@@ -252,6 +252,8 @@ public class StatisticsPopupMngr {
         }
 
         Button submitButton = (Button) mPopupView.findViewById(R.id.submitVoteButton);
+        TextView lawName = (TextView) mPopupView.findViewById(R.id.lawname);
+        lawName.setText(law.getName());
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
