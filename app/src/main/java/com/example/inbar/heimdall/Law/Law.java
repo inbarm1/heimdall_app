@@ -88,7 +88,7 @@ public class Law {
         try {
             this.userVote = lawObject.getString(USER_VOTED).equals("for") ? UserVote.VOTED_FOR :
                     lawObject.getString(USER_VOTED).equals("no_vote") ? UserVote.NO_VOTE : UserVote.VOTED_AGAINST;
-
+            this.userVote = UserVote.NO_VOTE; //TODO change. only for popup
             this.description = lawObject.getString(DESC);
             this.link = lawObject.getString(LINK);
             this.tags = getTagsAsArray(lawObject.getJSONArray(TAGS));

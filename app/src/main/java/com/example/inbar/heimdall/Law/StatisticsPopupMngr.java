@@ -90,7 +90,7 @@ public class StatisticsPopupMngr {
     }
 
     public void DrawStats(Law law, ImageButton barChartCloseButton) {
-//        DrawElectedVotesGraph(law,barChartCloseButton);
+        DrawElectedVotesGraph(law,barChartCloseButton);
         DrawUserDistribution(law);
     }
 
@@ -195,7 +195,7 @@ public class StatisticsPopupMngr {
             values = getDistFromJson(law, lable, forKey, againstKey);
         } catch (JSONException e) {
             e.printStackTrace();
-            
+            ((ViewManager)chart.getParent()).removeView(chart);
             return;
         }
 
@@ -383,7 +383,7 @@ public class StatisticsPopupMngr {
                 pieMap.put(currName, dataJson);
                 nameToPercent.put(currName, ((float) myCnt / totalCnt) * 100);
             }
-//            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView, mLawActivityLayout,barChartCloseButton);
+            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView, mLawActivityLayout,barChartCloseButton);
         } catch (Exception e) {
             e.printStackTrace();
             return;
