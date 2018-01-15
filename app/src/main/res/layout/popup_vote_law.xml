@@ -16,7 +16,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/activity_horizontal_margin">
+            android:padding="8dp">
             <ImageButton
                 android:id="@+id/ib_close"
                 android:layout_width="wrap_content"
@@ -27,9 +27,21 @@
                 android:background="@null" />
 
         </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/lawname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"/>
+        </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="8dp"
         android:padding="@dimen/activity_horizontal_margin">
 
         <ImageButton
@@ -49,16 +61,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="180dp"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:text="בחר קטוגוריה 1"
+            android:text="בחר קטגוריה 1"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#727272" />
 
@@ -66,18 +77,17 @@
             android:id="@+id/tag1_spinner"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:textColor="#212121" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_marginTop="20dp"
+
             android:layout_height="wrap_content"
             android:layout_marginStart="180dp"
             android:textStyle="bold"
@@ -90,7 +100,6 @@
             android:id="@+id/tag2_spinner"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:textColor="#212121" />
     </RelativeLayout>
     <RelativeLayout

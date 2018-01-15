@@ -102,6 +102,9 @@ public class StatisticsPopupMngr {
             case STATS:
                 resource = R.layout.activity_pop_law_stats;
                 break;
+            case VOTE_FIRST:
+                resource = R.layout.activity_pop_please_vote_first;
+                break;
             case DESCRIPTION:
                 resource = R.layout.activity_pop_law_description;
                 break;
@@ -157,6 +160,8 @@ public class StatisticsPopupMngr {
             case VOTE:
                 DrawVotePopUp(law);
                 break;
+            case VOTE_FIRST:
+                break;
             default:
                 return;
         }
@@ -165,6 +170,7 @@ public class StatisticsPopupMngr {
 
     public static enum PopUpType {
         STATS,
+        VOTE_FIRST,
         DESCRIPTION,
         VOTE
     }
@@ -252,6 +258,8 @@ public class StatisticsPopupMngr {
         }
 
         Button submitButton = (Button) mPopupView.findViewById(R.id.submitVoteButton);
+        TextView lawName = (TextView) mPopupView.findViewById(R.id.lawname);
+        lawName.setText(law.getName());
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -610,6 +618,7 @@ public class StatisticsPopupMngr {
         }
 
     }
+
 
 }
 
