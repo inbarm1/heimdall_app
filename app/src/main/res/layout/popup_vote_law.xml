@@ -61,11 +61,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="180dp"
             android:textStyle="bold"
@@ -78,18 +77,17 @@
             android:id="@+id/tag1_spinner"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:textColor="#212121" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_marginTop="20dp"
+
             android:layout_height="wrap_content"
             android:layout_marginStart="180dp"
             android:textStyle="bold"
@@ -102,7 +100,6 @@
             android:id="@+id/tag2_spinner"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:textColor="#212121" />
     </RelativeLayout>
     <RelativeLayout
