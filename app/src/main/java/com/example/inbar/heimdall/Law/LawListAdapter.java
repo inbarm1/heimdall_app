@@ -149,7 +149,6 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                 b.setCompoundDrawablesWithIntrinsicBounds(0,0, 0, R.drawable.up_arrow2);
             }
             expandableLayout.toggle();
-//            mLaw.DrawVotesGraph(parent,R.id.VoteLikeMe);
         }
     }
 
