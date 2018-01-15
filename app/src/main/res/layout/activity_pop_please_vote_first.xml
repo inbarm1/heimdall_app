@@ -34,7 +34,9 @@
                 android:layout_width="400dp"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="רוצה להשפיע?! תצביע, ואז תוכל לראות את הסטטיסטיקות" />
+                android:text="רוצה להשפיע? תצביע!
+
+לאחר ההצבעה תוכל לראות את ההתפלגויות" />
 
         </RelativeLayout>
         <RelativeLayout
