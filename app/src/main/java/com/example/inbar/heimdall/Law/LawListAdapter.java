@@ -107,7 +107,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         holder.nameTextView.setText(law.getName());
         holder.moreInfoButton.setOnClickListener(new MoreInfoButtonListener(law,lawActivity) );
         Drawable voteIcon = lawActivity.getDrawable(law.getLawVoteIconDrawableId());
-        holder.moreInfoButton.setCompoundDrawables(voteIcon,null,null,null);
+        holder.moreInfoButton.setCompoundDrawablesWithIntrinsicBounds(voteIcon,null,null,null);
         holder.showStatsButton.setOnClickListener( new ShowStatsButtonListener(law,mStatsPopupMngr));
         holder.showDescriptionButton.setOnClickListener( new ShowDescriptionButtonListener(law,mStatsPopupMngr));
         holder.voteButton.setOnClickListener(new VoteButtonListener(law,mStatsPopupMngr));
