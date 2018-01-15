@@ -17,6 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#AAC8D3">
+
+            <Spinner
+                android:id="@+id/chooseTagSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:layout_marginStart="50dp"
+                android:textColor="#212121" />
+
             <TextView
                 android:id="@+id/toDateText"
                 android:layout_width="wrap_content"

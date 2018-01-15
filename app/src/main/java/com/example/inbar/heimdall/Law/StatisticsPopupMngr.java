@@ -173,7 +173,7 @@ public class StatisticsPopupMngr {
     public void DrawDescription(Law law) {
         TextView descriptionTextView = ((TextView) mPopupView.findViewById(R.id.lawDescriptionTextView));
         if (law.getDescription().length() < 5) {
-            descriptionTextView.setText("no description available");
+//            descriptionTextView.setText("no description available");
         } else {
             descriptionTextView.setText(law.getDescription());
         }
@@ -569,8 +569,8 @@ public class StatisticsPopupMngr {
             // Initialize a new instance of popup window
             mPiePopupWindow = new PopupWindow(
                     customView,
-                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                    CoordinatorLayout.LayoutParams.WRAP_CONTENT
+                    100,
+                    180
             );
 
             // Set an elevation value for popup window

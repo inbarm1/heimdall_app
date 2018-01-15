@@ -5,13 +5,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="2dp"
-    android:background="#ADD8E6"
+    android:background="#EDF4F6"
     >
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#CDE7F0"
+        android:background="#EDF4F6"
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
