@@ -262,6 +262,8 @@ public class StatisticsPopupMngr {
 
         Button submitButton = (Button) mPopupView.findViewById(R.id.submitVoteButton);
         TextView lawName = (TextView) mPopupView.findViewById(R.id.lawname);
+
+
         lawName.setText(law.getName());
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -277,6 +279,8 @@ public class StatisticsPopupMngr {
                 });
 
                 thread.start();
+                Button moreInfoButton = law.mLawView.findViewById(R.id.moreInfoButton);
+                moreInfoButton.setCompoundDrawablesWithIntrinsicBounds(law.getLawVoteIconDrawableId(),0,0,R.drawable.down_arrow2);
                 mPopupWindow.dismiss();
                 isUp = false;
             }

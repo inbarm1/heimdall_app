@@ -1,8 +1,13 @@
 package com.example.inbar.heimdall.Law;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,11 +103,15 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         return holder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         final Law law = mLaws.get(position);
+        law.mLawView=holder.view;
         holder.nameTextView.setText(law.getName());
         holder.moreInfoButton.setOnClickListener(new MoreInfoButtonListener(law,lawActivity) );
+        Drawable voteIcon = lawActivity.getDrawable(law.getLawVoteIconDrawableId());
+        holder.moreInfoButton.setCompoundDrawablesWithIntrinsicBounds(voteIcon,null,null,null);
         holder.showStatsButton.setOnClickListener( new ShowStatsButtonListener(law,mStatsPopupMngr));
         holder.showDescriptionButton.setOnClickListener( new ShowDescriptionButtonListener(law,mStatsPopupMngr));
         holder.voteButton.setOnClickListener(new VoteButtonListener(law,mStatsPopupMngr));
@@ -120,6 +129,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         protected Button showStatsButton;
         protected Button showDescriptionButton;
         protected Button voteButton;
+        public View view;
 
 
         public SimpleViewHolder(View v) {
@@ -129,6 +139,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             showStatsButton = ((Button)v.findViewById(R.id.showStatsButton));
             showDescriptionButton = ((Button)v.findViewById(R.id.showDescriptionButton));
             voteButton = ((Button)v.findViewById(R.id.VoteButton));
+            view=v;
         }
     }
 
@@ -148,9 +159,9 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             ExpandableLayout expandableLayout = ((ExpandableLayout) parent.findViewById(R.id.expandable_layout));
             Button b = (Button)v;
             if (expandableLayout.isExpanded()) {
-                b.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.down_arrow2);
+                b.setCompoundDrawablesWithIntrinsicBounds(mLaw.getLawVoteIconDrawableId(), 0, 0, R.drawable.down_arrow2);
             } else {
-                b.setCompoundDrawablesWithIntrinsicBounds(0,0, 0, R.drawable.up_arrow2);
+                b.setCompoundDrawablesWithIntrinsicBounds(mLaw.getLawVoteIconDrawableId(),0, 0, R.drawable.up_arrow2);
             }
             expandableLayout.toggle();
             mLaw.setUserDistAndElectedVotes(mLawActivity);
