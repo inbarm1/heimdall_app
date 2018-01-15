@@ -8,12 +8,6 @@
     android:background="#f1f3f4"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:text="אחוז ההצבעה כמוני בקרב המפלגות" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/rl_pop_law_desc_layout"
@@ -24,13 +18,29 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:text="אחוז ההצבעה כמוני בקרב המפלגות" />
+
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/votedLikeMe"
             android:layout_marginTop="40dp"
             android:layout_width="wrap_content"
             android:layout_height="450dp"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:text="אחוז ההצבעה כמוני בקרב המפלגות" />
 
         <com.numetriclabz.numandroidcharts.StackBarChart
             android:id="@+id/jobChart"
@@ -66,3 +76,4 @@
         android:background="@null" />
 
 </RelativeLayout>
+
