@@ -15,6 +15,15 @@
         android:background="#f1f3f4"
         android:padding="2dp">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#EDF4F6"
+            android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin">
 
         <TextView
             android:id="@+id/lawDescriptionTextView"
@@ -22,6 +31,8 @@
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             />
+        </RelativeLayout>
+        </LinearLayout>
 
 
     </android.support.v4.widget.NestedScrollView>
