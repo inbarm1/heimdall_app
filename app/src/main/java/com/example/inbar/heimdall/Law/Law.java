@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -54,7 +55,7 @@ public class Law {
 
     public static final String LINK = "link";
     public static final String DESC = "description";
-    public static final String TAGS = "originalTags";
+    public static final String TAGS = "tags";
     public static final String USER_VOTED = "user_voted";
     public static final String JOB_FOR = "job_for";
     public static final String JOB_AGAINST = "job_against";
@@ -74,8 +75,7 @@ public class Law {
     UserVote userVote;
     private String description;
     private String link;
-    ArrayList<String> originalTags;
-    ArrayList<String> selectedTagsByUser;
+    List<String> tags;
     private JSONObject userDist;
     private JSONObject electedVotes;
     LawActivity lawActivity;
@@ -91,7 +91,7 @@ public class Law {
 
             this.description = lawObject.getString(DESC);
             this.link = lawObject.getString(LINK);
-            this.originalTags = getTagsAsArray(lawObject.getJSONArray(TAGS));
+            this.tags = getTagsAsArray(lawObject.getJSONArray(TAGS));
             this.lawActivity = lawActivity;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -143,9 +143,6 @@ public class Law {
         return link;
     }
 
-    public ArrayList<String> getOriginalTags() {
-        return originalTags;
-    }
 
     private ArrayList<String> getTagsAsArray(JSONArray jArray) throws JSONException {
         ArrayList<String> tags = new ArrayList<>();

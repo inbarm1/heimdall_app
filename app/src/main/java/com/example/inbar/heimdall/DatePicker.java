@@ -3,7 +3,10 @@ package com.example.inbar.heimdall;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.TextView;
 
 /**
@@ -43,9 +46,15 @@ public class DatePicker extends DialogFragment implements DatePickerDialog.OnDat
             return new DatePickerDialog(getActivity(),R.style.DialogTheme,this,year,month,day);
         }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
 
     @Override
     public void onDateSet(android.widget.DatePicker datePicker, int i, int i1, int i2) {
+
             TextView dateText=getActivity().findViewById(R.id.birth_date_selection);
             day=datePicker.getDayOfMonth();
             month=datePicker.getMonth();
