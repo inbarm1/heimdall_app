@@ -153,9 +153,9 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             ExpandableLayout expandableLayout = ((ExpandableLayout) parent.findViewById(R.id.expandable_layout));
             Button b = (Button)v;
             if (expandableLayout.isExpanded()) {
-                b.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.down_arrow2);
+                b.setCompoundDrawablesWithIntrinsicBounds(mLaw.getLawVoteIconDrawableId(), 0, 0, R.drawable.down_arrow2);
             } else {
-                b.setCompoundDrawablesWithIntrinsicBounds(0,0, 0, R.drawable.up_arrow2);
+                b.setCompoundDrawablesWithIntrinsicBounds(mLaw.getLawVoteIconDrawableId(),0, 0, R.drawable.up_arrow2);
             }
             expandableLayout.toggle();
             mLaw.setUserDistAndElectedVotes(mLawActivity);
