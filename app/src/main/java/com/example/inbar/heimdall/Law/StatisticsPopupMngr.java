@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -89,7 +90,7 @@ public class StatisticsPopupMngr {
     }
 
     public void DrawStats(Law law, ImageButton barChartCloseButton) {
-        DrawElectedVotesGraph(law,barChartCloseButton);
+//        DrawElectedVotesGraph(law,barChartCloseButton);
         DrawUserDistribution(law);
     }
 
@@ -194,6 +195,8 @@ public class StatisticsPopupMngr {
             values = getDistFromJson(law, lable, forKey, againstKey);
         } catch (JSONException e) {
             e.printStackTrace();
+            
+            return;
         }
 
         chart.setHorizontal_label(lable);
@@ -380,7 +383,7 @@ public class StatisticsPopupMngr {
                 pieMap.put(currName, dataJson);
                 nameToPercent.put(currName, ((float) myCnt / totalCnt) * 100);
             }
-            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView, mLawActivityLayout,barChartCloseButton);
+//            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView, mLawActivityLayout,barChartCloseButton);
         } catch (Exception e) {
             e.printStackTrace();
             return;

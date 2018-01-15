@@ -26,11 +26,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/votedLikeMe"
-            android:layout_marginTop="40dp"
-            android:layout_width="wrap_content"
-            android:layout_height="450dp"/>
+        <!--<com.github.mikephil.charting.charts.BarChart-->
+            <!--android:id="@+id/votedLikeMe"-->
+            <!--android:layout_marginTop="40dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="450dp"/>-->
 
         <com.numetriclabz.numandroidcharts.StackBarChart
             android:id="@+id/jobChart"
