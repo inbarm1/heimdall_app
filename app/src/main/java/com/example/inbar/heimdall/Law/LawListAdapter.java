@@ -167,7 +167,11 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         @Override
         public void onClick(View v) {
             //the view is the button, we need to get it's parnet
-           mPopupMngr.openPopUp(StatisticsPopupMngr.PopUpType.STATS,mLaw );
+           if (mLaw.getUserVote() == UserVote.NO_VOTE){
+               mPopupMngr.openPopUp(StatisticsPopupMngr.PopUpType.VOTE_FIRST,mLaw );
+           }else {
+               mPopupMngr.openPopUp(StatisticsPopupMngr.PopUpType.STATS,mLaw );
+           }
         }
     }
 
