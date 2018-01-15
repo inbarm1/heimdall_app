@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -12,8 +13,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.inbar.heimdall.APIRequest;
@@ -26,6 +29,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -36,6 +40,7 @@ public class LawActivity extends APIRequest {
     private RecyclerView.LayoutManager mLayoutManager;
     private LawListAdapter mAdapter;
     public JSONArray TAGS;
+    public final int RECIEVE_TAGS = 2;
 
 
     public TextView fromDateText;
@@ -46,7 +51,20 @@ public class LawActivity extends APIRequest {
     View mStatisticscustomView;
     boolean mStatisticsBlocking = false;
 
-
+    private Handler recieveTagsHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case RECIEVE_TAGS:
+                    try {
+                        setSpinnerContent(R.id.chooseTagSpinner, LawActivity.this.TAGS, null, true);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    };
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -100,6 +118,7 @@ public class LawActivity extends APIRequest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                recieveTagsHandler.sendMessage(Message.obtain(recieveTagsHandler, RECIEVE_TAGS));
             }
         });
 
@@ -130,6 +149,22 @@ public class LawActivity extends APIRequest {
 
     public void refreshLawsForAdapter(View v) {
         mAdapter.getLaws(fromDatePicker.c, toDatePicker.c);
+    }
+
+    public void setSpinnerContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
+        Spinner s = (Spinner) findViewById(layout_id);
+        ArrayList<String> values = new ArrayList<>();
+        for (int i = 0; i < j_values.length(); i++) {
+            String value = (String) j_values.get(i);
+            if (value.isEmpty()) continue;
+            values.add(value);
+        }
+        if (doSort)
+            Collections.sort(values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
+        s.setPrompt(defaultOption);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+        s.setAdapter(adapter);
     }
 
 }
