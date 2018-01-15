@@ -36,7 +36,7 @@
                 android:id="@+id/lawname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"/>
+                android:textSize="17sp"/>
         </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -47,13 +47,13 @@
         <ImageButton
             android:background="@drawable/dislike_small"
             android:id="@+id/downvoteButton"
-            android:layout_marginStart="70dp"
+            android:layout_marginStart="50dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <ImageButton
             android:background="@drawable/like_small"
             android:id="@+id/upvoteButton"
-            android:layout_marginStart="190dp"
+            android:layout_marginStart="200dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
