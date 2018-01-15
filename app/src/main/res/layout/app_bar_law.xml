@@ -18,19 +18,11 @@
             android:layout_height="match_parent"
             android:background="#AAC8D3">
 
-            <Spinner
-                android:id="@+id/chooseTagSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:layout_marginStart="50dp"
-                android:textColor="#212121" />
-
             <TextView
                 android:id="@+id/toDateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="140dp"
+                android:layout_marginStart="130dp"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:hint="עד תאריך"/>
@@ -52,6 +44,31 @@
                 android:onClick="refreshLawsForAdapter"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:text="סנן" />
+
+
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#AAC8D3">
+
+            <Spinner
+                android:id="@+id/chooseTagSpinner"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textColor="#212121" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:textSize="15sp"
+                android:onClick="refreshLawsForAdapter"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:text="סנן לפי  קטגוריה" />
+
 
         </android.support.v7.widget.Toolbar>
 
