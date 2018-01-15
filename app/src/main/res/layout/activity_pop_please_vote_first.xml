@@ -15,7 +15,8 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/stop" />
+        android:src="@drawable/stop"
+        android:text="הלו גבר תצביע קודם"/>
 
     <ImageButton
         android:id="@+id/ib_close"

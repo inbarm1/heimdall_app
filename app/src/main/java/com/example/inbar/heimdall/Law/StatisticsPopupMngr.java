@@ -103,7 +103,7 @@ public class StatisticsPopupMngr {
                 resource = R.layout.activity_pop_law_stats;
                 break;
             case VOTE_FIRST:
-                resource = R.layout.activity_pop_law_description;
+                resource = R.layout.activity_pop_please_vote_first;
                 break;
             case DESCRIPTION:
                 resource = R.layout.activity_pop_law_description;
@@ -616,6 +616,7 @@ public class StatisticsPopupMngr {
         }
 
     }
+
 
 }
 
