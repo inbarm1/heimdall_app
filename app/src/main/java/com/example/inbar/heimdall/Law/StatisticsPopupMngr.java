@@ -249,7 +249,6 @@ public class StatisticsPopupMngr {
         downvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_AGAINST,
                 R.id.downvoteButton, mPopupView,
                 R.drawable.dislike_small, R.drawable.dislike));
-
         try {
             setSpinnerContent(R.id.tag1_spinner, mLawActivity.TAGS, null, true);
             setSpinnerContent(R.id.tag2_spinner, mLawActivity.TAGS, null, true);
@@ -259,6 +258,8 @@ public class StatisticsPopupMngr {
 
         Button submitButton = (Button) mPopupView.findViewById(R.id.submitVoteButton);
         TextView lawName = (TextView) mPopupView.findViewById(R.id.lawname);
+
+
         lawName.setText(law.getName());
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,6 +275,8 @@ public class StatisticsPopupMngr {
                 });
 
                 thread.start();
+                Button moreInfoButton = law.mLawView.findViewById(R.id.moreInfoButton);
+                moreInfoButton.setCompoundDrawablesWithIntrinsicBounds(law.getLawVoteIconDrawableId(),0,0,R.drawable.down_arrow2);
                 mPopupWindow.dismiss();
                 isUp = false;
             }

@@ -104,6 +104,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         final Law law = mLaws.get(position);
+        law.mLawView=holder.view;
         holder.nameTextView.setText(law.getName());
         holder.moreInfoButton.setOnClickListener(new MoreInfoButtonListener(law,lawActivity) );
         Drawable voteIcon = lawActivity.getDrawable(law.getLawVoteIconDrawableId());
@@ -125,6 +126,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         protected Button showStatsButton;
         protected Button showDescriptionButton;
         protected Button voteButton;
+        public View view;
 
 
         public SimpleViewHolder(View v) {
@@ -134,6 +136,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
             showStatsButton = ((Button)v.findViewById(R.id.showStatsButton));
             showDescriptionButton = ((Button)v.findViewById(R.id.showDescriptionButton));
             voteButton = ((Button)v.findViewById(R.id.VoteButton));
+            view=v;
         }
     }
 

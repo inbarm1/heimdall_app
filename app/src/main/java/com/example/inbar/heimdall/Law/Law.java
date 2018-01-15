@@ -81,6 +81,7 @@ public class Law {
     LawActivity lawActivity;
     boolean blocking;
     PopupWindow mPopupWindow;
+    View mLawView;
 
 
     public Law(String name, JSONObject lawObject, LawActivity lawActivity) {
