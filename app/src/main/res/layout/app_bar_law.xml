@@ -16,13 +16,22 @@
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:background="#AAC8D3">
+
+            <Spinner
+                android:id="@+id/chooseTagSpinner"
+                android:layout_width="170dp"
+                android:textSize="10sp"
+                android:layout_height="wrap_content"
+                android:textColor="#212121" />
 
             <TextView
                 android:id="@+id/toDateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="130dp"
+                android:layout_marginStart="20dp"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:hint="עד תאריך"/>
@@ -32,43 +41,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 android:textStyle="bold"
                 android:hint="מתאריך"/>
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="8dp"
                 android:textSize="15sp"
                 android:onClick="refreshLawsForAdapter"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:background="#CDE7F0"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:text="סנן" />
-
-
-        </android.support.v7.widget.Toolbar>
-
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#AAC8D3">
-
-            <Spinner
-                android:id="@+id/chooseTagSpinner"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:textColor="#212121" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:textSize="15sp"
-                android:onClick="refreshLawsForAdapter"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:text="סנן לפי  קטגוריה" />
-
 
         </android.support.v7.widget.Toolbar>
 
