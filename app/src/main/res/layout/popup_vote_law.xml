@@ -5,13 +5,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="2dp"
-    android:background="#ADD8E6"
+    android:background="#EDF4F6"
     >
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#CDE7F0"
+        android:background="#EDF4F6"
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,13 +35,13 @@
         <ImageButton
             android:background="@drawable/dislike_small"
             android:id="@+id/downvoteButton"
-            android:layout_marginStart="80dp"
+            android:layout_marginStart="70dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <ImageButton
             android:background="@drawable/like_small"
             android:id="@+id/upvoteButton"
-            android:layout_marginStart="180dp"
+            android:layout_marginStart="190dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
@@ -55,19 +55,18 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="160dp"
+            android:layout_marginStart="180dp"
             android:textStyle="bold"
-            android:textSize="20sp"
-            android:text="בחר תג 1"
+            android:textSize="18sp"
+            android:text="בחר קטוגוריה 1"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#727272" />
 
         <Spinner
             android:id="@+id/tag1_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:layout_marginStart="50dp"
+            android:layout_marginTop="20dp"
             android:textColor="#212121" />
     </RelativeLayout>
 
@@ -80,19 +79,18 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="160dp"
+            android:layout_marginStart="180dp"
             android:textStyle="bold"
-            android:textSize="20sp"
-            android:text="בחר תג 2"
+            android:textSize="18sp"
+            android:text="בחר קטגוריה 2"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#727272" />
 
         <Spinner
             android:id="@+id/tag2_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:layout_marginStart="50dp"
+            android:layout_marginTop="20dp"
             android:textColor="#212121" />
     </RelativeLayout>
     <RelativeLayout
@@ -101,11 +99,13 @@
         android:padding="@dimen/activity_horizontal_margin">
         <Button
             android:id="@+id/submitVoteButton"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:background="@color/colorAccent"
+            android:layout_marginStart="110dp"
             android:textColor="@color/colorPrimaryDark"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:text="אשר"  />
 
     </RelativeLayout>
