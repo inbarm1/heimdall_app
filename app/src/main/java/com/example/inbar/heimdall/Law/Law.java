@@ -81,6 +81,7 @@ public class Law {
     LawActivity lawActivity;
     boolean blocking;
     PopupWindow mPopupWindow;
+    View mLawView;
 
 
     public Law(String name, JSONObject lawObject, LawActivity lawActivity) {
@@ -88,7 +89,7 @@ public class Law {
         try {
             this.userVote = lawObject.getString(USER_VOTED).equals("for") ? UserVote.VOTED_FOR :
                     lawObject.getString(USER_VOTED).equals("no_vote") ? UserVote.NO_VOTE : UserVote.VOTED_AGAINST;
-
+            this.userVote = UserVote.NO_VOTE; //TODO change. only for popup
             this.description = lawObject.getString(DESC);
             this.link = lawObject.getString(LINK);
             this.tags = getTagsAsArray(lawObject.getJSONArray(TAGS));
@@ -223,6 +224,17 @@ public class Law {
 
     }
 
+    public int getLawVoteIconDrawableId(){
+        switch (userVote){
+            case VOTED_AGAINST:
+                return R.drawable.thumb_down;
+            case VOTED_FOR:
+                return R.drawable.thumb_up;
+            case NO_VOTE:
+            default:
+                return R.drawable.no_vote;
+        }
+    }
 
     private void createBarChart(JSONObject nameToPercentage,Map<String,JSONObject> pieMap, int char_id, String myName, View v) {
 

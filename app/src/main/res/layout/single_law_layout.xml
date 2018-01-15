@@ -27,14 +27,17 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"/>
 
+
             <Button
                 android:id="@+id/moreInfoButton"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
                 android:drawableBottom="@drawable/down_arrow2"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:text="מידע נוסף"  />
+                android:text="מידע נוסף"
+                android:textColor="@color/colorPrimaryDark" />
+
+
 
             <net.cachapa.expandablelayout.ExpandableLayout
                 android:id="@+id/expandable_layout"

@@ -26,12 +26,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
 
 import static android.graphics.Color.rgb;
 
@@ -40,7 +40,8 @@ public class LawActivity extends APIRequest {
     private RecyclerView.LayoutManager mLayoutManager;
     private LawListAdapter mAdapter;
     public JSONArray TAGS;
-    public final int RECIEVE_TAGS = 2;
+    public final static  int RECIEVE_TAGS = 2;
+    public final static int RATE_HANDLER = 4;
 
 
     public TextView fromDateText;
@@ -51,7 +52,7 @@ public class LawActivity extends APIRequest {
     View mStatisticscustomView;
     boolean mStatisticsBlocking = false;
 
-    private Handler recieveTagsHandler = new Handler() {
+    private Handler generalHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -62,6 +63,18 @@ public class LawActivity extends APIRequest {
                         e.printStackTrace();
                     }
                     break;
+                case RATE_HANDLER:
+                    JSONObject data4 = null;
+                    try {
+                        data4 = new JSONObject(readFromMessage(msg));
+                        String rank = data4.getString("user_rank");
+                        ImageView img= (ImageView) findViewById(R.id.rate);
+                        img.setImageResource(rate.get(rank));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
             }
         }
     };
@@ -74,6 +87,7 @@ public class LawActivity extends APIRequest {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         loadTags();
+        getRate();
         number_of_notification = 0;
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -107,6 +121,23 @@ public class LawActivity extends APIRequest {
 
     }
 
+    private void getRate() {
+
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                JSONObject json = getUserRank(R.id.mainLayout);
+                if(json == null) {
+                    return;
+                }
+                String str = json.toString();
+                InputStream is = new ByteArrayInputStream(str.getBytes());
+                generalHandler.sendMessage(Message.obtain(generalHandler, RATE_HANDLER, is));
+            }
+        });
+        thread.start();
+    }
+
     private void loadTags() {
         Thread thread = new Thread(new Runnable(){
             @Override
@@ -118,7 +149,7 @@ public class LawActivity extends APIRequest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                recieveTagsHandler.sendMessage(Message.obtain(recieveTagsHandler, RECIEVE_TAGS));
+                generalHandler.sendMessage(Message.obtain(generalHandler, RECIEVE_TAGS));
             }
         });
 
