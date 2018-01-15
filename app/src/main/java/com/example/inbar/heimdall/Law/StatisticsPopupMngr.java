@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -200,6 +201,8 @@ public class StatisticsPopupMngr {
             values = getDistFromJson(law, lable, forKey, againstKey);
         } catch (JSONException e) {
             e.printStackTrace();
+            ((ViewManager)chart.getParent()).removeView(chart);
+            return;
         }
 
         chart.setHorizontal_label(lable);
