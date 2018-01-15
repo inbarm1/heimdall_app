@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:background="@color/colorAccent"
-            android:layout_marginStart="120dp"
+            android:layout_marginStart="110dp"
             android:textColor="@color/colorPrimaryDark"
             style="@style/Widget.AppCompat.Button.Colored"
             android:text="אשר"  />
