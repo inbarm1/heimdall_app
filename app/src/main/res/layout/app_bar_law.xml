@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="140dp"
-                android:textSize="20dp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:hint="עד תאריך"/>
 
@@ -30,7 +30,7 @@
                 android:id="@+id/fromDateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="15sp"
                 android:layout_marginStart="20dp"
                 android:textStyle="bold"
                 android:hint="מתאריך"/>
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:textSize="20dp"
+                android:textSize="15sp"
                 android:onClick="refreshLawsForAdapter"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:text="סנן" />
