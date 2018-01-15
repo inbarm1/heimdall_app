@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -200,6 +201,8 @@ public class StatisticsPopupMngr {
             values = getDistFromJson(law, lable, forKey, againstKey);
         } catch (JSONException e) {
             e.printStackTrace();
+            ((ViewManager)chart.getParent()).removeView(chart);
+            return;
         }
 
         chart.setHorizontal_label(lable);
@@ -242,13 +245,14 @@ public class StatisticsPopupMngr {
     public void DrawVotePopUp(final Law law) {
         ImageButton upvoteButton = (ImageButton) mPopupView.findViewById(R.id.upvoteButton);
         upvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_FOR,
-                R.id.upvoteButton, mPopupView,
-                R.drawable.like_small, R.drawable.like));
+                R.id.upvoteButton, R.id.downvoteButton, mPopupView,
+                R.drawable.like_small, R.drawable.like, R.drawable.dislike_small));
 
         ImageButton downvoteButton = (ImageButton) mPopupView.findViewById(R.id.downvoteButton);
         downvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_AGAINST,
-                R.id.downvoteButton, mPopupView,
-                R.drawable.dislike_small, R.drawable.dislike));
+                R.id.downvoteButton, R.id.upvoteButton, mPopupView,
+                R.drawable.dislike_small, R.drawable.dislike, R.drawable.like_small));
+
         try {
             setSpinnerContent(R.id.tag1_spinner, mLawActivity.TAGS, null, true);
             setSpinnerContent(R.id.tag2_spinner, mLawActivity.TAGS, null, true);
@@ -304,22 +308,28 @@ public class StatisticsPopupMngr {
         private Law mLaw;
         private final UserVote mUserVote;
         private final int mIdLayout;
+        private final int mIdLayout2;
         private View mPopupView;
         private final int mGrayImgId;
+        private final int mGrayImgId2;
         private final int mColorImgId;
 
-        public VoteButtonListener(Law law, UserVote userVote, int idLayout, View popupView, int grayId, int colorId) {
+        public VoteButtonListener(Law law, UserVote userVote, int idLayout, int idLayout2, View popupView,
+                                  int grayId, int colorId, int grayId2) {
             mLaw = law;
             mUserVote = userVote;
             mIdLayout = idLayout;
             mPopupView = popupView;
             mGrayImgId = grayId;
+            mGrayImgId2 = grayId2;
             mColorImgId = colorId;
+            mIdLayout2 = idLayout2;
         }
 
         @Override
         public void onClick(View v) {
             ImageButton btn = (ImageButton) mPopupView.findViewById(mIdLayout);
+            ImageButton btn2 = (ImageButton) mPopupView.findViewById(mIdLayout2);
             if (mLaw.userVote == mUserVote)
             {
                 mLaw.userVote = UserVote.NO_VOTE;
@@ -327,6 +337,7 @@ public class StatisticsPopupMngr {
 
             }else{
                 btn.setImageResource(mColorImgId);
+                btn2.setImageResource(mGrayImgId2);
                 mLaw.userVote = mUserVote;
             }
         }
