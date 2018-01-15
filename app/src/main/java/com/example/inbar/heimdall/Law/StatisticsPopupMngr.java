@@ -212,7 +212,7 @@ public class StatisticsPopupMngr {
 
         List<ChartData> values = new ArrayList<>();
         values.add(new ChartData(forChart.toArray(new Float[forChart.size()]), "For"));
-        values.add(new ChartData(againstChart.toArray(new Float[againstChart.size()]), "For"));
+        values.add(new ChartData(againstChart.toArray(new Float[againstChart.size()]), "Against"));
         return values;
 
     }
@@ -259,6 +259,8 @@ public class StatisticsPopupMngr {
                 });
 
                 thread.start();
+                mPopupWindow.dismiss();
+                isUp = false;
             }
         });
     }
@@ -371,7 +373,7 @@ public class StatisticsPopupMngr {
                 pieMap.put(currName, dataJson);
                 nameToPercent.put(currName, ((float) myCnt / totalCnt) * 100);
             }
-            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView);
+//            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView);
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -634,7 +636,7 @@ public class StatisticsPopupMngr {
                 pieMap.put(currName, dataJson);
                 nameToPercent.put(currName, ((float) myCnt / totalCnt) * 100);
             }
-            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView);
+//            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView);
         } catch (Exception e) {
             e.printStackTrace();
             return;

@@ -80,11 +80,6 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                 }
 
                 listAdapterHandler.sendMessage(Message.obtain(listAdapterHandler, LAWS_UPDATED));
-                for (Law law: mLaws) {
-                    if (law.userVote != UserVote.NO_VOTE) {
-                        law.setUserDistAndElectedVotes(lawActivity);
-                    }
-                }
             }
         });
 
