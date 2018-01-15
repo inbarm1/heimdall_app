@@ -80,7 +80,11 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                 }
 
                 listAdapterHandler.sendMessage(Message.obtain(listAdapterHandler, LAWS_UPDATED));
-                for (Law law: mLaws) law.setUserDistAndElectedVotes(lawActivity);
+                for (Law law: mLaws) {
+                    if (law.userVote != UserVote.NO_VOTE) {
+                        law.setUserDistAndElectedVotes(lawActivity);
+                    }
+                }
             }
         });
 
@@ -100,7 +104,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         final Law law = mLaws.get(position);
         holder.nameTextView.setText(law.getName());
-        holder.moreInfoButton.setOnClickListener(new MoreInfoButtonListener(law));
+        holder.moreInfoButton.setOnClickListener(new MoreInfoButtonListener(law,lawActivity) );
         holder.showStatsButton.setOnClickListener( new ShowStatsButtonListener(law,mStatsPopupMngr));
         holder.showDescriptionButton.setOnClickListener( new ShowDescriptionButtonListener(law,mStatsPopupMngr));
         holder.voteButton.setOnClickListener(new VoteButtonListener(law,mStatsPopupMngr));
@@ -132,9 +136,11 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
 
     public static class MoreInfoButtonListener implements View.OnClickListener {
         private Law mLaw;
+        private LawActivity mLawActivity;
 
-        public MoreInfoButtonListener(Law law) {
+        public MoreInfoButtonListener(Law law, LawActivity lawActivity) {
             mLaw = law;
+            mLawActivity = lawActivity;
         }
 
         @Override
@@ -149,6 +155,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                 b.setCompoundDrawablesWithIntrinsicBounds(0,0, 0, R.drawable.up_arrow2);
             }
             expandableLayout.toggle();
+            mLaw.setUserDistAndElectedVotes(mLawActivity);
 //            mLaw.DrawVotesGraph(parent,R.id.VoteLikeMe);
         }
     }

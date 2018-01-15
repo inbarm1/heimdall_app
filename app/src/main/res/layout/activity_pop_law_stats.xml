@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_pop_law_stats_layout_top"
     android:layout_width="match_parent"
@@ -9,6 +9,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
@@ -17,25 +18,29 @@
             android:id="@+id/votedLikeMe"
             android:layout_marginTop="40dp"
             android:layout_width="match_parent"
-            android:layout_height="450dp" />
+            android:layout_height="450dp"
+            android:layout_below="@+id/textView"/>
 
         <com.numetriclabz.numandroidcharts.StackBarChart
             android:id="@+id/jobChart"
             android:layout_marginTop="40dp"
             android:layout_width="match_parent"
-            android:layout_height="450dp" />
+            android:layout_height="450dp"
+            android:layout_below="@+id/votedLikeMe"/>
 
         <com.numetriclabz.numandroidcharts.StackBarChart
             android:id="@+id/cityChart"
             android:layout_marginTop="40dp"
             android:layout_width="match_parent"
-            android:layout_height="450dp" />
+            android:layout_height="450dp"
+            android:layout_below="@+id/jobChart"/>
 
         <com.numetriclabz.numandroidcharts.StackBarChart
             android:id="@+id/ageChart"
             android:layout_marginTop="40dp"
             android:layout_width="match_parent"
-            android:layout_height="450dp" />
+            android:layout_height="450dp"
+            android:layout_below="@+id/cityChart"/>
 
     <ImageButton
         android:id="@+id/ib_close"
@@ -46,4 +51,4 @@
         android:layout_alignParentRight="true"
         android:background="@null" />
 
-</LinearLayout>
+</RelativeLayout>
