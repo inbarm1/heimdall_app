@@ -16,7 +16,7 @@
         android:src="@drawable/if_icon"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="@color/colorAccent" />
+        android:background="#EDF4F6" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/rl_pop_law_desc_layout"
@@ -34,7 +34,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="400dp"
             android:padding="@dimen/activity_horizontal_margin">
 
         <TextView
