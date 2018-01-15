@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
-import com.example.inbar.heimdall.ProfileActivity;
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -42,6 +40,16 @@ public class AsyncCallbackExecutor extends AsyncTask<Void,Void,List<JSONObject>>
         m_showDialog=showLoadDialog;
     }
 
+    public AsyncCallbackExecutor(Activity activity, Callable<JSONObject> callable, CallBack<Void,JSONObject> callback, boolean showLoadDialog){
+        dialog=new ProgressDialog(activity);
+        ArrayList<Callable<JSONObject>> callable_list=new ArrayList<>();
+        callable_list.add(callable);
+        List<CallBack<Void,JSONObject>> callback_list=new ArrayList<>();
+        callback_list.add(callback);
+        m_api_callables=callable_list;
+        m_callbacks=callback_list;
+        m_showDialog=showLoadDialog;
+    }
     @Override
     protected List<JSONObject> doInBackground(Void... voids) {
         ArrayList<JSONObject> objects=new ArrayList<>();
