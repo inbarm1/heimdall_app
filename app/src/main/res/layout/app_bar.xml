@@ -44,10 +44,10 @@
             </RelativeLayout>
 
             <Button
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="40dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:text="Notify!"
                 android:id="@+id/button"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"

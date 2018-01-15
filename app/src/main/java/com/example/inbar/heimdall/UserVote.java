@@ -5,9 +5,9 @@ package com.example.inbar.heimdall;
  */
 
 public enum UserVote {
-    VOTED_FOR("voted_for"),
-    VOTED_AGAINST("voted_against"),
-    NO_VOTE("no_vote");
+    VOTED_FOR("VOTED_FOR"),
+    VOTED_AGAINST("VOTED_AGAINST"),
+    NO_VOTE("NO_VOTE");
 
     private final String name;
 
