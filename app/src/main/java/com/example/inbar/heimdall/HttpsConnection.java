@@ -45,7 +45,7 @@ public class HttpsConnection extends NevActivity {
     protected HttpURLConnection getConnection(final int id_layer, String subDomain){
         try {
             URL url = new URL("http://35.196.187.4"+subDomain);
-            //URL url = new URL("http://192.168.1.25:8080"+subDomain);
+//            URL url = new URL("http://192.168.1.24:8080"+subDomain);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(150000);
             conn.setConnectTimeout(150000);

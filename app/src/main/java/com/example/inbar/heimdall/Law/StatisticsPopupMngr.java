@@ -179,6 +179,13 @@ public class StatisticsPopupMngr {
         }
     }
 
+
+    public void DrawUserDistribution(Law law) {
+        DrawChartDist(law, R.id.jobChart, JOB_FOR, JOB_AGAINST);
+        DrawChartDist(law, R.id.cityChart, RESIDNET_FOR, RESIDENT_AGAINST);
+        DrawChartDist(law, R.id.ageChart, AGE_FOR, AGE_AGAINST);
+    }
+
     public void DrawChartDist(Law law, int layoutId, String forKey, String againstKey) {
         StackBarChart chart = (StackBarChart) mPopupView.findViewById(layoutId);
         List<String> lable = new ArrayList<>();
@@ -191,13 +198,6 @@ public class StatisticsPopupMngr {
 
         chart.setHorizontal_label(lable);
         chart.setData(values);
-
-    }
-
-    public void DrawUserDistribution(Law law) {
-        DrawChartDist(law, R.id.jobChart, JOB_FOR, JOB_AGAINST);
-        DrawChartDist(law, R.id.cityChart, RESIDNET_FOR, RESIDENT_AGAINST);
-        DrawChartDist(law, R.id.ageChart, AGE_FOR, AGE_AGAINST);
     }
 
     public List<ChartData> getDistFromJson(Law law, List<String> lables, String forKey, String againstKey) throws JSONException {
@@ -219,7 +219,7 @@ public class StatisticsPopupMngr {
 
         List<ChartData> values = new ArrayList<>();
         values.add(new ChartData(forChart.toArray(new Float[forChart.size()]), "For"));
-        values.add(new ChartData(againstChart.toArray(new Float[againstChart.size()]), "For"));
+        values.add(new ChartData(againstChart.toArray(new Float[againstChart.size()]), "Against"));
         return values;
 
     }
@@ -266,10 +266,10 @@ public class StatisticsPopupMngr {
                 });
 
                 thread.start();
+                mPopupWindow.dismiss();
+                isUp = false;
             }
         });
-
-
     }
 
     public void setSpinnerContent(int layout_id, JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
