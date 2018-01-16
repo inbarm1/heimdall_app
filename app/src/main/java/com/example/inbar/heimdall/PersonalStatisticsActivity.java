@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -61,7 +63,7 @@ public class PersonalStatisticsActivity extends APIRequest {
     private ArrayList<String> tags = new ArrayList<String>();
     private ArrayList<String> tags2 = new ArrayList<String>();
     private static int currentTagPosition = 0;
-    private static int currentElectedPosition = 0;
+    private static int currentElectedPosition = -1;
     private final static int CHART_1 = 0;
     private final static int CHART_2 = 1;
     private final static int CHART_3 = 2;
@@ -355,7 +357,7 @@ public class PersonalStatisticsActivity extends APIRequest {
     }
 
     private void setAutoCompleteContent(JSONArray j_values, String defaultOption, boolean doSort) throws JSONException {
-        AutoCompleteTextView a = (AutoCompleteTextView) findViewById(R.id.tagp2);
+        final AutoCompleteTextView a = (AutoCompleteTextView) findViewById(R.id.tagp2);
 
         for (int i=0; i< j_values.length(); i++) {
             final String name = (String) j_values.get(i);
@@ -367,15 +369,18 @@ public class PersonalStatisticsActivity extends APIRequest {
             Collections.sort(tags2);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(PersonalStatisticsActivity.this, android.R.layout.simple_list_item_1, tags2);
 //        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         a.setContentDescription(NONE_TAG);
         a.setAdapter(adapter);
         a.setThreshold(1);
         a.setTextColor(Color.BLACK);
+
     }
 
     private void createFirstView() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
         Spinner spinTag = (Spinner)findViewById(R.id.tagp);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         spinTag.setAdapter(adapter);
 
         spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -404,11 +409,30 @@ public class PersonalStatisticsActivity extends APIRequest {
                 TextView test = (TextView)findViewById(R.id.no_data);
                 test.setVisibility(View.GONE);
                 currentElectedPosition = pos;
+                if (currentElectedPosition < 0) {
+                    return;
+                }
                 createLawPieChart(tags2.get(pos), tags.get(currentTagPosition));
 
             }
         });
+        spinTag.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                spinTag.dismissDropDown();
+                InputMethodManager inputManager = (InputMethodManager) PersonalStatisticsActivity.this.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
+                View v = PersonalStatisticsActivity.this.getCurrentFocus();
+
+                if (v != null) {
+
+                    PersonalStatisticsActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+                    inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+                }
+            }
+        });
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
         Spinner spinTag2 = (Spinner)findViewById(R.id.tagp3);
         spinTag2.setAdapter(adapter2);
@@ -418,12 +442,18 @@ public class PersonalStatisticsActivity extends APIRequest {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 currentElectedPosition = position;
+                if (currentElectedPosition < 0) {
+                    return;
+                }
                 createLawPieChart(tags2.get(currentElectedPosition), tags.get(position));
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
+                if (currentElectedPosition < 0) {
+                    return;
+                }
                 createLawPieChart(null, null);
             }
 

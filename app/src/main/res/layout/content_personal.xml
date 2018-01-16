@@ -41,6 +41,7 @@
 
                 <Spinner
                     android:id="@+id/tagp"
+                    android:theme="@style/SpinnerStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -114,7 +115,7 @@
                     android:id="@+id/tagp2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
+                    android:singleLine="true"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:textColor="#212121" />
 
@@ -140,6 +141,7 @@
 
                 <Spinner
                     android:id="@+id/tagp3"
+                    android:theme="@style/SpinnerStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
