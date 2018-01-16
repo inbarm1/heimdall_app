@@ -90,7 +90,7 @@ public class StatisticsPopupMngr {
     }
 
     public void DrawStats(Law law, ImageButton barChartCloseButton) {
-        //DrawElectedVotesGraph(law,barChartCloseButton);
+        DrawElectedVotesGraph(law,barChartCloseButton);
         DrawUserDistribution(law);
     }
 
@@ -277,6 +277,7 @@ public class StatisticsPopupMngr {
                         Spinner tag2Spinner = (Spinner) mPopupView.findViewById(R.id.tag2_spinner);
                         String tags = tag1Spinner.getSelectedItem().toString() + "," + tag2Spinner.getSelectedItem().toString();
                         mLawActivity.lawVoteSubmit(R.id.lawLayout, law.getName(), law.getUserVote(), tags);
+                        mLawActivity.lawVoteSubmit(R.id.lawLayout, law.getName(), law.getUserVote(), tags);
                     }
                 });
 
@@ -406,7 +407,7 @@ public class StatisticsPopupMngr {
                 pieMap.put(currName, dataJson);
                 nameToPercent.put(currName, ((float) myCnt / totalCnt) * 100);
             }
-            //createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView, mLawActivityLayout,barChartCloseButton);
+            createBarChart(nameToPercent, pieMap,R.id.votedLikeMe, myParty, mPopupView, mLawActivityLayout,barChartCloseButton);
         } catch (Exception e) {
             e.printStackTrace();
             return;

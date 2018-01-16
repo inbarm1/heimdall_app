@@ -81,7 +81,7 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
                     try {
                         lawDetails = (JSONObject) json.get(lawName);
                         String lawDescription = lawDetails.getString("description");
-                        if (lawDescription.length() > -1) {
+                        if (lawDescription.length() > 10) {
                             mLaws.add(new Law(lawName, lawDetails, lawActivity));
                         }
                     } catch (JSONException e) {
