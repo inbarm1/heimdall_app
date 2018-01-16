@@ -441,7 +441,7 @@ public class PersonalStatisticsActivity extends APIRequest {
         spinTag2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                currentElectedPosition = position;
+                currentTagPosition = position;
                 if (currentElectedPosition < 0) {
                     return;
                 }
