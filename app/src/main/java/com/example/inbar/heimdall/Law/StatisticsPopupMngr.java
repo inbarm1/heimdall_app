@@ -400,14 +400,20 @@ public class StatisticsPopupMngr {
                     }
                 }
                 JSONObject dataJson = new JSONObject();
+                int totalFound = 0;
                 for (String type : voteTypes) {
+                    if (type == "missing") {
+                        continue;
+                    }
                     JSONObject singleVoteTypeJson = votesJson.getJSONObject(type);
                     int cnt = 0;
                     if (singleVoteTypeJson.has("count")) {
                         cnt = singleVoteTypeJson.getInt("count");
+                        totalFound += cnt;
                     }
                     dataJson.put(type, (float) cnt / totalCnt);
                 }
+                dataJson.put("missing",((float)(totalCnt - totalFound)) / totalCnt);
                 pieMap.put(currName, dataJson);
                 nameToPercent.put(currName, ((float) myCnt / totalCnt) * 100);
             }
@@ -597,8 +603,8 @@ public class StatisticsPopupMngr {
             // Initialize a new instance of popup window
             mPiePopupWindow = new PopupWindow(
                     customView,
-                    900,
-                    900
+                    100,
+                    180
             );
 
             // Set an elevation value for popup window
