@@ -603,8 +603,8 @@ public class StatisticsPopupMngr {
             // Initialize a new instance of popup window
             mPiePopupWindow = new PopupWindow(
                     customView,
-                    100,
-                    180
+                    900,
+                    900
             );
 
             // Set an elevation value for popup window
