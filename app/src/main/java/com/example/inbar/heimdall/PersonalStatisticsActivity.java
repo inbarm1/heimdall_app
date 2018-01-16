@@ -159,6 +159,19 @@ public class PersonalStatisticsActivity extends APIRequest {
             }
         });
 
+        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    image.setVisibility(View.GONE);
+                } else if (scrollY == 0) {
+                    image_up.setVisibility(View.GONE);
+                } else {
+                    image_up.setVisibility(View.VISIBLE);
+                    image.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
