@@ -459,7 +459,7 @@ public class StatisticsPopupMngr {
         barChart.setData(data);
         barChart.getLegend().setEnabled(false);
 
-        barChart.setExtraTopOffset(40);
+        barChart.setExtraTopOffset(10);
         XAxis xAxistemp = barChart.getXAxis();
         xAxistemp.setSpaceBetweenLabels(0);
         xAxistemp.setLabelsToSkip(0);
