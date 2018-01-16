@@ -86,7 +86,7 @@
                 android:id="@+id/ageChart"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_below="@+id/cityChart"/>
 
         </RelativeLayout>
@@ -114,7 +114,7 @@
                 android:id="@+id/cityChart"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_below="@+id/jobChart"/>
 
         </RelativeLayout>
@@ -143,7 +143,7 @@
             android:id="@+id/jobChart"
             android:layout_width="match_parent"
             android:layout_height="400dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_below="@+id/votedLikeMe"
             />
 
