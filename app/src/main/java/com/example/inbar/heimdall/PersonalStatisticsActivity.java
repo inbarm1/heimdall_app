@@ -369,32 +369,18 @@ public class PersonalStatisticsActivity extends APIRequest {
             Collections.sort(tags2);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(PersonalStatisticsActivity.this, android.R.layout.simple_list_item_1, tags2);
 //        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         a.setContentDescription(NONE_TAG);
         a.setAdapter(adapter);
         a.setThreshold(1);
         a.setTextColor(Color.BLACK);
-        a.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                a.dismissDropDown();
-                InputMethodManager inputManager = (InputMethodManager) PersonalStatisticsActivity.this.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-                View v = PersonalStatisticsActivity.this.getCurrentFocus();
-
-                if (v != null) {
-
-                    PersonalStatisticsActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-                    inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
-                }
-            }
-        });
     }
 
     private void createFirstView() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
         Spinner spinTag = (Spinner)findViewById(R.id.tagp);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         spinTag.setAdapter(adapter);
 
         spinTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -427,9 +413,26 @@ public class PersonalStatisticsActivity extends APIRequest {
 
             }
         });
+        spinTag.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                spinTag.dismissDropDown();
+                InputMethodManager inputManager = (InputMethodManager) PersonalStatisticsActivity.this.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
+                View v = PersonalStatisticsActivity.this.getCurrentFocus();
+
+                if (v != null) {
+
+                    PersonalStatisticsActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+                    inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+                }
+            }
+        });
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
         Spinner spinTag2 = (Spinner)findViewById(R.id.tagp3);
+        adapter2.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         spinTag2.setAdapter(adapter2);
 
 
