@@ -109,7 +109,7 @@ public class SignInActivity extends APIRequest implements
                 intent = new Intent(SignInActivity.this, LawActivity.class);//Todo change back to main activity
             }
             else {
-                intent = new Intent(SignInActivity.this, LawActivity.class);
+                intent = new Intent(SignInActivity.this, RegisterActivity.class);
             }
             startActivity(intent);
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
