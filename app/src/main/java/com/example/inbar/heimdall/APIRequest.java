@@ -229,7 +229,8 @@ public class APIRequest extends HttpsConnection{
             if(tag != null && !tag.isEmpty()){
                 request.put(TAG, tag);
             }
-            return new JSONObject(sendJson(idLayer, request, "/getUserPartiesVotesMatchByTag"));
+            String s = sendJson(idLayer, request, "/getUserPartiesVotesMatchByTag");
+            return new JSONObject(s);
         }
         catch (JSONException e){
             e.printStackTrace();

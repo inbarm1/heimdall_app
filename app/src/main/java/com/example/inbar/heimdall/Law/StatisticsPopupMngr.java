@@ -91,8 +91,12 @@ public class StatisticsPopupMngr {
 
     public void DrawStats(Law law, ImageButton barChartCloseButton) {
         DrawElectedVotesGraph(law,barChartCloseButton);
+        law.getUserDist(1.8);
         DrawUserDistribution(law);
     }
+
+
+
 
     public void openPopUp(PopUpType type, Law law) {
         if (isUp) {
@@ -354,7 +358,7 @@ public class StatisticsPopupMngr {
     // shitty code starts here->
 
     public void DrawElectedVotesGraph(Law law, ImageButton barChartCloseButton ) {
-        JSONObject voteJson = law.getElectedVotes();
+        JSONObject voteJson = law.getElectedVotes(1.8);
         if (voteJson == null) {
             Log.d("DrawVotesGraph", "get elected votes from law returned null");
             return;
@@ -455,7 +459,7 @@ public class StatisticsPopupMngr {
         barChart.setData(data);
         barChart.getLegend().setEnabled(false);
 
-        barChart.setExtraTopOffset(40);
+        barChart.setExtraTopOffset(10);
         XAxis xAxistemp = barChart.getXAxis();
         xAxistemp.setSpaceBetweenLabels(0);
         xAxistemp.setLabelsToSkip(0);

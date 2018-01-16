@@ -162,6 +162,42 @@ public class Law {
         return electedVotes;
     }
 
+    public JSONObject getUserDist(double timeoutSec) {
+        double time = 0;
+        double delta = timeoutSec / 10;
+        while (time < timeoutSec){
+            if (userDist != null){
+                return userDist;
+            }else {
+                try {
+                    Thread.sleep((long)(delta*1000));
+                } catch (InterruptedException e) {
+                    return userDist;
+                }
+                time += delta;
+            }
+        }
+        return userDist;
+    }
+
+    public JSONObject getElectedVotes(double timeoutSec) {
+        double time = 0;
+        double delta = timeoutSec / 10;
+        while (time < timeoutSec){
+            if (electedVotes != null){
+                return electedVotes;
+            }else {
+                try {
+                    Thread.sleep((long)(delta*1000));
+                } catch (InterruptedException e) {
+                    return electedVotes;
+                }
+                time += delta;
+            }
+        }
+        return electedVotes;
+    }
+
 
     public void DrawVotesGraph(View fatherView, int charId) {
         JSONObject voteJson = this.getElectedVotes();

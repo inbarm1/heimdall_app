@@ -478,9 +478,9 @@ public class PersonalStatisticsActivity extends APIRequest {
         float absent = 0;
         float same = 0;
         try {
-            diff = Math.round((float) data.get(PRECENT_DIFFERENT) * 100) / (float) 100;
-            absent = Math.round((float)data.get(PRECENT_ABSENT)*100)/(float)100;
-            same = Math.round((float)data.get(PRECENT_SAME)*100)/(float)100;
+            diff = Math.round( data.getDouble(PRECENT_DIFFERENT) * 100) / (float) 100;
+            absent = Math.round(data.getDouble(PRECENT_ABSENT)*100)/(float)100;
+            same = Math.round(data.getDouble(PRECENT_SAME)*100)/(float)100;
         } catch (JSONException e) {
             e.printStackTrace();
         }
