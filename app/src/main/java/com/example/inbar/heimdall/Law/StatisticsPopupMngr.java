@@ -246,12 +246,12 @@ public class StatisticsPopupMngr {
         ImageButton upvoteButton = (ImageButton) mPopupView.findViewById(R.id.upvoteButton);
         upvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_FOR,
                 R.id.upvoteButton, R.id.downvoteButton, mPopupView,
-                R.drawable.like_small, R.drawable.like, R.drawable.dislike_small));
+                R.drawable.like1, R.drawable.like2, R.drawable.dis1));
 
         ImageButton downvoteButton = (ImageButton) mPopupView.findViewById(R.id.downvoteButton);
         downvoteButton.setOnClickListener(new VoteButtonListener(law, UserVote.VOTED_AGAINST,
                 R.id.downvoteButton, R.id.upvoteButton, mPopupView,
-                R.drawable.dislike_small, R.drawable.dislike, R.drawable.like_small));
+                R.drawable.dis1, R.drawable.dis2, R.drawable.like1));
 
         try {
             setSpinnerContent(R.id.tag1_spinner, mLawActivity.TAGS, null, true);
@@ -280,7 +280,9 @@ public class StatisticsPopupMngr {
 
                 thread.start();
                 Button moreInfoButton = law.mLawView.findViewById(R.id.moreInfoButton);
-                moreInfoButton.setCompoundDrawablesWithIntrinsicBounds(law.getLawVoteIconDrawableId(),0,0,R.drawable.down_arrow2);
+                ImageView vote = law.mLawView.findViewById(R.id.vote_image);
+                vote.setImageResource(law.getLawVoteIconDrawableId());
+                moreInfoButton.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.down_arrow2);
                 mPopupWindow.dismiss();
                 isUp = false;
             }

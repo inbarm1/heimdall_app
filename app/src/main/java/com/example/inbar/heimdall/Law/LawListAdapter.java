@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.inbar.heimdall.R;
@@ -111,7 +113,9 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         holder.nameTextView.setText(law.getName());
         holder.moreInfoButton.setOnClickListener(new MoreInfoButtonListener(law,lawActivity) );
         Drawable voteIcon = lawActivity.getDrawable(law.getLawVoteIconDrawableId());
-        holder.moreInfoButton.setCompoundDrawablesWithIntrinsicBounds(voteIcon,null,null,null);
+        ImageView vote = law.mLawView.findViewById(R.id.vote_image);
+        vote.setImageDrawable(voteIcon);
+        holder.moreInfoButton.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.down_arrow2);
         holder.showStatsButton.setOnClickListener( new ShowStatsButtonListener(law,mStatsPopupMngr));
         holder.showDescriptionButton.setOnClickListener( new ShowDescriptionButtonListener(law,mStatsPopupMngr));
         holder.voteButton.setOnClickListener(new VoteButtonListener(law,mStatsPopupMngr));
@@ -155,13 +159,15 @@ public class LawListAdapter extends RecyclerView.Adapter<LawListAdapter.SimpleVi
         @Override
         public void onClick(View v) {
             //the view is the button, we need to get it's parnet
-            View parent = (View) v.getParent();
+            View parent = (View) v.getParent().getParent();
             ExpandableLayout expandableLayout = ((ExpandableLayout) parent.findViewById(R.id.expandable_layout));
+            ImageView vote = mLaw.mLawView.findViewById(R.id.vote_image);
+            vote.setImageResource(mLaw.getLawVoteIconDrawableId());
             Button b = (Button)v;
             if (expandableLayout.isExpanded()) {
-                b.setCompoundDrawablesWithIntrinsicBounds(mLaw.getLawVoteIconDrawableId(), 0, 0, R.drawable.down_arrow2);
+                b.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.down_arrow2);
             } else {
-                b.setCompoundDrawablesWithIntrinsicBounds(mLaw.getLawVoteIconDrawableId(),0, 0, R.drawable.up_arrow2);
+                b.setCompoundDrawablesWithIntrinsicBounds(0,0, 0, R.drawable.up_arrow2);
             }
             expandableLayout.toggle();
             mLaw.setUserDistAndElectedVotes(mLawActivity);

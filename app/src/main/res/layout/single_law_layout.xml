@@ -27,6 +27,16 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"/>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/vote_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/no_vote" />
 
             <Button
                 android:id="@+id/moreInfoButton"
@@ -36,8 +46,7 @@
                 android:drawableBottom="@drawable/down_arrow2"
                 android:text="מידע נוסף"
                 android:textColor="@color/colorPrimaryDark" />
-
-
+            </RelativeLayout>
 
             <net.cachapa.expandablelayout.ExpandableLayout
                 android:id="@+id/expandable_layout"
