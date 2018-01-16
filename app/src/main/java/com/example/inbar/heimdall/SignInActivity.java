@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.inbar.heimdall.Law.LawActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
@@ -105,10 +106,10 @@ public class SignInActivity extends APIRequest implements
         if (user != null) {
             Intent intent;
             if(isRegistered) {
-                intent = new Intent(SignInActivity.this, MainActivity.class);
+                intent = new Intent(SignInActivity.this, LawActivity.class);//Todo change back to main activity
             }
             else {
-                intent = new Intent(SignInActivity.this, RegisterActivity.class);
+                intent = new Intent(SignInActivity.this, LawActivity.class);
             }
             startActivity(intent);
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
