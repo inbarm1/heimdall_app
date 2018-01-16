@@ -148,7 +148,7 @@ public class PersonalStatisticsActivity extends APIRequest {
         final FloatingActionButton image = (FloatingActionButton) findViewById(R.id.img_arrow2);
         image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                scrollView.scrollBy(0, 1500);
+                scrollView.scrollBy(0, 1000);
             }
         });
 
