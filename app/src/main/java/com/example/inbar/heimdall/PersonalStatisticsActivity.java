@@ -371,7 +371,6 @@ public class PersonalStatisticsActivity extends APIRequest {
         a.setAdapter(adapter);
         a.setThreshold(1);
         a.setTextColor(Color.BLACK);
-        ;
     }
 
     private void createFirstView() {
