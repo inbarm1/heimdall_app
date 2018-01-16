@@ -455,16 +455,13 @@ public class StatisticsPopupMngr {
         barChart.setData(data);
         barChart.getLegend().setEnabled(false);
 
+        barChart.setExtraTopOffset(40);
         XAxis xAxistemp = barChart.getXAxis();
-        xAxistemp.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxistemp.setSpaceBetweenLabels(6);
-//        xAxistemp.setXOffset(12);
+        xAxistemp.setSpaceBetweenLabels(0);
+        xAxistemp.setLabelsToSkip(0);
         xAxistemp.setTextSize(8);
-//        XAxis rot = barChart.getXAxis();
-//        rot.setLabelRotationAngle(-45);
+        xAxistemp.setLabelRotationAngle(-45);
 
-//        barChart.setDragEnabled(true); // on by default
-//        barChart.setVisibleXRange(3,3); // sets the viewport to show 3 bars
         barChart.setDescription("");
         barChart.animateXY(2000, 2000);
         barChart.invalidate();

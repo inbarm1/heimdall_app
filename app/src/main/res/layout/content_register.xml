@@ -51,6 +51,16 @@
             android:clickable="true"
             android:orientation="horizontal"
             android:padding="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/ivContactItem1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/party" />
+
+
             <Spinner
                 android:id="@+id/party"
                 android:theme="@style/SpinnerStyle"
@@ -61,19 +71,12 @@
                 android:layout_weight="1"
                 android:textColor="#212121" />
 
-            <ImageView
-                android:id="@+id/ivContactItem1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/elections" />
 
 
 
         </LinearLayout>
 
-        <include layout="@layout/item_divider" />
+        <include layout="@layout/item_divider_main" />
 
         <TextView
             android:id="@+id/job_text"
@@ -95,6 +98,17 @@
             android:orientation="horizontal"
             android:padding="@dimen/activity_horizontal_margin">
 
+            <ImageView
+                android:id="@+id/ivContactItem2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_alignLeft="@+id/job"
+                android:src="@drawable/job" />
+
+
             <Spinner
                 android:id="@+id/job"
                 android:layout_width="match_parent"
@@ -105,19 +119,10 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:textColor="#212121" />
 
-            <ImageView
-                android:id="@+id/ivContactItem2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_alignLeft="@+id/job"
-                android:src="@drawable/briefcase" />
 
         </LinearLayout>
 
-        <include layout="@layout/item_divider" android:id="@+id/date_divider"/>
+        <include layout="@layout/item_divider_main" android:id="@+id/date_divider"/>
 
         <TextView
             android:id="@+id/birth_date_text"
@@ -140,6 +145,16 @@
             android:id="@+id/date_layout"
             android:padding="@dimen/activity_horizontal_margin">
 
+            <ImageView
+                android:id="@+id/ivContactItem3"
+                android:layout_width="wrap_content"
+                android:layout_alignLeft="@+id/birth_date_selection"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/date" />
+
             <TextView
                 android:id="@+id/birth_date_selection"
                 android:layout_width="match_parent"
@@ -150,23 +165,16 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="30dp"
                 android:textSize="16dp"
+                android:layout_marginEnd="64dp"
                 android:gravity="right"
                 android:text="@string/choose_date_text"
                 android:textColor="#212121" />
 
 
-            <ImageView
-                android:id="@+id/ivContactItem3"
-                android:layout_width="wrap_content"
-                android:layout_alignLeft="@+id/birth_date_selection"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/cupcake" />
+
         </LinearLayout>
 
-        <include layout="@layout/item_divider" />
+        <include layout="@layout/item_divider_main" />
         <TextView
             android:id="@+id/residency_text"
             android:layout_width="match_parent"
@@ -187,16 +195,6 @@
             android:orientation="horizontal"
             android:padding="@dimen/activity_horizontal_margin">
 
-            <AutoCompleteTextView
-                android:theme="@style/Autocomplete"
-                android:id="@+id/city"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_weight="1"
-                android:textColor="#212121" />
-
             <ImageView
                 android:id="@+id/ivContactItem5"
                 android:layout_width="wrap_content"
@@ -206,14 +204,28 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_alignLeft="@+id/city"
 
-                android:src="@drawable/ic_location_on_black" />
+                android:src="@drawable/city" />
+
+            <AutoCompleteTextView
+                android:theme="@style/Autocomplete"
+                android:id="@+id/city"
+                android:layout_width="match_parent"
+                android:singleLine="true"
+                android:textSize="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginEnd="64dp"
+                android:layout_weight="1"
+                android:textColor="#212121" />
+
 
 
 
 
         </LinearLayout>
 
-        <include layout="@layout/item_divider" />
+        <include layout="@layout/item_divider_main" />
 
         <TextView
             android:id="@+id/involvment_text"
@@ -235,6 +247,16 @@
             android:orientation="horizontal"
             android:padding="@dimen/activity_horizontal_margin">
 
+            <ImageView
+                android:id="@+id/ivContactItem4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/involvement"
+                android:layout_alignLeft="@+id/involvment_spinner"
+                />
 
             <Spinner
                 android:id="@+id/involvment_spinner"
@@ -249,17 +271,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121" />
 
-            <ImageView
-                android:id="@+id/ivContactItem4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_email_black"
-                android:visibility="invisible"
-                android:layout_alignLeft="@+id/involvment_spinner"
-                />
+
 
 
 
@@ -268,7 +280,7 @@
 
         </LinearLayout>
 
-        <include layout="@layout/item_divider" />
+        <include layout="@layout/item_divider_main" />
 
         <LinearLayout
             android:layout_width="match_parent"
