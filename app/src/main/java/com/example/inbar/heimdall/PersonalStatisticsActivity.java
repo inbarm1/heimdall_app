@@ -401,22 +401,6 @@ public class PersonalStatisticsActivity extends APIRequest {
         final AutoCompleteTextView spinTag = (AutoCompleteTextView) findViewById(R.id.tagp2);
 
         spinTag.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View arg1, int pos,
-                                    long id) {
-
-                TextView test = (TextView)findViewById(R.id.no_data);
-                test.setVisibility(View.GONE);
-                currentElectedPosition = pos;
-                if (currentElectedPosition < 0) {
-                    return;
-                }
-                createLawPieChart(tags2.get(pos), tags.get(currentTagPosition));
-
-            }
-        });
-        spinTag.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 spinTag.dismissDropDown();
@@ -431,6 +415,14 @@ public class PersonalStatisticsActivity extends APIRequest {
                     inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
                 }
+
+                TextView test = (TextView)findViewById(R.id.no_data);
+                test.setVisibility(View.GONE);
+                currentElectedPosition = i;
+                if (currentElectedPosition < 0) {
+                    return;
+                }
+                createLawPieChart(tags2.get(i), tags.get(currentTagPosition));
             }
         });
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
