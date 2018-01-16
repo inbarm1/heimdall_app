@@ -91,7 +91,7 @@ public class StatisticsPopupMngr {
 
     public void DrawStats(Law law, ImageButton barChartCloseButton) {
         DrawElectedVotesGraph(law,barChartCloseButton);
-        law.getUserDist(1.8);
+        law.getUserDist(2.5);
         DrawUserDistribution(law);
     }
 
@@ -358,7 +358,7 @@ public class StatisticsPopupMngr {
     // shitty code starts here->
 
     public void DrawElectedVotesGraph(Law law, ImageButton barChartCloseButton ) {
-        JSONObject voteJson = law.getElectedVotes(1.8);
+        JSONObject voteJson = law.getElectedVotes(2.5);
         if (voteJson == null) {
             Log.d("DrawVotesGraph", "get elected votes from law returned null");
             return;
@@ -400,14 +400,20 @@ public class StatisticsPopupMngr {
                     }
                 }
                 JSONObject dataJson = new JSONObject();
+                int totalFound = 0;
                 for (String type : voteTypes) {
+                    if (type == "missing") {
+                        continue;
+                    }
                     JSONObject singleVoteTypeJson = votesJson.getJSONObject(type);
                     int cnt = 0;
                     if (singleVoteTypeJson.has("count")) {
                         cnt = singleVoteTypeJson.getInt("count");
+                        totalFound += cnt;
                     }
                     dataJson.put(type, (float) cnt / totalCnt);
                 }
+                dataJson.put("missing",((float)(totalCnt - totalFound)) / totalCnt);
                 pieMap.put(currName, dataJson);
                 nameToPercent.put(currName, ((float) myCnt / totalCnt) * 100);
             }
