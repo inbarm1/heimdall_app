@@ -16,53 +16,51 @@
         android:background="#f1f3f4"
         android:padding="2dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:text="אחוז ההצבעה כמוני בקרב המפלגות" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/votedLikeMe"
-            android:layout_width="match_parent"
-            android:layout_height="450dp"
-            android:layout_marginTop="40dp" />
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:text="אחוז ההצבעה כמוני בקרב המפלגות" />-->
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:text="אחוז ההצבעה כמוני בקרב המפלגות" />
+            <!--<com.github.mikephil.charting.charts.BarChart-->
+                <!--android:id="@+id/votedLikeMe"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="400dp"-->
+                <!--android:layout_marginTop="40dp" />-->
 
-        <com.numetriclabz.numandroidcharts.StackBarChart
-            android:id="@+id/jobChart"
-            android:layout_width="wrap_content"
-            android:layout_height="400dp"
-            />
 
-        <com.numetriclabz.numandroidcharts.StackBarChart
-            android:id="@+id/cityChart"
-            android:layout_marginTop="40dp"
-            android:layout_width="wrap_content"
-            android:layout_height="450dp"
-            />
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:text="אחוז ההצבעה כמוני בקרב המפלגות" />-->
 
-        <com.numetriclabz.numandroidcharts.StackBarChart
-            android:id="@+id/ageChart"
-            android:layout_marginTop="40dp"
-            android:layout_width="wrap_content"
-            android:layout_height="450dp"
-            />
+            <com.numetriclabz.numandroidcharts.StackBarChart
+                android:id="@+id/jobChart"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+               />
 
-    </LinearLayout>
+            <com.numetriclabz.numandroidcharts.StackBarChart
+                android:id="@+id/cityChart"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_below="@+id/jobChart"/>
+
+            <com.numetriclabz.numandroidcharts.StackBarChart
+                android:id="@+id/ageChart"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_below="@+id/cityChart"/>
+
+        </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
