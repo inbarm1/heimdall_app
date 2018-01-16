@@ -213,8 +213,10 @@ public class StatisticsPopupMngr {
         ArrayList<Float> forChart = new ArrayList<>();
         ArrayList<Float> againstChart = new ArrayList<>();
         while (law.getUserDist() == null) {};
+
         JSONObject forDataJson = (JSONObject) law.getUserDist().get(forKey);
         JSONObject againstDataJson = (JSONObject) law.getUserDist().get(againstKey);
+
 
         Set<String> keys = fromIteratorToSet(forDataJson.keys());
         keys.addAll(fromIteratorToSet(againstDataJson.keys()));
@@ -274,6 +276,7 @@ public class StatisticsPopupMngr {
                         Spinner tag1Spinner = (Spinner) mPopupView.findViewById(R.id.tag1_spinner);
                         Spinner tag2Spinner = (Spinner) mPopupView.findViewById(R.id.tag2_spinner);
                         String tags = tag1Spinner.getSelectedItem().toString() + "," + tag2Spinner.getSelectedItem().toString();
+                        mLawActivity.lawVoteSubmit(R.id.lawLayout, law.getName(), law.getUserVote(), tags);
                         mLawActivity.lawVoteSubmit(R.id.lawLayout, law.getName(), law.getUserVote(), tags);
                     }
                 });
