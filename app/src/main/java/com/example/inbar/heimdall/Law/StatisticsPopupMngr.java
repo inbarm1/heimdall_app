@@ -441,9 +441,9 @@ public class StatisticsPopupMngr {
                 BarEntry entry = new BarEntry(val, counter);
                 valueList.add(entry);
                 if (name.equals(myName)) {
-                    colors.add(rgb(70, 130, 180));
+                    colors.add(rgb(255,69,0));
                 } else {
-                    colors.add(rgb(135, 206, 235));
+                    colors.add(rgb(220,20,60));
                 }
                 counter++;
             }
@@ -597,8 +597,8 @@ public class StatisticsPopupMngr {
             // Initialize a new instance of popup window
             mPiePopupWindow = new PopupWindow(
                     customView,
-                    100,
-                    180
+                    900,
+                    900
             );
 
             // Set an elevation value for popup window
