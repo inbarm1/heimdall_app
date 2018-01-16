@@ -411,9 +411,9 @@ public class StatisticsPopupMngr {
                         cnt = singleVoteTypeJson.getInt("count");
                         totalFound += cnt;
                     }
-                    dataJson.put(type, (float) cnt / totalCnt);
+                    dataJson.put(type, ((float) cnt / totalCnt)*100);
                 }
-                dataJson.put("missing",((float)(totalCnt - totalFound)) / totalCnt);
+                dataJson.put("missing",(((float)(totalCnt - totalFound)) / totalCnt)*100);
                 pieMap.put(currName, dataJson);
                 nameToPercent.put(currName, ((float) myCnt / totalCnt) * 100);
             }
