@@ -91,7 +91,7 @@ public class StatisticsPopupMngr {
 
     public void DrawStats(Law law, ImageButton barChartCloseButton) {
         DrawElectedVotesGraph(law,barChartCloseButton);
-        law.getUserDist(1.8);
+        law.getUserDist(2.5);
         DrawUserDistribution(law);
     }
 
@@ -358,7 +358,7 @@ public class StatisticsPopupMngr {
     // shitty code starts here->
 
     public void DrawElectedVotesGraph(Law law, ImageButton barChartCloseButton ) {
-        JSONObject voteJson = law.getElectedVotes(1.8);
+        JSONObject voteJson = law.getElectedVotes(2.5);
         if (voteJson == null) {
             Log.d("DrawVotesGraph", "get elected votes from law returned null");
             return;
