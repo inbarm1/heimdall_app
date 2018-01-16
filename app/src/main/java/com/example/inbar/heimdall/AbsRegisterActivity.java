@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.inbar.heimdall.Law.LawActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,7 +66,7 @@ public abstract class AbsRegisterActivity extends APIRequest {
                 Intent intent = null;
                 try {
                     if (register.get()) {
-                        intent = new Intent(AbsRegisterActivity.this, MainActivity.class);
+                        intent = new Intent(AbsRegisterActivity.this, LawActivity.class);
                     }
                     else{
                         Log.d("error","register failed");
