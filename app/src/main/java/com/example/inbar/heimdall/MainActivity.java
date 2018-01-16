@@ -328,27 +328,6 @@ public class MainActivity extends APIRequest {
 
 
     }
-    private Boolean exit = false;
-
-    @Override
-    public void onBackPressed() {
-        if (exit) {
-            super.onBackPressed();
-            moveTaskToBack(true); // finish activity
-
-        } else {
-            Toast.makeText(this, "לחץ אחורה כדי לצאת...",
-                    Toast.LENGTH_SHORT).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
-
-        }
-    }
 
     private void createBarChart(int char_id, JSONObject parties, String userPartyName, String key, String keyMember, final Map<String, JSONObject> map) {
 
