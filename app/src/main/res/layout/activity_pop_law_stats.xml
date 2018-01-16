@@ -5,78 +5,150 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="2dp"
-    android:background="#f1f3f4"
+    android:background="#EDF4F6"
     android:orientation="vertical">
-
-
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/rl_pop_law_desc_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#f1f3f4"
-        android:padding="2dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <TextView
-                android:id="@+id/votedLikeMeHeader"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:text="אחוז ההצבעה כמוני בקרב המפלגות" />
-
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/votedLikeMe"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:layout_below="@+id/votedLikeMeHeader"
-                />
-
-
-            <TextView
-                android:id="@+id/jobChartHeader"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:text="אחוז ההצבעה כמוני בקרב המפלגות"
-                android:layout_below="@+id/votedLikeMe"/>
-
-            <com.numetriclabz.numandroidcharts.StackBarChart
-                android:id="@+id/jobChart"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:layout_below="@+id/votedLikeMe"
-                />
-
-            <com.numetriclabz.numandroidcharts.StackBarChart
-                android:id="@+id/cityChart"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:layout_below="@+id/jobChart"/>
-
-            <com.numetriclabz.numandroidcharts.StackBarChart
-                android:id="@+id/ageChart"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:layout_below="@+id/cityChart"/>
-
-        </RelativeLayout>
-
-    </android.support.v4.widget.NestedScrollView>
 
     <ImageButton
         android:id="@+id/ib_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:src="@drawable/if_icon"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="@null" />
+        android:background="#EDF4F6" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/rl_pop_law_desc_layout"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="45dp"
+        android:layout_height="500dp"
+        android:background="#EDF4F6"
+        android:padding="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#EDF4F6"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:id="@+id/votedLikeMeHeader"
+                android:text="אחוז ההצבעה כמוני בקרב המפלגות"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#727272" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/votedLikeMe"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_height="400dp"
+                android:layout_below="@+id/votedLikeMeHeader"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#EDF4F6"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/jobChartHeader2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="אחוז ההצבעה כמוני בקרב המפלגות"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#727272" />
+
+            <com.numetriclabz.numandroidcharts.StackBarChart
+                android:id="@+id/ageChart"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/cityChart"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#EDF4F6"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/jobChartHeader1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="אחוז ההצבעה כמוני בקרב המפלגות"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#727272" />
+
+
+            <com.numetriclabz.numandroidcharts.StackBarChart
+                android:id="@+id/cityChart"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/jobChart"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#EDF4F6"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/jobChartHeader2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="אחוז ההצבעה כמוני בקרב המפלגות"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#727272" />
+
+        </RelativeLayout>
+
+        <com.numetriclabz.numandroidcharts.StackBarChart
+            android:id="@+id/jobChart"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_below="@+id/votedLikeMe"
+            />
+
+    </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </RelativeLayout>
 
