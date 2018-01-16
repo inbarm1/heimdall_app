@@ -349,7 +349,7 @@ public class MainActivity extends APIRequest {
                 // Get party's data
                 if ( parties.get(name) instanceof JSONObject ) {
                     JSONObject data = (JSONObject)parties.get(name);
-                    float val = Math.round((((Number)data.get(key)).floatValue() * 100 * 100.0) / 100.0);
+                    float val=Math.round(data.getDouble(key)*100)/(float)100;
                     BarEntry entry = new BarEntry(val, counter);
                     if (name.equals(userPartyName)) {
                         colors.add(rgb(70,130,180));
