@@ -427,6 +427,7 @@ public class PersonalStatisticsActivity extends APIRequest {
         });
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tags);
         Spinner spinTag2 = (Spinner)findViewById(R.id.tagp3);
+        adapter2.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         spinTag2.setAdapter(adapter2);
 
 
